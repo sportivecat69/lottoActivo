@@ -1,0 +1,84 @@
+/*************************************************************************
+							SHORCUTS
+*************************************************************************/
+.shortcut-list-item {
+    border-bottom: 1px solid #D6DADC;
+    margin-bottom: 8px;
+    padding: 8px 0;
+    position: relative;
+}
+.shortcut-list-item-header {
+    float: left;
+    margin: 6px 1pc 6px 0;
+}
+.shortcut-list-item-keys {
+    float: right;
+    top: 4px;
+    right: 0;
+}
+.keyboard-key {
+    background: #fff;
+    border-radius: 5px;
+    border: 1px solid #D6DADC;
+    border-bottom-color: #CDD2D4;
+    box-shadow: 0 2px 3px rgba(0,0,0,.1);
+    color: #4d4d4d;
+    cursor: default;
+    display: inline-block;
+    font-size: 1pc;
+    margin: 0 5px 10px 0;
+    padding: 6px 10px;
+}
+.short-list-item-desc {
+    clear: both;
+}
+/*************************************************************************
+							END SHORCUTS
+*************************************************************************/
+/*************************************************************************
+						ESTILO DE NOTIFICATION
+**************************************************************************/
+.badge {
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 13px;
+    padding: 2px 6px;
+    position: absolute;
+    right: 2px;
+    top: 8px;
+    background-color: #f00 !important;
+}
+
+ul.notificaciones {
+	width: 350px;	
+}
+
+ul.notificaciones li {
+    background: #f7f7f7;
+    padding: 5px;
+    display: -ms-flexbox;
+    display: flex;
+    margin: 6px 6px 0;
+    width: 96%!important;
+}
+
+.notificaciones span {
+    white-space: normal;
+}
+
+ul.notificaciones li a .time {
+    font-size: 11px;
+    font-style: italic;
+    font-weight: 700;
+    position: absolute;
+    right: 35px;
+}
+
+ul.notificaciones li a .message {
+    display: block!important;
+    font-size: 11px;
+    margin-top: 5px;
+}
+/*************************************************************************
+					END ESTILO DE NOTIFICATION
+**************************************************************************/
