@@ -47,13 +47,13 @@
         
         <!-- Main content -->
         <section class="content">
-        
-        @if (session('status'))
-            <div class="alert alert-danger alert-dismissable">
-			  <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times"></i></a>
-			  {{ session('status') }}
-			</div>
-         @endif
+
+		<!-- ALERT -->        
+        <div class="alert alert-danger alert-dismissable status" style="display: none;">
+		  <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times"></i></a>
+		  <div id='title-alert'></div>
+		</div>
+		<!-- END ALERT --> 
         
           <div class="row">
             <div class="col-md-12">
@@ -278,29 +278,89 @@
 				                        </td>
 				                    </tr>
 				                   <tr>
-				                   		<td><img alt="22" src="{{asset('img/animalitos/22.png')}}"></td>
-				                    	<td><img alt="23" src="{{asset('img/animalitos/23.png')}}"></td>
-				                        <td><img alt="24" src="{{asset('img/animalitos/24.png')}}"></td>
+				                        <td>
+				                        	<a href="#" onclick="add('22')">
+				                        		<img alt="22" src="{{asset('img/animalitos/22.png')}}">
+				                        	</a>
+				                        </td>
+				                        <td>
+				                        	<a href="#" onclick="add('23')">
+				                        		<img alt="23" src="{{asset('img/animalitos/23.png')}}">
+				                        	</a>
+				                        </td>
+				                        <td>
+				                        	<a href="#" onclick="add('24')">
+				                        		<img alt="24" src="{{asset('img/animalitos/24.png')}}">
+				                        	</a>
+				                        </td>
 				                    </tr>
 				                   <tr>
-				                   		<td><img alt="25" src="{{asset('img/animalitos/25.png')}}"></td>
-				                    	<td><img alt="26" src="{{asset('img/animalitos/26.png')}}"></td>
-				                        <td><img alt="27" src="{{asset('img/animalitos/27.png')}}"></td>
+				                        <td>
+				                        	<a href="#" onclick="add('25')">
+				                        		<img alt="25" src="{{asset('img/animalitos/25.png')}}">
+				                        	</a>
+				                        </td>
+				                        <td>
+				                        	<a href="#" onclick="add('26')">
+				                        		<img alt="26" src="{{asset('img/animalitos/26.png')}}">
+				                        	</a>
+				                        </td>
+				                        <td>
+				                        	<a href="#" onclick="add('27')">
+				                        		<img alt="27" src="{{asset('img/animalitos/27.png')}}">
+				                        	</a>
+				                        </td>
 				                    </tr>
 				                   <tr>
-				                   		<td><img alt="28" src="{{asset('img/animalitos/28.png')}}"></td>
-				                    	<td><img alt="29" src="{{asset('img/animalitos/29.png')}}"></td>
-				                        <td><img alt="30" src="{{asset('img/animalitos/30.png')}}"></td>
+				                        <td>
+				                        	<a href="#" onclick="add('28')">
+				                        		<img alt="28" src="{{asset('img/animalitos/28.png')}}">
+				                        	</a>
+				                        </td>
+				                        <td>
+				                        	<a href="#" onclick="add('29')">
+				                        		<img alt="29" src="{{asset('img/animalitos/29.png')}}">
+				                        	</a>
+				                        </td>
+				                        <td>
+				                        	<a href="#" onclick="add('30')">
+				                        		<img alt="30" src="{{asset('img/animalitos/30.png')}}">
+				                        	</a>
+				                        </td>
 				                    </tr>
 				                   <tr>
-				                   		<td><img alt="31" src="{{asset('img/animalitos/31.png')}}"></td>
-				                    	<td><img alt="32" src="{{asset('img/animalitos/32.png')}}"></td>
-				                        <td><img alt="33" src="{{asset('img/animalitos/33.png')}}"></td>
+				                        <td>
+				                        	<a href="#" onclick="add('31')">
+				                        		<img alt="31" src="{{asset('img/animalitos/31.png')}}">
+				                        	</a>
+				                        </td>
+				                        <td>
+				                        	<a href="#" onclick="add('32')">
+				                        		<img alt="32" src="{{asset('img/animalitos/32.png')}}">
+				                        	</a>
+				                        </td>
+				                        <td>
+				                        	<a href="#" onclick="add('33')">
+				                        		<img alt="33" src="{{asset('img/animalitos/33.png')}}">
+				                        	</a>
+				                        </td>
 				                    </tr>
 				                   <tr>
-				                   		<td><img alt="34" src="{{asset('img/animalitos/34.png')}}"></td>
-				                    	<td><img alt="35" src="{{asset('img/animalitos/35.png')}}"></td>
-				                        <td><img alt="36" src="{{asset('img/animalitos/36.png')}}"></td>
+				                        <td>
+				                        	<a href="#" onclick="add('34')">
+				                        		<img alt="34" src="{{asset('img/animalitos/34.png')}}">
+				                        	</a>
+				                        </td>
+				                        <td>
+				                        	<a href="#" onclick="add('35')">
+				                        		<img alt="35" src="{{asset('img/animalitos/35.png')}}">
+				                        	</a>
+				                        </td>
+				                        <td>
+				                        	<a href="#" onclick="add('36')">
+				                        		<img alt="36" src="{{asset('img/animalitos/36.png')}}">
+				                        	</a>
+				                        </td>
 				                    </tr>
 					            </table>
 					        </div>
@@ -324,7 +384,7 @@
         								<div class="col-md-4">
     						                <div class="input-group">
     						                	<span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span>
-    						                    <input type="text" class="form-control" maxlength="2" onkeydown="keyCode_codigo(event)"  id="codigo" name="codigo"  placeholder="Ingrese codigo" >
+    						                    <input type="text" class="form-control" maxlength="2" onkeydown="keyCode_codigo(event)"  id="codigo" name="codigo"  placeholder="Ingrese n&uacute;mero" >
     					               		</div>
         								</div>
         								<div class="col-md-4" style=" display: inline-flex;">
@@ -366,7 +426,7 @@
 								<div class=" col-md-12" >
 					                <hr>
 								</div>
-					            <table class="table table-striped table-condensed table-hover text-center" id="tabla_product">
+					            <table class="table table-striped table-condensed text-center" id="tabla_product">
 					                <thead>
 					                    <tr>
 					                    	<th>Ruleta</th>
@@ -460,56 +520,70 @@
 			    var sorteo =  $('#sorteo').val();
 			    if(cod != '' && monto != ''){
     		    	 $.ajax({
-    		    	        url: "{{ route('sale.add',  '0' ) }}",
+							url: appRoot + "/sale/add/" + cod ,
     		    	        type: "post",
     		    	        data: { "_token": "{{ csrf_token() }}", categorie: 1, sorteo: sorteo, cod: cod, amount: monto  } ,
     		    	        success: function (data) {
-    		    	        	$.each(data, function(index, value){
-    			    	        	
-    			    	        	//SI EXISTE Y LO REPIREN LO REMUEVE 
-    		    	        		$('#'+data[index].cod+data[index].sorteo.substring(0, 2)).remove();
-    		    	        		//END
-    		    	        		
-        							add_ = '<tr id="'+data[index].cod+data[index].sorteo.substring(0, 2)+'">';
-        							add_ += 	'<td>';
-        							if(data[index].categorie_id == 1){ 
-        								add_ += '<h5>Ruleta Activa<h5>'; 
-            						};
-            						add_ += 	'</td>';
-        							add_ += 	'<td><h5>';
-        							add_ += 		data[index].cod + '-' +data[index].name;
-        							add_ += 	'</h5></td>';
-        							add_ += 	'<td><h5>';
-        							add_ += 		data[index].sorteo;
-        							add_ += 	'</h5></td>';
-        							add_ += 	'<td><h5>';
-        							add_ += 		data[index].amount + ',00 ';
-        							add_ += 	'</h5></td>';
-        							add_ +=   '<td>';
-        							add_ +=    	'<a href="#" onclick="delete_(\''+data[index].cod+data[index].sorteo.substring(0, 2)+'\')">';
-        							add_ +=    		'<h5><i class="fa fa-times fa-lg" aria-hidden="true" style="color:#FF0000;"></i></h5>';
-        							add_ +=    	'</a>';
-        							add_ +=	'</td>'
-        							add_ += '</tr>';
-        							$('#no_product').remove();
-        							$('#add_product').append(add_);
-    		    	        	})
-    
-    		    	        	//Calcula el monto
-    							var total = 0;
-    							$('#tabla_product tbody tr').each(function(){
-    								total += parseInt($(this).find('td').eq(3).text()||0,10)
-    							});
-    							$('#total').html(total+',00');
-    							//Calculo de Nro. jugadas
-    							$('#jugadas').html($('#tabla_product tbody tr').size());
-    							
+        		    	        //Validamos si esta abilitado
+        		    	        if(data != 0) {
+        		    	        	$.each(data, function(index, value){
+        			    	        	
+        			    	        	//SI EXISTE Y LO REPIREN LO REMUEVE 
+        		    	        		$('#'+data[index].cod+data[index].sorteo.substring(0, 2)).remove();
+        		    	        		//END
+        		    	        		
+            							add_ = '<tr id="'+data[index].cod+data[index].sorteo.substring(0, 2)+'">';
+            							add_ += 	'<td>';
+            							if(data[index].categorie_id == 1){ 
+            								add_ += '<h5>Ruleta Activa<h5>'; 
+                						};
+                						add_ += 	'</td>';
+            							add_ += 	'<td><h5>';
+            							add_ += 		data[index].cod + '-' +data[index].name;
+            							add_ += 	'</h5></td>';
+            							add_ += 	'<td><h5>';
+            							add_ += 		data[index].sorteo;
+            							add_ += 	'</h5></td>';
+            							add_ += 	'<td><h5>';
+            							add_ += 		data[index].amount + ',00 ';
+            							add_ += 	'</h5></td>';
+            							add_ +=   '<td>';
+            							add_ +=    	'<a href="#" onclick="delete_(\''+data[index].cod+data[index].sorteo.substring(0, 2)+'\')">';
+            							add_ +=    		'<h5><i class="fa fa-times fa-lg" aria-hidden="true" style="color:#FF0000;"></i></h5>';
+            							add_ +=    	'</a>';
+            							add_ +=	'</td>'
+            							add_ += '</tr>';
+            							$('#no_product').remove();
+            							$('#add_product').append(add_);
+        		    	        	})
+        
+        		    	        	//Calcula el monto
+        							var total = 0;
+        							$('#tabla_product tbody tr').each(function(){
+        								total += parseInt($(this).find('td').eq(3).text()||0,10)
+        							});
+        							$('#total').html(total+',00');
+        							//Calculo de Nro. jugadas
+        							$('#jugadas').html($('#tabla_product tbody tr').size());
+        		    	        } else {
+        		    	        	//Notificacion
+        		    	        	$('#title-alert').html('El n&uacute;mero esta inhabilitado');
+          		    			    $('.status').show();
+           							$('#codigo').val('');
+          		    			    $('#codigo').focus();
+          		    			    setTimeout(function(){ $('.alert').fadeOut(2000) }, 5000); 
+            		    	    }
     							$('#codigo').val('');
     		    			    $('#codigo').focus();               
     
     		    	        },
     		    	        error: function(jqXHR, textStatus, errorThrown) {
-    		    	           console.log(textStatus, errorThrown);
+    		    	  		  	//Notificacion
+    		    	  		  	$('#title-alert').html('El n&uacute;mero no coincide con ningun registro');
+    		    			    $('.status').show();
+     							$('#codigo').val('');
+    		    			    $('#codigo').focus();
+    		    			    setTimeout(function(){ $('.alert').fadeOut(2000) }, 5000);    
     		    	        }
     		    	    });
     		    	    
@@ -562,7 +636,7 @@
 	    	        }
 	    	    });
 	    }
-	
+
 	</script>
 @endpush
 		                          

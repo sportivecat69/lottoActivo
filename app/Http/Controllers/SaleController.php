@@ -43,24 +43,26 @@ class SaleController extends Controller
 	{
 	    $article = Article::where([
 	        ['cod', $request->cod],
-	        ['categorie_id', $request->categorie],
-	        ['status', 1],
+	        ['categorie_id', $request->categorie]
 	    ])->first();
 	    
 	    if (!$article) {
-	        return redirect()->route('sale.index')->with('status', 'La busqueda no coincide con ningun producto o esta inhabilitado');
+	        return 'not registro';
 	    } else {
-	        
-	        $rowCount = count($request->sorteo);
-	        for($i=0; $i < $rowCount; $i++){
-    	        $sale_cart = Session::get('sale_cart');
-    	        $product->sorteo = $request->sorteo[$i];
-    	        $product->amount = convertAmount($request->amount);
-    	        $sale_cart[$product->cod.substr($request->sorteo[$i],0,2)] = $product;
-    	        Session::put('sale_cart', $sale_cart);
+	        if($article->status != 0){
+	            $rowCount = count($request->sorteo);
+	            for($i=0; $i < $rowCount; $i++){
+	                $sale_cart = Session::get('sale_cart');
+	                $product->sorteo = $request->sorteo[$i];
+	                $product->amount = convertAmount($request->amount);
+	                $sale_cart[$product->cod.substr($request->sorteo[$i],0,2)] = $product;
+	                Session::put('sale_cart', $sale_cart);
+	            }
+	            
+	            return Response::json($sale_cart);
+	        } else {
+	            return 0;
 	        }
-	        
-	        return Response::json($sale_cart);
 	    }
 	}
 	
