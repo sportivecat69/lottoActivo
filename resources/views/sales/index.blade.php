@@ -423,7 +423,7 @@
 
 		function add(id) {
 		    $('#codigo').val(id);
-		    $('#monto').focus();
+		    $('#monto').focus().select();
 		    return false;
 		}
 
@@ -455,61 +455,72 @@
 		function keyCode_monto(event) {
 		    var x = event.keyCode;
 		    if (x == 13) { // 13 = enter => agregar al carrito
-		    	 $.ajax({
-		    	        url: "{{ route('sale.add',  '0' ) }}",
-		    	        type: "post",
-		    	        data: { "_token": "{{ csrf_token() }}", categorie: 1, sorteo: $('#sorteo').val(), cod: $('#codigo').val(), amount: $('#monto').val()  } ,
-		    	        success: function (data) {
-		    	        	$.each(data, function(index){
-			    	        	
-			    	        	//SI EXISTE Y LO REPIREN LO REMUEVE 
-		    	        		$('#'+data[index].cod+data[index].sorteo.substring(0, 2)).remove();
-		    	        		//END
-		    	        		
-    							add = '<tr id="'+data[index].cod+data[index].sorteo.substring(0, 2)+'">';
-    							add += 	'<td>';
-    							if(data[index].categorie_id == 1){ 
-    								add += '<h5>Ruleta Activa<h5>'; 
-        						};
-    							add += 	'</td>';
-    							add += 	'<td><h5>';
-    							add += 		data[index].cod + '-' +data[index].name;
-    							add += 	'</h5></td>';
-    							add += 	'<td><h5>';
-    							add += 		data[index].sorteo;
-    							add += 	'</h5></td>';
-    							add += 	'<td><h5>';
-    							add += 		data[index].amount + ',00 ';
-    							add += 	'</h5></td>';
-    							add +=   '<td>';
-    							add +=    	'<a href="#" onclick="delete_(\''+data[index].cod+data[index].sorteo.substring(0, 2)+'\')">';
-    							add +=    		'<h5><i class="fa fa-times fa-lg" aria-hidden="true" style="color:#FF0000;"></i></h5>';
-    							add +=    	'</a>';
-    							add +=	'</td>'
-    							add += '</tr>';
-    							$('#no_product').html('');
-    							$('#add_product').append(add);
-		    	        	});
-
-		    	        	//Calcula el monto
-							var total = 0;
-							$('#tabla_product tbody tr').each(function(){
-								total += parseInt($(this).find('td').eq(3).text()||0,10)
-							});
-							$('#total').html(total+',00');
-							//Calculo de Nro. jugadas
-							$('#jugadas').html($('#tabla_product tbody tr').size());
-							
-							$('#codigo').val('');
-		    			    $('#codigo').focus();               
-
-		    	        },
-		    	        error: function(jqXHR, textStatus, errorThrown) {
-		    	           console.log(textStatus, errorThrown);
-		    	        }
-		    	    });
-		    	    
-		    	 return false;
+			    var cod = $('#codigo').val();
+			    var monto =  $('#monto').val();
+			    var sorteo =  $('#sorteo').val();
+			    if(cod != '' && monto != ''){
+    		    	 $.ajax({
+    		    	        url: "{{ route('sale.add',  '0' ) }}",
+    		    	        type: "post",
+    		    	        data: { "_token": "{{ csrf_token() }}", categorie: 1, sorteo: sorteo, cod: cod, amount: monto  } ,
+    		    	        success: function (data) {
+    		    	        	$.each(data, function(index, value){
+    			    	        	
+    			    	        	//SI EXISTE Y LO REPIREN LO REMUEVE 
+    		    	        		$('#'+data[index].cod+data[index].sorteo.substring(0, 2)).remove();
+    		    	        		//END
+    		    	        		
+        							add_ = '<tr id="'+data[index].cod+data[index].sorteo.substring(0, 2)+'">';
+        							add_ += 	'<td>';
+        							if(data[index].categorie_id == 1){ 
+        								add_ += '<h5>Ruleta Activa<h5>'; 
+            						};
+            						add_ += 	'</td>';
+        							add_ += 	'<td><h5>';
+        							add_ += 		data[index].cod + '-' +data[index].name;
+        							add_ += 	'</h5></td>';
+        							add_ += 	'<td><h5>';
+        							add_ += 		data[index].sorteo;
+        							add_ += 	'</h5></td>';
+        							add_ += 	'<td><h5>';
+        							add_ += 		data[index].amount + ',00 ';
+        							add_ += 	'</h5></td>';
+        							add_ +=   '<td>';
+        							add_ +=    	'<a href="#" onclick="delete_(\''+data[index].cod+data[index].sorteo.substring(0, 2)+'\')">';
+        							add_ +=    		'<h5><i class="fa fa-times fa-lg" aria-hidden="true" style="color:#FF0000;"></i></h5>';
+        							add_ +=    	'</a>';
+        							add_ +=	'</td>'
+        							add_ += '</tr>';
+        							$('#no_product').remove();
+        							$('#add_product').append(add_);
+    		    	        	})
+    
+    		    	        	//Calcula el monto
+    							var total = 0;
+    							$('#tabla_product tbody tr').each(function(){
+    								total += parseInt($(this).find('td').eq(3).text()||0,10)
+    							});
+    							$('#total').html(total+',00');
+    							//Calculo de Nro. jugadas
+    							$('#jugadas').html($('#tabla_product tbody tr').size());
+    							
+    							$('#codigo').val('');
+    		    			    $('#codigo').focus();               
+    
+    		    	        },
+    		    	        error: function(jqXHR, textStatus, errorThrown) {
+    		    	           console.log(textStatus, errorThrown);
+    		    	        }
+    		    	    });
+    		    	    
+    		    	 return false;
+			    }else{
+				    if(cod == '') {
+				    	$('#codigo').focus();
+					} else if(monto != '') {
+						$('#monto').focus();
+					} 
+				}
 		    }
 		    if (x == 65) { // 65 = a => agregar al carrito
 				if($('#quantity').val() > $('#stok').val()) {
