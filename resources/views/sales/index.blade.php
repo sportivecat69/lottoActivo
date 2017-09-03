@@ -19,7 +19,7 @@
 		}
 		
 		table.lotto-activo  tr  td  img {
-		  width: 90px;
+		  width: 75px;
 		}
 		
 		/** ESTILOS DE SCROLL **/
@@ -36,6 +36,15 @@
         div.list::-webkit-scrollbar-thumb {
             -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
             background-image: -webkit-linear-gradient(top, #3c8dbc 10%,#3c8dbc 51%);
+        }
+        
+        .table-condensed>tbody>tr>td,
+        .table-condensed>tbody>tr>th, 
+        .table-condensed>tfoot>tr>td, 
+        .table-condensed>tfoot>tr>th, 
+        .table-condensed>thead>tr>td, 
+        .table-condensed>thead>tr>th {
+            padding: 0px;
         }
 	</style>
 @endpush
@@ -83,15 +92,12 @@
 									<div class="shortcut-list-item">
 										<h3 class="shortcut-list-item-header">A&ntilde;adir producto a la lista</h3>
 										<div class="shortcut-list-item-keys">
-											<span class="keyboard-key">A</span>
-										</div>
-										<div class="shortcut-list-item-keys">
 											<span class="keyboard-key">ENTER</span>
 										</div>
 										<div class="short-list-item-desc">
 											<p>
-												Si pulsa &laquo;enter&raquo; o &laquo;a&raquo;, se a&ntilde;adira el articulo buscado a 
-												la lista de compra siempre y cuando estes parado sobre el monto.
+												Si pulsa &laquo;enter&raquo;, se a&ntilde;adira el articulo a 
+												la lista siempre y cuando estes parado sobre el monto.
 											</p>
 										</div>
 									</div>
@@ -109,22 +115,11 @@
 									<div class="shortcut-list-item">
 										<h3 class="shortcut-list-item-header">Fijar foco en la monto</h3>
 										<div class="shortcut-list-item-keys">
-											<span class="keyboard-key">Q</span>
+											<span class="keyboard-key">M</span>
 										</div>
 										<div class="short-list-item-desc">
 											<p>
 												Si pulsa &laquo;m&raquo;, se fijara el foco en el input de monto.
-											</p>
-										</div>
-									</div>
-									<div class="shortcut-list-item">
-										<h3 class="shortcut-list-item-header">Borrar la informaci&oacute;n de la busqueda</h3>
-										<div class="shortcut-list-item-keys">
-											<span class="keyboard-key">R</span>
-										</div>
-										<div class="short-list-item-desc">
-											<p>
-												Si pulsa &laquo;r&raquo;, se borrara la informaci&oacute;n buscada.
 											</p>
 										</div>
 									</div>
@@ -149,7 +144,7 @@
 				                        </td>
 				                    </tr>
 				                    <tr>
-				                        <td colspan="3">
+				                        <td colspan="4">
 				                        	<a href="#" onclick="add('0')">
 				                        		<img alt="0" src="{{asset('img/animalitos/0.png')}}">
 				                        	</a>
@@ -174,13 +169,13 @@
     				                        	<img alt="03" src="{{asset('img/animalitos/03.png')}}">
     				                        </a>
 				                        </td>
-				                    </tr>
-				                    <tr>
-				                  		<td>
+				                        <td>
 				                  			<a href="#" onclick="add('04')">
 				                  				<img alt="04" src="{{asset('img/animalitos/04.png')}}">
 				                  			</a>
 				                  		</td>
+				                    </tr>
+				                    <tr>
 				                        <td>
 				                        	<a href="#" onclick="add('05')">
 				                        		<img alt="05" src="{{asset('img/animalitos/05.png')}}">
@@ -191,9 +186,7 @@
 				                        		<img alt="06" src="{{asset('img/animalitos/06.png')}}">
 				                        	</a>
 				                        </td>
-				                    </tr>
-				                    <tr>
-				                    	<td>
+				                        <td>
 				                    		<a href="#" onclick="add('07')">
 				                    			<img alt="07" src="{{asset('img/animalitos/07.png')}}">
 				                    		</a>
@@ -203,14 +196,15 @@
 				                    			<img alt="08" src="{{asset('img/animalitos/08.png')}}">
 				                    		</a>
 				                    	</td>
+				                    </tr>
+				                    <tr>
+				                    	
 				                        <td>
 				                        	<a href="#" onclick="add('09')">
 				                       			<img alt="09" src="{{asset('img/animalitos/09.png')}}">
 				                       		</a>
 				                       	</td>
-				                    </tr>
-				                    <tr>
-				                        <td>
+				                       	<td>
 				                        	<a href="#" onclick="add('10')">
 				                        		<img alt="10" src="{{asset('img/animalitos/10.png')}}">
 				                        	</a>
@@ -242,13 +236,13 @@
 				                        		<img alt="15" src="{{asset('img/animalitos/15.png')}}">
 				                        	</a>
 				                        </td>
-				                    </tr>
-				                   <tr>
 				                        <td>
 				                        	<a href="#" onclick="add('16')">
 				                        		<img alt="16" src="{{asset('img/animalitos/16.png')}}">
 				                        	</a>
 				                        </td>
+				                    </tr>
+				                   <tr>
 				                        <td>
 				                        	<a href="#" onclick="add('17')">
 				                        		<img alt="17" src="{{asset('img/animalitos/17.png')}}">
@@ -259,8 +253,6 @@
 				                        		<img alt="18" src="{{asset('img/animalitos/18.png')}}">
 				                        	</a>
 				                        </td>
-				                    </tr>
-				                   <tr>
 				                        <td>
 				                        	<a href="#" onclick="add('19')">
 				                        		<img alt="19" src="{{asset('img/animalitos/19.png')}}">
@@ -271,13 +263,13 @@
 				                        		<img alt="20" src="{{asset('img/animalitos/20.png')}}">
 				                        	</a>
 				                        </td>
+				                    </tr>
+				                   <tr>
 				                        <td>
 				                        	<a href="#" onclick="add('21')">
 				                        		<img alt="21" src="{{asset('img/animalitos/21.png')}}">
 				                        	</a>
 				                        </td>
-				                    </tr>
-				                   <tr>
 				                        <td>
 				                        	<a href="#" onclick="add('22')">
 				                        		<img alt="22" src="{{asset('img/animalitos/22.png')}}">
@@ -310,13 +302,13 @@
 				                        		<img alt="27" src="{{asset('img/animalitos/27.png')}}">
 				                        	</a>
 				                        </td>
-				                    </tr>
-				                   <tr>
 				                        <td>
 				                        	<a href="#" onclick="add('28')">
 				                        		<img alt="28" src="{{asset('img/animalitos/28.png')}}">
 				                        	</a>
 				                        </td>
+				                    </tr>
+				                   <tr>
 				                        <td>
 				                        	<a href="#" onclick="add('29')">
 				                        		<img alt="29" src="{{asset('img/animalitos/29.png')}}">
@@ -327,8 +319,6 @@
 				                        		<img alt="30" src="{{asset('img/animalitos/30.png')}}">
 				                        	</a>
 				                        </td>
-				                    </tr>
-				                   <tr>
 				                        <td>
 				                        	<a href="#" onclick="add('31')">
 				                        		<img alt="31" src="{{asset('img/animalitos/31.png')}}">
@@ -339,13 +329,13 @@
 				                        		<img alt="32" src="{{asset('img/animalitos/32.png')}}">
 				                        	</a>
 				                        </td>
+				                    </tr>
+				                   <tr>
 				                        <td>
 				                        	<a href="#" onclick="add('33')">
 				                        		<img alt="33" src="{{asset('img/animalitos/33.png')}}">
 				                        	</a>
 				                        </td>
-				                    </tr>
-				                   <tr>
 				                        <td>
 				                        	<a href="#" onclick="add('34')">
 				                        		<img alt="34" src="{{asset('img/animalitos/34.png')}}">
@@ -506,9 +496,6 @@
 		    if (x == 77) { // 81 = m => focus en el monto
 		    	document.getElementById("monto").focus();
 		    }
-		    if (x == 82) { // 82 = r => borra la busqueda
-		    	window.location.href = '{{ route('sale.index') }}';
-		    }
 		}
 		
 		//funciones con teclado desde monto
@@ -519,11 +506,15 @@
 			    var monto =  $('#monto').val();
 			    var sorteo =  $('#sorteo').val();
 			    if(cod != '' && monto != ''){
+					$('#codigo').val('');
+    			    $('#codigo').focus(); 
+    			    
     		    	 $.ajax({
 							url: appRoot + "/sale/add/" + cod ,
     		    	        type: "post",
     		    	        data: { "_token": "{{ csrf_token() }}", categorie: 1, sorteo: sorteo, cod: cod, amount: monto  } ,
     		    	        success: function (data) {
+        		    	        
         		    	        //Validamos si esta abilitado
         		    	        if(data != 0) {
         		    	        	$.each(data, function(index, value){
@@ -539,7 +530,7 @@
                 						};
                 						add_ += 	'</td>';
             							add_ += 	'<td><h5>';
-            							add_ += 		data[index].cod + '-' +data[index].name;
+            							add_ += 		data[index].cod + ' - ' +data[index].name;
             							add_ += 	'</h5></td>';
             							add_ += 	'<td><h5>';
             							add_ += 		data[index].sorteo;
@@ -569,20 +560,14 @@
         		    	        	//Notificacion
         		    	        	$('#title-alert').html('El n&uacute;mero esta inhabilitado');
           		    			    $('.status').show();
-           							$('#codigo').val('');
-          		    			    $('#codigo').focus();
           		    			    setTimeout(function(){ $('.alert').fadeOut(2000) }, 5000); 
             		    	    }
-    							$('#codigo').val('');
-    		    			    $('#codigo').focus();               
     
     		    	        },
     		    	        error: function(jqXHR, textStatus, errorThrown) {
     		    	  		  	//Notificacion
     		    	  		  	$('#title-alert').html('El n&uacute;mero no coincide con ningun registro');
     		    			    $('.status').show();
-     							$('#codigo').val('');
-    		    			    $('#codigo').focus();
     		    			    setTimeout(function(){ $('.alert').fadeOut(2000) }, 5000);    
     		    	        }
     		    	    });
@@ -596,19 +581,8 @@
 					} 
 				}
 		    }
-		    if (x == 65) { // 65 = a => agregar al carrito
-				if($('#quantity').val() > $('#stok').val()) {
-					alert('no tiene suficientes productos para ese pedido');
-				} else {
-			    	event.preventDefault();
-			        document.getElementById('add-product').submit();
-				}
-		    }
 		    if (x == 67) { // 67 = c => focus en el codigo
 		    	document.getElementById("codigo").focus();
-		    }
-		    if (x == 82) { // 82 = r => borra la busqueda
-		    	window.location.href = '{{ route('sale.index') }}';
 		    }
 		}
 
