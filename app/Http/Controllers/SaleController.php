@@ -58,8 +58,9 @@ class SaleController extends Controller
 	                $sale_cart[$product->cod.substr($request->sorteo[$i],0,2)] = $product;
 	                Session::put('sale_cart', $sale_cart);
 	            }
+// 	            print_r(json_encode($sale_cart).'-----');
 	            
-	            return Response::json($sale_cart);
+	            return $article->name;
 	        } else {
 	            return 0;
 	        }

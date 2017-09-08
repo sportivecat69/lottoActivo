@@ -379,7 +379,7 @@
         								</div>
         								<div class="col-md-4" style=" display: inline-flex;">
     						                <div class="input-group col-md-10">
-    						                	<span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span>
+    						                	<span class="input-group-addon">Bsf.</span>
     						                    <input type="text" class="form-control money" onkeydown="keyCode_monto(event)"  id="monto" name="monto"  placeholder="Ingrese Monto" >
     					               		</div>
     					               		<div class="col-md-2">
@@ -505,6 +505,7 @@
 			    var cod = $('#codigo').val();
 			    var monto =  $('#monto').val();
 			    var sorteo =  $('#sorteo').val();
+			    var categorie = 1;
 			    if(cod != '' && monto != ''){
 					$('#codigo').val('');
     			    $('#codigo').focus(); 
@@ -512,34 +513,35 @@
     		    	 $.ajax({
 							url: appRoot + "/sale/add/" + cod ,
     		    	        type: "post",
-    		    	        data: { "_token": "{{ csrf_token() }}", categorie: 1, sorteo: sorteo, cod: cod, amount: monto  } ,
+    		    	        data: { "_token": "{{ csrf_token() }}", categorie: categorie, sorteo: sorteo, cod: cod, amount: monto  } ,
     		    	        success: function (data) {
         		    	        
         		    	        //Validamos si esta abilitado
         		    	        if(data != 0) {
-        		    	        	$.each(data, function(index, value){
-        			    	        	
+        		    	        	$.each(sorteo, function(index){
+//         		    	        		console.log(sorteo[index]);
+        		    	        		var cod_ = cod + sorteo[index].substring(0, 2);
         			    	        	//SI EXISTE Y LO REPIREN LO REMUEVE 
-        		    	        		$('#'+data[index].cod+data[index].sorteo.substring(0, 2)).remove();
+        		    	        		$('#'+cod_).remove();
         		    	        		//END
         		    	        		
-            							add_ = '<tr id="'+data[index].cod+data[index].sorteo.substring(0, 2)+'">';
+            							add_ = '<tr id="'+cod_+'">';
             							add_ += 	'<td>';
-            							if(data[index].categorie_id == 1){ 
+            							if(categorie == 1){ 
             								add_ += '<h5>Ruleta Activa<h5>'; 
                 						};
                 						add_ += 	'</td>';
             							add_ += 	'<td><h5>';
-            							add_ += 		data[index].cod + ' - ' +data[index].name;
+            							add_ += 		cod + ' - ' +data;
             							add_ += 	'</h5></td>';
             							add_ += 	'<td><h5>';
-            							add_ += 		data[index].sorteo;
+            							add_ += 		sorteo[index];
             							add_ += 	'</h5></td>';
             							add_ += 	'<td><h5>';
-            							add_ += 		data[index].amount + ',00 ';
+            							add_ += 		monto + ',00 ';
             							add_ += 	'</h5></td>';
             							add_ +=   '<td>';
-            							add_ +=    	'<a href="#" onclick="delete_(\''+data[index].cod+data[index].sorteo.substring(0, 2)+'\')">';
+            							add_ +=    	'<a href="#" onclick="delete_(\''+cod_+'\')">';
             							add_ +=    		'<h5><i class="fa fa-times fa-lg" aria-hidden="true" style="color:#FF0000;"></i></h5>';
             							add_ +=    	'</a>';
             							add_ +=	'</td>'
