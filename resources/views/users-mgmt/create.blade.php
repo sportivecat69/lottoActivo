@@ -58,7 +58,7 @@
                             <label for="documento" class="col-md-4 control-label">Cedula</label>
 
                             <div class="col-md-6">
-                                <input type="text" name="doc" id="doc" value="{{ old('documento') }}" class="form-control doc" placeholder="Ej: V-12.345.678" required="required">
+                                <input type="text" name="documento" id="doc" value="{{ old('documento') }}" class="form-control doc" placeholder="Ej: V-12.345.678" required="required">
 
                                 @if ($errors->has('documento'))
                                     <span class="help-block">
@@ -67,19 +67,15 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="form-group{{ $errors->has('role') ? ' has-error' : '' }}">
-                            <label for="role" class="col-md-4 control-label">Role</label>
+                        <div class="form-group{{ $errors->has('user_level') ? ' has-error' : '' }}">
+                            <label for="user_level" class="col-md-4 control-label">Role</label>
 
                             <div class="col-md-6">
-                                <select name="role" required="required" class="form-control">
-                                	<option value="">Seleccione Role</option>
-                                	<option value="ADMINISTRADOR">ADMINISTRADOR</option>
-                                	<option value="EMPLEADO">EMPLEADO</option>
-                                </select>
+                            {{ Form::select('user_level', [null => 'Seleccione'] + $Roles, old('user_level') or null, array('class' => 'form-control')) }}
 
-                                @if ($errors->has('role'))
+                                @if ($errors->has('user_level'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('role') }}</strong>
+                                        <strong>{{ $errors->first('user_level') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -108,7 +104,7 @@
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
-				    			<button type="submit" id="btn-loading" data-loading-text="Cargando..." class="btn btn-primary">
+				    			<button type="submit" class="btn btn-primary">
 									Guardar
 								</button>
 				            	<a href="{{ route('user-management.index') }}" class="btn btn-danger">
@@ -124,3 +120,4 @@
 </div>
   </div> 	
 @endsection
+

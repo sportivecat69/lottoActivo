@@ -17,7 +17,18 @@ class DatabaseSeeder extends Seeder
              'lastname' => 'Mr.',
              'firstname' => 'Admin',
              'documento' => 'V-00000000',
-              'role' => 'ADMINISTRADOR'
+             //'role' => 'ADMINISTRADOR'
+         ]);
+         
+         \DB::table('roles')->insert([
+         'name' => 'rooter',
+         'display_name' => 'ADMIN',
+         'description' => 'Administrador de Sistema',
+         ]);
+         
+         \DB::table('role_user')->insert([
+         'user_id' => 1,
+         'role_id' => 1,
          ]);
     }
 }

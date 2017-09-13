@@ -40,19 +40,15 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="form-group{{ $errors->has('role') ? ' has-error' : '' }}">
-                            <label for="role" class="col-md-4 control-label">Role</label>
+                        <div class="form-group{{ $errors->has('user_level') ? ' has-error' : '' }}">
+                            <label for="user_level" class="col-md-4 control-label">Role</label>
 
                             <div class="col-md-6">
-                                <select name="role" required="required" class="form-control">
-                                	<option value="{{ isset($user->role) ? $user->role : ' ' }}">{{ isset($user->role) ? $user->role : 'Seleccione Role' }}</option>
-                                	<option value="ADMINISTRADOR">ADMINISTRADOR</option>
-                                	<option value="EMPLEADO">EMPLEADO</option>
-                                </select>
+                            {{ Form::select('user_level', $Roles, old('user_level') or null, array('class' => 'form-control')) }}
 
-                                @if ($errors->has('role'))
+                                @if ($errors->has('user_level'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('role') }}</strong>
+                                        <strong>{{ $errors->first('user_level') }}</strong>
                                     </span>
                                 @endif
                             </div>
