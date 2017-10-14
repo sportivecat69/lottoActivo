@@ -96,7 +96,7 @@
 										</div>
 										<div class="short-list-item-desc">
 											<p>
-												Si pulsa &laquo;enter&raquo;, se a&ntilde;adira el articulo a 
+												Si pulsa &laquo; enter &raquo;, se a&ntilde;adira el articulo a 
 												la lista siempre y cuando estes parado sobre el monto.
 											</p>
 										</div>
@@ -108,7 +108,7 @@
 										</div>
 										<div class="short-list-item-desc">
 											<p>
-												Si pulsa &laquo;c&raquo;, se fijara el foco en el input del codigo.
+												Si pulsa &laquo; c &raquo;, se fijara el foco en el input del codigo.
 											</p>
 										</div>
 									</div>
@@ -119,7 +119,7 @@
 										</div>
 										<div class="short-list-item-desc">
 											<p>
-												Si pulsa &laquo;m&raquo;, se fijara el foco en el input de monto.
+												Si pulsa &laquo; m &raquo;, se fijara el foco en el input de monto.
 											</p>
 										</div>
 									</div>
@@ -138,11 +138,6 @@
 	                  	<div class="row">
 	                  		<div class=" col-md-4 list">
 					            <table class="table table-striped table-condensed text-center lotto-activo"> 
-				                    <tr>
-				                        <td colspan="4">
-				                        	<h4 class="text-center">Lista de Animalitos</h4>
-				                        </td>
-				                    </tr>
 				                    <tr>
 				                        <td colspan="4">
 				                        	<a href="#" onclick="add('0')">
@@ -380,7 +375,7 @@
         								<div class="col-md-4" style=" display: inline-flex;">
     						                <div class="input-group col-md-10">
     						                	<span class="input-group-addon">Bsf.</span>
-    						                    <input type="text" class="form-control money" onkeydown="keyCode_monto(event)"  id="monto" name="monto"  placeholder="Ingrese Monto" >
+    						                    <input type="text" class="form-control" onkeydown="keyCode_monto(event)"  id="monto" name="monto"  placeholder="Ingrese Monto" >
     					               		</div>
     					               		<div class="col-md-2">
     											<a data-target="#modal-delete" data-toggle="modal" href="#" id="trash" class="btn btn-danger" {{ count($sale_cart) ? '' : 'disabled' }}>
@@ -516,8 +511,8 @@
     		    	        data: { "_token": "{{ csrf_token() }}", categorie: categorie, sorteo: sorteo, cod: cod, amount: monto  } ,
     		    	        success: function (data) {
         		    	        
-        		    	        //Validamos si esta abilitado
-        		    	        if(data != 0) {
+        		    	        //Validamos si esta abilitado o se excedio el limite
+        		    	        if(data != 0 && data != 1) {
         		    	        	$.each(sorteo, function(index){
 //         		    	        		console.log(sorteo[index]);
         		    	        		var cod_ = cod + sorteo[index].substring(0, 2);
@@ -538,7 +533,7 @@
             							add_ += 		sorteo[index];
             							add_ += 	'</h5></td>';
             							add_ += 	'<td><h5>';
-            							add_ += 		monto + ',00 ';
+            							add_ += 		monto;
             							add_ += 	'</h5></td>';
             							add_ +=   '<td>';
             							add_ +=    	'<a href="#" onclick="delete_(\''+cod_+'\')">';
@@ -558,12 +553,17 @@
         							$('#total').html(total+',00');
         							//Calculo de Nro. jugadas
         							$('#jugadas').html($('#tabla_product tbody tr').size());
-        		    	        } else {
+        		    	        } else if( data == 0 ) {
         		    	        	//Notificacion
         		    	        	$('#title-alert').html('El n&uacute;mero esta inhabilitado');
           		    			    $('.status').show();
           		    			    setTimeout(function(){ $('.alert').fadeOut(2000) }, 5000); 
-            		    	    }
+        		    	        } else if( data == 1 ) {
+        		    	        	//Notificacion
+        		    	        	$('#title-alert').html('Se ha excedido el limite de venta');
+          		    			    $('.status').show();
+          		    			    setTimeout(function(){ $('.alert').fadeOut(2000) }, 5000); 
+                		    	}
     
     		    	        },
     		    	        error: function(jqXHR, textStatus, errorThrown) {
