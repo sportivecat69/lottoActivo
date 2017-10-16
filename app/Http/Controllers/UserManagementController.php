@@ -48,7 +48,7 @@ class UserManagementController extends Controller
     {
     	//$Roles= Role::pluck('display_name', 'id');
     	//$Roles= Role::where('name','<>','rooter')->pluck('display_name', 'id')->prepend('Seleccione', 0);
-    	$Roles= Role::where('name','<>','rooter')->pluck('display_name', 'id')->all();
+    	$Roles= Role::where('name','<>','rooter')->where('name','<>','banker')->pluck('display_name', 'id')->all();
     	return view('users-mgmt/create')->with('Roles', $Roles);
     	
        
@@ -99,7 +99,7 @@ class UserManagementController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        $Roles= Role::where('name','<>','rooter')->pluck('display_name', 'id')->prepend('Seleccione', null);
+        $Roles= Role::where('name','<>','rooter')->where('name','<>','banker')->pluck('display_name', 'id')->prepend('Seleccione', null);
         // Redirect to user list if updating user wasn't existed
         if ($user == null || count($user) == 0) {
             return redirect()->intended('/user-management');

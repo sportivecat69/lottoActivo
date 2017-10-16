@@ -70,7 +70,7 @@
 									                  <td>{{ $user->lastname }}</td>
 									                  <td>{{ $user->documento }}</td>
 									                  <td>{{ $user->email }}</td>
-									                  <td>{{ $user->role }}</td>
+									                  <td> @foreach ($user->rol as $rol){{ $rol->display_name }}	@endforeach </td>
 									                  <td>
 									                    <form  method="POST" action="{{ route('user-management.destroy', ['id' => $user->id]) }}" onsubmit = "return confirm('Are you sure?')">
 									                        <input type="hidden" name="_method" value="DELETE">
