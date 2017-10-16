@@ -29,6 +29,18 @@ class DatabaseSeeder extends Seeder
 
          ]);
          
+         \DB::table('roles')->insert([
+         		'name' => 'banker',
+         		'display_name' => 'BANQUERO',
+         		'description' => 'Administrador del Sitio',
+         		]);
+          
+         \DB::table('roles')->insert([
+         		'name' => 'seller',
+         		'display_name' => 'VENDEDOR',
+         		'description' => 'Administrador de Ventas',
+         ])
+         
          DB::table('role_user')->insert([
          'user_id' => 1,
          'role_id' => 1,
