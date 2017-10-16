@@ -207,7 +207,7 @@
     <script type="text/javascript">
 	    $(document).ready(function(){
 	    	  $('.phone_us').mask('(000) 000-0000');
-	    	  $('.money').mask("#.##0", {reverse: true});
+	    	  $('.money').mask("000.000.000.000.000,00", {reverse: true});
 	    	  $('.doc').mask('S-00.000.000-0', {'translation': {
 												                  S: {pattern: /[V,E,J,G]/}
 													                }

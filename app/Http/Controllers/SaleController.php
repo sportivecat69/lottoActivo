@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Article;
-use App\Client;
 use App\SaleInvoice;
 use App\Sale;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +16,7 @@ class SaleController extends Controller
 {
 	public function __construct()
 	{
-		if (!Session::has('sale_cart')) Session::put('sale_cart', array());
+	    if (!session()->has('sale_cart')) session()->put('sale_cart', array());
 	}
 	
 	/**
@@ -27,10 +26,9 @@ class SaleController extends Controller
 	 */
 	public function index()
 	{
-		$clients = Client::all();
-		$sale_cart = Session::get('sale_cart');
+		$sale_cart = session()->get('sale_cart');
 		$total = $this->total();
-		return view('sales.index', ['sale_cart' => $sale_cart, 'total' => $total, 'clients' => $clients]);
+		return view('sales.index', ['sale_cart' => $sale_cart, 'total' => $total]);
 	}
 	
 	/**
@@ -46,24 +44,37 @@ class SaleController extends Controller
 	        ['categorie_id', $request->categorie]
 	    ])->first();
 	    
+	    /**
+	     * Hacer resta de total de venta por articulo menos el limite de venta
+	     * Ej: $rest = $limite - $venta; //200 
+	     */
+	    
 	    if (!$article) {
 	        return 'not registro';
 	    } else {
+
 	        if($article->status != 0){
 	            $rowCount = count($request->sorteo);
 	            for($i=0; $i < $rowCount; $i++){
-	                $sale_cart = Session::get('sale_cart');
-	                $product->sorteo = $request->sorteo[$i];
-	                $product->amount = convertAmount($request->amount);
-	                $sale_cart[$product->cod.substr($request->sorteo[$i],0,2)] = $product;
-	                Session::put('sale_cart', $sale_cart);
+	                
+// 	                if (convertAmount($request->amount) <= '200') {
+    	                $sale_cart = session()->get('sale_cart');
+    	                $product->sorteo = $request->sorteo[$i];
+    	                $product->amount = convertAmount($request->amount);
+    	                $sale_cart[$product->cod.substr($request->sorteo[$i],0,2)] = $product;
+    	                session()->put('sale_cart', $sale_cart);
+// 	                } else {
+// 	                    return 1;//Se ha excedido el limite de venta
+// 	                }
+	                
 	            }
-// 	            print_r(json_encode($sale_cart).'-----');
+	            print_r(json_encode($sale_cart).'-----');
 	            
 	            return $article->name;
 	        } else {
-	            return 0;
+	            return 0;//El n&uacute;mero esta inhabilitado
 	        }
+
 	    }
 	}
 	
@@ -76,9 +87,9 @@ class SaleController extends Controller
 	 */
 	public function delete($id)
 	{
-		$sale_cart = Session::get('sale_cart');
+		$sale_cart = session()->get('sale_cart');
 		unset($sale_cart[$id]);
-		Session::put('sale_cart', $sale_cart);
+		session()->put('sale_cart', $sale_cart);
 	
 		return 1;
 	}
@@ -91,7 +102,7 @@ class SaleController extends Controller
 	 */
 	public function trash()
 	{
-		Session::forget('sale_cart');
+	    session()->forget('sale_cart');
 	
 		return redirect()->route('sale.index');
 	}
@@ -104,7 +115,7 @@ class SaleController extends Controller
 	 */
 	public function total()
 	{
-		$sale_cart = Session::get('sale_cart');
+		$sale_cart = session()->get('sale_cart');
 		$total= 0;
 		foreach ($sale_cart as $c) {
 			$total += $c->amount;
@@ -121,52 +132,52 @@ class SaleController extends Controller
 	 */
 	public function process(Request $request)
 	{
-		if ($request->client_id != 0) {
-			$client = Client::find($request->client_id);
+// 		if ($request->client_id != 0) {
+// 			$client = Client::find($request->client_id);
 			
-			$sale_invoice = new SaleInvoice();
-			$sale_invoice->employee = Auth::user()->firstname.' '.Auth::user()->lastname;
-			$sale_invoice->client = $client->name;
-			$sale_invoice->doc = $client->doc;
-			$sale_invoice->phone = $client->phone;
-			$sale_invoice->address = $client->address;
-			$sale_invoice->amount_received = convertAmount($request->amount_received);
-			$sale_invoice->save();
-		} else {
-			$sale_invoice = new SaleInvoice();
-			$sale_invoice->employee = Auth::user()->firstname.' '.Auth::user()->lastname;
-			$sale_invoice->client = 'Publico General';
-			$sale_invoice->doc = '---';
-			$sale_invoice->phone = '---';
-			$sale_invoice->address = '---';
-			$sale_invoice->amount_received = convertAmount($request->amount_received);
-			$sale_invoice->save();
-		}
+// 			$sale_invoice = new SaleInvoice();
+// 			$sale_invoice->employee = Auth::user()->firstname.' '.Auth::user()->lastname;
+// 			$sale_invoice->client = $client->name;
+// 			$sale_invoice->doc = $client->doc;
+// 			$sale_invoice->phone = $client->phone;
+// 			$sale_invoice->address = $client->address;
+// 			$sale_invoice->amount_received = convertAmount($request->amount_received);
+// 			$sale_invoice->save();
+// 		} else {
+// 			$sale_invoice = new SaleInvoice();
+// 			$sale_invoice->employee = Auth::user()->firstname.' '.Auth::user()->lastname;
+// 			$sale_invoice->client = 'Publico General';
+// 			$sale_invoice->doc = '---';
+// 			$sale_invoice->phone = '---';
+// 			$sale_invoice->address = '---';
+// 			$sale_invoice->amount_received = convertAmount($request->amount_received);
+// 			$sale_invoice->save();
+// 		}
 		 
-		//obtengo el ultimo id para agregarlo a la relacion de la venta
-		$sale_invoice_id = SaleInvoice::all();
+// 		//obtengo el ultimo id para agregarlo a la relacion de la venta
+// 		$sale_invoice_id = SaleInvoice::all();
 		 
-		$sale_cart = Session::get('sale_cart');
-		foreach ($sale_cart as $sc) {
-			//agrego en la tabla de descripcion de ventas
-			$sale = new Sale();
-			$sale->cod = $sc->cod;
-			$sale->product = $sc->name;
-			$sale->quantity = $sc->quantity;
-			$sale->price = convertAmount($sc->sale_price);
-			$sale->sale_invoice_id = $sale_invoice_id->last()->id;
-			$sale->save();
+// 		$sale_cart = session()->get('sale_cart');
+// 		foreach ($sale_cart as $sc) {
+// 			//agrego en la tabla de descripcion de ventas
+// 			$sale = new Sale();
+// 			$sale->cod = $sc->cod;
+// 			$sale->product = $sc->name;
+// 			$sale->quantity = $sc->quantity;
+// 			$sale->price = convertAmount($sc->sale_price);
+// 			$sale->sale_invoice_id = $sale_invoice_id->last()->id;
+// 			$sale->save();
 	
-			$article = Article::where('cod', $sc->cod)->first();
-			//edito en el stok
-			Article::where('cod', $sc->cod)->update(['stok' => $article->stok - $sc->quantity]);
+// 			$article = Article::where('cod', $sc->cod)->first();
+// 			//edito en el stok
+// 			Article::where('cod', $sc->cod)->update(['stok' => $article->stok - $sc->quantity]);
 	
-		}
+// 		}
 		 
-		//Elimino los datos del carrito
-		Session::forget('sale_cart');
+// 		//Elimino los datos del carrito
+// 		session()->forget('sale_cart');
 		 
-		return redirect()->route('sale.invoice', $sale_invoice_id->last()->id);
+// 		return redirect()->route('sale.invoice', $sale_invoice_id->last()->id);
 	}
 	
 	/**

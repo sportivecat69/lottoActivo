@@ -55,7 +55,7 @@
 										    	</div>
 										    	<div class="col-lg-3 col-sm-6 col-md-3 col-xs-12 ">
 										    		<div class="form-group {{ $errors->has('precio_venta') ? ' has-error' : '' }}">
-										            	<label for="stock">Precio Tope</label>
+										            	<label for="stock">Limite de venta</label>
 										            	<input type="text" name="precio_venta" value="{{ old('precio_venta') ? old('precio_venta') : $article->sale_price }}" class="form-control money" placeholder="Precio venta del art&iacute;culo...">
 										           		@if ($errors->has('precio_venta'))
 						                                    <span class="help-block">

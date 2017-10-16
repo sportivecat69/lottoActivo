@@ -57,20 +57,15 @@
 										<div class="table-responsive">
 											<table class="table table-striped table-condensed table-hover text-center">
 												<thead>
-													<th>#</th>
-													<th>C&oacute;digo Bar.</th>
+													<th>C&oacute;digo</th>
 													<th>Nombre</th>
-													<th>Precio Venta</th>
+													<th>Limite de Venta</th>
 													<th>Estado</th>
 													<th>Editar</th>
 <!-- 													<th>Eliminar</th> -->
 												</thead>
-												@php
-													$i = 1;
-												@endphp
 												@foreach($articles as $article)
 													<tr>
-														<td>{{$i}}</td>
 														<td>{{ $article->cod }}</td>
 														<td>{{ $article->name }}</td>
 														<td>{{ number_format($article->sale_price,2,",",".") }}</td>
@@ -118,9 +113,6 @@
 <!-- 														</div> -->
 <!-- 														</form> -->
 <!-- 													</div> -->
-													@php
-														$i++;
-													@endphp
 												@endforeach							
 											</table>
 											
