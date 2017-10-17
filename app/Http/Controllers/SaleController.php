@@ -39,6 +39,7 @@ class SaleController extends Controller
 	 */
 	public function add(Request $request, Article $product)
 	{
+		
 	    $article = Article::where([
 	        ['cod', $request->cod],
 	        ['categorie_id', $request->categorie]
@@ -58,10 +59,17 @@ class SaleController extends Controller
 	            for($i=0; $i < $rowCount; $i++){
 	                
 // 	                if (convertAmount($request->amount) <= '200') {
+						// quizas pueda resumirse pero lo cierto es que la variable product no te sirve como objeto a salvar
+						$producto=new Article();
+						foreach ($product->getAttributes() as $key=>$value){
+							$producto->setAttribute($key, $value);
+						}
+						
+
     	                $sale_cart = session()->get('sale_cart');
-    	                $product->sorteo = $request->sorteo[$i];
-    	                $product->amount = convertAmount($request->amount);
-    	                $sale_cart[$product->cod.substr($request->sorteo[$i],0,2)] = $product;
+    	                $producto->sorteo = $request->sorteo[$i];
+    	                $producto->amount = convertAmount($request->amount);
+    	                $sale_cart[$producto->cod.substr($request->sorteo[$i],0,2)] = $producto;
     	                session()->put('sale_cart', $sale_cart);
 // 	                } else {
 // 	                    return 1;//Se ha excedido el limite de venta
