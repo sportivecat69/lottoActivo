@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSaleInvoicesTable extends Migration
+class CreateDrawsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,11 @@ class CreateSaleInvoicesTable extends Migration
      */
     public function up()
     {
-        Schema::create('sale_invoices', function (Blueprint $table) {
+        Schema::create('draws', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('employee');
-            $table->string('client');
-            $table->string('doc');
-            $table->string('phone');
-            $table->string('address');
-            $table->decimal('amount_received', 10, 2);
+            $table->integer('categorie_id')->unsigned();
+            $table->foreign('categorie_id')->references('id')->on('categories');
+            $table->string('time');
             $table->timestamps();
         });
     }
@@ -32,6 +29,6 @@ class CreateSaleInvoicesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sale_invoices');
+        Schema::dropIfExists('draws');
     }
 }
