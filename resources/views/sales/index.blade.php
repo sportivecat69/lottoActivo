@@ -22,7 +22,7 @@
 		  width: 75px;
 		}
 		
-		/** ESTILOS DE SCROLL **/
+		/** ESTILOS DE SCROLL DE PRODUCTO**/
 		div.list {
 		    overflow-x:hidden; 
 		    overflow-y:scroll;
@@ -38,6 +38,22 @@
             background-image: -webkit-linear-gradient(top, #3c8dbc 10%,#3c8dbc 51%);
         }
         
+        /** ESTILOS DE SCROLL VENTA**/
+		div.list-sale {
+		    overflow-x:hidden; 
+		    overflow-y:scroll;
+            height: 445px;
+        }
+        
+        div.list-sale::-webkit-scrollbar {
+            background:#fff;
+            width:9px;
+        }
+        div.list-sale::-webkit-scrollbar-thumb {
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+            background-image: -webkit-linear-gradient(top, #3c8dbc 10%,#3c8dbc 51%);
+        }
+        
         .table-condensed>tbody>tr>td,
         .table-condensed>tbody>tr>th, 
         .table-condensed>tfoot>tr>td, 
@@ -46,6 +62,7 @@
         .table-condensed>thead>tr>th {
             padding: 0px;
         }
+        
 	</style>
 @endpush
 @section('content')
@@ -349,107 +366,111 @@
 				                    </tr>
 					            </table>
 					        </div>
-    							<div class=" col-md-8">
-    								<div class=" col-md-12">
-    									<div class="col-md-4">
-    						                <div class="input-group">
-    						                	<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-    						                    <select id="sorteo" name="sorteo[]" class="selectpicker show-menu-arrow form-control" multiple data-actions-box="true" title="Seleccione Sorteo" data-selected-text-format="count > 2">
-                                                  <option value="10:00 am">10:00 am</option>
-                                                  <option value="11:00 am">11:00 am</option>
-                                                  <option value="12:00 am">12:00 am</option>
-                                                  <option value="01:00 pm">01:00 pm</option>
-                                                  <option value="04:00 pm">04:00 pm</option>
-                                                  <option value="05:00 pm">05:00 pm</option>
-                                                  <option value="06:00 pm">06:00 pm</option>
-                                                  <option value="07:00 pm">07:00 pm</option>
-                                                </select>
-    					               		</div>
+    						<div class=" col-md-8">
+								<div class=" col-md-12">
+									<div class="col-md-4">
+						                <div class="input-group">
+						                	<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+						                    <select id="sorteo" name="sorteo[]" class="selectpicker show-menu-arrow form-control" multiple data-actions-box="true" title="Seleccione Sorteo" data-selected-text-format="count > 2">
+                                              <option value="10:00 am">10:00 am</option>
+                                              <option value="11:00 am">11:00 am</option>
+                                              <option value="12:00 am">12:00 am</option>
+                                              <option value="01:00 pm">01:00 pm</option>
+                                              <option value="04:00 pm">04:00 pm</option>
+                                              <option value="05:00 pm">05:00 pm</option>
+                                              <option value="06:00 pm">06:00 pm</option>
+                                              <option value="07:00 pm">07:00 pm</option>
+                                            </select>
 					               		</div>
-        								<div class="col-md-4">
-    						                <div class="input-group">
-    						                	<span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span>
-    						                    <input type="text" class="form-control" maxlength="2" onkeydown="keyCode_codigo(event)"  id="codigo" name="codigo"  placeholder="Ingrese n&uacute;mero" >
-    					               		</div>
-        								</div>
-        								<div class="col-md-4" style=" display: inline-flex;">
-    						                <div class="input-group col-md-10">
-    						                	<span class="input-group-addon">Bsf.</span>
-    						                    <input type="text" class="form-control" onkeydown="keyCode_monto(event)"  id="monto" name="monto"  placeholder="Ingrese Monto" >
-    					               		</div>
-    					               		<div class="col-md-2">
-    											<a data-target="#modal-delete" data-toggle="modal" href="#" id="trash" class="btn btn-danger" {{ count($sale_cart) ? '' : 'disabled' }}>
-    					                        	<i class="fa fa-trash" aria-hidden="true"></i>
-    					                        </a>
-    									        <!-- Modal de confirmacion para vaciar carrito -->		
-				       							<div class="modal fade modal-slide-in-right" aria-hidden="true" role="dialog" tabindex="-1" id="modal-delete">
-													<div class="modal-dialog">
-														<div class="modal-content">
-															<div class="modal-header">
-																<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-												                     <i class="fa fa-times"></i>
-												                </button>
-												                <h4 class="modal-title">Borrar Productos</h4>
-															</div>
-															
-															<div class="modal-body">
-																<p>Confirme si desea borrar todos</p>
-															</div>
-															<div class="modal-footer">
-																<button type="button" class="btn btn-default"  data-dismiss="modal">Cerrar</button>
-																<a href="{{ route('sale.trash') }}" id="btn-loading" data-loading-text="Cargando..." class="btn btn-primary">
-										                        	Confirmar
-										                        </a>
-															</div>
-															
+				               		</div>
+    								<div class="col-md-4">
+						                <div class="input-group">
+						                	<span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span>
+						                    <input type="text" class="form-control" maxlength="2" onkeydown="keyCode_codigo(event)"  id="codigo" name="codigo"  placeholder="Ingrese n&uacute;mero" >
+					               		</div>
+    								</div>
+    								<div class="col-md-4" style=" display: inline-flex;">
+						                <div class="input-group col-md-10">
+						                	<span class="input-group-addon">Bsf.</span>
+						                    <input type="text" class="form-control" onkeydown="keyCode_monto(event)"  id="monto" name="monto"  placeholder="Ingrese Monto" >
+					               		</div>
+					               		<div class="col-md-2">
+											<a data-target="#modal-delete" data-toggle="modal" href="#" id="trash" class="btn btn-danger" {{ count($sale_cart) ? '' : 'disabled' }}>
+					                        	<i class="fa fa-trash" aria-hidden="true"></i>
+					                        </a>
+									        <!-- Modal de confirmacion para vaciar carrito -->		
+			       							<div class="modal fade modal-slide-in-right" aria-hidden="true" role="dialog" tabindex="-1" id="modal-delete">
+												<div class="modal-dialog">
+													<div class="modal-content">
+														<div class="modal-header">
+															<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											                     <i class="fa fa-times"></i>
+											                </button>
+											                <h4 class="modal-title">Borrar Productos</h4>
 														</div>
+														
+														<div class="modal-body">
+															<p>Confirme si desea borrar todos</p>
+														</div>
+														<div class="modal-footer">
+															<button type="button" class="btn btn-default"  data-dismiss="modal">Cerrar</button>
+															<a href="{{ route('sale.trash') }}" id="btn-loading" data-loading-text="Cargando..." class="btn btn-primary">
+									                        	Confirmar
+									                        </a>
+														</div>
+														
 													</div>
 												</div>
 											</div>
-        								</div>
+										</div>
     								</div>
+								</div>
 								<div class=" col-md-12" >
 					                <hr>
 								</div>
-					            <table class="table table-striped table-condensed text-center" id="tabla_product">
-					                <thead>
-					                    <tr>
-					                    	<th>Ruleta</th>
-					                        <th>N&uacute;mero: <span id="jugadas" style="color:#FF0000">{{ count($sale_cart) }}</span></th>
-					                        <th>Sorteo</th>
-					                        <th>Monto</th>
-					                        <th>Total:  <span id="total" style="color:#FF0000">{{ number_format($total,2,",",".") }}</span> </th>
-					                    </tr>
-					                </thead>
-					                <tbody id="add_product">
-					                	@if(count($sale_cart))
-						                	@foreach($sale_cart as $c)
-							                    <tr id="{{ $c->cod }}{{ substr($c->sorteo,0,2) }}">
-							                    	<td><h5>{{ $c->categorie['name'] }}</h5></td>
-							                        <td>
-						                                <h5>{{ $c->cod }} - {{ $c->name }}</h5>
-							                        </td>
-							                        <td>
-						                                <h5>{{ $c->sorteo }}</h5>
-							                        </td>
-							                        <td>
-						                                <h5>{{ number_format($c->amount,2,",",".") }}</h5>
-							                        </td>
-							                        <td>
-								                        <a href="#" onclick="delete_('{{ $c->cod }}{{ substr($c->sorteo,0,2)}}')">
-								                        	<h5><i class="fa fa-times fa-lg" aria-hidden="true" style="color:#FF0000;"></i></h5>
-								                        </a>
-							                        </td>
-							                    </tr>
-							                @endforeach
-							                </tr>
-							             @else
-							             	<tr id="no_product">
-							             		<td colspan="7"><b>No hay productos agregados</b></td>
-							             	</tr>
-							             @endif
-					                </tbody>
-					            </table>
+							</div>
+							<div class=" col-md-8">
+								<div class="list-sale">
+    					            <table class="table table-striped table-condensed text-center" id="tabla_product">
+    					                <thead>
+    					                    <tr>
+    					                    	<th>Ruleta</th>
+    					                        <th>N&uacute;mero: <span id="jugadas" style="color:#FF0000">{{ count($sale_cart) }}</span></th>
+    					                        <th>Sorteo</th>
+    					                        <th>Monto</th>
+    					                        <th>Total:  <span id="total" style="color:#FF0000">{{ number_format($total,2,",",".") }}</span> </th>
+    					                    </tr>
+    					                </thead>
+    					                <tbody id="add_product">
+    					                	@if(count($sale_cart))
+    						                	@foreach($sale_cart as $c)
+    							                    <tr id="{{ $c->cod }}{{ substr($c->sorteo,0,2) }}">
+    							                    	<td><h5>{{ $c->categorie['name'] }}</h5></td>
+    							                        <td>
+    						                                <h5>{{ $c->cod }} - {{ $c->name }}</h5>
+    							                        </td>
+    							                        <td>
+    						                                <h5>{{ $c->sorteo }}</h5>
+    							                        </td>
+    							                        <td>
+    						                                <h5>{{$c->amount}}</h5>
+    							                        </td>
+    							                        <td>
+    								                        <a href="#" onclick="delete_('{{ $c->cod }}{{ substr($c->sorteo,0,2)}}')">
+    								                        	<h5><i class="fa fa-times fa-lg" aria-hidden="true" style="color:#FF0000;"></i></h5>
+    								                        </a>
+    							                        </td>
+    							                    </tr>
+    							                @endforeach
+    							                </tr>
+    							             @else
+    							             	<tr id="no_product">
+    							             		<td colspan="7"><b>No hay productos agregados</b></td>
+    							             	</tr>
+    							             @endif
+    					                </tbody>
+    					            </table>
+					            </div>
 					        </div>
 					    </div>	
 					</div>
@@ -555,7 +576,7 @@
         							$('#jugadas').html($('#tabla_product tbody tr').size());
         		    	        } else if( data == 0 ) {
         		    	        	//Notificacion
-        		    	        	$('#title-alert').html('El n&uacute;mero esta inhabilitado');
+        		    	        	$('#title-alert').html('El n&uacute;mero no esta disponible');
           		    			    $('.status').show();
           		    			    setTimeout(function(){ $('.alert').fadeOut(2000) }, 5000); 
         		    	        } else if( data == 1 ) {

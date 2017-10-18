@@ -76,7 +76,7 @@ class SaleController extends Controller
 // 	                }
 	                
 	            }
-	            print_r(json_encode($sale_cart).'-----');
+// 	            print_r(json_encode($sale_cart).'-----');
 	            
 	            return $article->name;
 	        } else {
