@@ -113,6 +113,9 @@
 <!--             <li class="{{ $url === '/sale/report' ? 'active' : ''}}"><a href="{{ route('sale.report') }}">Reporte</a></li> -->
           </ul>
         </li>
+        <li class="{{ $url === '/agency' ? 'active' : '' }}">
+        	<a href="{{ route('agency.index') }}"><i class="fa fa-users" aria-hidden="true"></i> <span>Agencias</span></a>
+        </li>
         <li class="{{ $url === '/user-management' ? 'active' : '' }}">
         	<a href="{{ route('user-management.index') }}"><i class="fa fa-users" aria-hidden="true"></i> <span>Usuarios</span></a>
         </li>

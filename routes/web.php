@@ -1,6 +1,7 @@
 <?php
 
 use App\Article;
+use App\Agency;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,7 @@ Route::group(['middleware' => 'auth'], function (){
 	
 	Route::resource('categorie', 'CategorieController');
 	Route::resource('article', 'ArticleController');
+	Route::resource('agency', 'AgencyController');
 	/******************************* SALES ************************************************/
 	Route::resource('client', 'ClientController');
 	Route::get('sale', 'SaleController@index')->name('sale.index');
