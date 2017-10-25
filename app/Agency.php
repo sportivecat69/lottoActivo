@@ -34,13 +34,28 @@ class Agency extends Model
 		$agency = new self();
 		
 		foreach ($request->request as $key=>$value){
-			if($key!='_token'):
+			if(($key!='_token') AND ($key!='_method')):
 				$agency->setAttribute($key, $value);
 			endif;
 		}
 
  		return $agency->save();
 		
+	}
+	
+	
+	public function edit($request, $id){
+	
+		$agency = self::find($id);
+
+		foreach ($request->request as $key=>$value){
+			if(($key!='_token') AND ($key!='_method')):
+			$agency->setAttribute($key, $value);
+			endif;
+		}
+	
+		return $agency->save();
+	
 	}
 }
 

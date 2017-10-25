@@ -21,6 +21,7 @@ class CreateAgenciesTable extends Migration
             $table->integer('num_cajas'); 
             $table->integer('mint_sell');
             $table->integer('mint_cancel');
+            $table->boolean('status')->default(TRUE);
             $table->timestamps();
         });
     }

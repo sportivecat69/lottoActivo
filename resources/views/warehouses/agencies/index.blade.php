@@ -70,7 +70,8 @@
 													<th>N&uacute;mero de cajas</th>
 													<th>Minutos para Vender</th>
 													<th>Minutos para Cancelar</th>
-<!-- 													<th>Eliminar</th> -->
+													<th>Estatus</th>
+													<th>Opciones</th>
 												</thead>
 												@foreach($agencies as $agency)
 													<tr>
@@ -81,16 +82,23 @@
 														<td>{{ $agency->mint_sell }}</td>
 														<td>{{ $agency->mint_cancel }}</td>
 														<td>
-															@if($agency->status === 1)
+															@if($agency->status === true)
 																<i class="fa fa-check-circle fa-lg" aria-hidden="true" style="color:#68D332;"></i>
 															@else
 																<i class="fa fa-minus-circle fa-lg" aria-hidden="true" style="color:#FF0000;"></i>
 															@endif
 														</td>
 														<td>
+															<a href="{{ route('agency.show', $agency->id) }}">
+																<i class="fa fa-eye fa-lg" aria-hidden="true"></i>
+															</a>
 															<a href="{{ route('agency.edit', $agency->id) }}">
 																<i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
 															</a>
+															<a href="" data-target="#modal-delete-{{$agency->id}}" data-toggle="modal">
+																 	<i class="fa fa-times fa-lg" aria-hidden="true"></i>
+	 														</a
+	 														
 														</td>
 <!-- 														<td> -->
 <!-- 															 <a href="" data-target="#modal-delete-{{$agency->id}}" data-toggle="modal"> -->

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Agency;
+use App\Categorie;
 use Illuminate\Support\Facades\Validator;
+use App\AgencyCategoriesSell;
 
 class AgencyController extends Controller
 {
@@ -26,7 +28,8 @@ class AgencyController extends Controller
      */
     public function create()
     {
-    	return view('warehouses.agencies.create');
+    	$categories = Categorie::all();
+    	return view('warehouses.agencies.create', ['categories' => $categories]);
     }
     
     /**
@@ -38,6 +41,8 @@ class AgencyController extends Controller
     public function store(Request $request)
     {
     	$agency = new Agency();
+    	$agency_cs= new AgencyCategoriesSell();
+
     	$validator = Validator::make($request->all(), $agency->rules);
     
     	if ($validator->fails()) {
@@ -69,7 +74,49 @@ class AgencyController extends Controller
     public function edit($id)
     {
     	$agency = Agency::find($id);
-    	return view('warehouses.agencies.edit', ['article' => $agency]);
+    	return view('warehouses.agencies.edit', ['agency' => $agency]);
+    }
+    
+    
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+    	$agency = new Agency();
+    	$validator = Validator::make($request->all(), $agency->rules);
+    	 
+    	if ($validator->fails()) {
+    		return redirect()->route('agency.edit', $id)
+    		->withErrors($validator)
+    		->withInput();
+    	} else {
+    
+    		//Edito
+    		$val=$agency->edit($request, $id);
+    		
+    		if(($val)){
+    			return redirect()->route('agency.index')->with('status', 'Se creo la agencia satisfactoriamente');
+    		}else{
+    			return redirect()->route('agency.index')->with('fail', 'Hubo un error intente de nuevo');
+    		}
+    	}
+    }
+    
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+    	$agency = Agency::find($id);
+    	return view('warehouses.agencies.show', ['agency' => $agency]);
     }
     
 }
