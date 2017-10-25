@@ -372,14 +372,14 @@
 						                <div class="input-group">
 						                	<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
 						                    <select id="sorteo" name="sorteo[]" class="selectpicker show-menu-arrow form-control" multiple data-actions-box="true" title="Seleccione Sorteo" data-selected-text-format="count > 2">
-                                              <option value="10:00 am">10:00 am</option>
-                                              <option value="11:00 am">11:00 am</option>
-                                              <option value="12:00 am">12:00 am</option>
-                                              <option value="01:00 pm">01:00 pm</option>
-                                              <option value="04:00 pm">04:00 pm</option>
-                                              <option value="05:00 pm">05:00 pm</option>
-                                              <option value="06:00 pm">06:00 pm</option>
-                                              <option value="07:00 pm">07:00 pm</option>
+                                              <option value="1">10:00 am</option>
+                                              <option value="2">11:00 am</option>
+                                              <option value="3">12:00 am</option>
+                                              <option value="4">01:00 pm</option>
+                                              <option value="5">04:00 pm</option>
+                                              <option value="6">05:00 pm</option>
+                                              <option value="7">06:00 pm</option>
+                                              <option value="8">07:00 pm</option>
                                             </select>
 					               		</div>
 				               		</div>
@@ -462,7 +462,6 @@
     							                        </td>
     							                    </tr>
     							                @endforeach
-    							                </tr>
     							             @else
     							             	<tr id="no_product">
     							             		<td colspan="7"><b>No hay productos agregados</b></td>
@@ -497,10 +496,6 @@
 		$("#btn-loading-confirmar").click(function() {
 		    var $btn = $(this);
 		    $btn.button('loading');
-		//	    // simulating a timeout
-		//	    setTimeout(function () {
-		//	        $btn.button('reset');
-		//	    }, 1000);
 		});
 
 		//funciones con teclado desde codigo
@@ -509,14 +504,24 @@
 		    if (x == 13) { // 13 = enter => poner focus en monto
 			    $('#monto').focus().select();
 		    }
+		    
 		    if (x == 77) { // 81 = m => focus en el monto
 		    	document.getElementById("monto").focus();
+		    }
+
+		    if (x == 27) { // 43 = esc => procesar 
+				process();
 		    }
 		}
 		
 		//funciones con teclado desde monto
 		function keyCode_monto(event) {
 		    var x = event.keyCode;
+
+		    if (x == 67) { // 67 = c => focus en el codigo
+		    	document.getElementById("codigo").focus();
+		    }
+		    
 		    if (x == 13) { // 13 = enter => agregar al carrito
 			    var cod = $('#codigo').val();
 			    var monto =  $('#monto').val();
@@ -604,34 +609,56 @@
 					} 
 				}
 		    }
-		    if (x == 67) { // 67 = c => focus en el codigo
-		    	document.getElementById("codigo").focus();
+		    
+		    if (x == 27) { // 43 = esc => procesar 
+				process();
 		    }
 		}
 
 		//DELETE
+		function process() {
+		     $.ajax({
+    	        url: appRoot + "/sale/process",
+    	        type: "post",
+    	        data: { _token: "{{csrf_token()}}" },
+    	        success: function (data) {
+	    	        $('#add_product').html('')
+	    	        
+					$('#total').html('0,00');
+					//Calculo de Nro. jugadas
+					$('#jugadas').html('0');
+						
+    			    $('#codigo').focus();               
+    	        },
+    	        error: function(jqXHR, textStatus, errorThrown) {
+    	           console.log(textStatus, errorThrown);
+    	        }
+    	    });
+	    }
+
+		//DELETE
 		function delete_(id) {
 	    	 $.ajax({
-	    	        url: appRoot + "/sale/delete/" + id,
-	    	        type: "get",
-	    	        success: function (data) {
-		    	        $('#'+id).remove()
-		    	        
-	    	        	//Calcula el monto
-						var total = 0;
-						$('#tabla_product tbody tr').each(function(){
-							total += parseInt($(this).find('td').eq(3).text()||0,10)
-						});
-						$('#total').html(total+',00');
-						//Calculo de Nro. jugadas
-						$('#jugadas').html($('#tabla_product tbody tr').size());
-							
-	    			    $('#codigo').focus();               
-	    	        },
-	    	        error: function(jqXHR, textStatus, errorThrown) {
-	    	           console.log(textStatus, errorThrown);
-	    	        }
-	    	    });
+    	        url: appRoot + "/sale/delete/" + id,
+    	        type: "get",
+    	        success: function (data) {
+	    	        $('#'+id).remove()
+	    	        
+    	        	//Calcula el monto
+					var total = 0;
+					$('#tabla_product tbody tr').each(function(){
+						total += parseInt($(this).find('td').eq(3).text()||0,10)
+					});
+					$('#total').html(total+',00');
+					//Calculo de Nro. jugadas
+					$('#jugadas').html($('#tabla_product tbody tr').size());
+						
+    			    $('#codigo').focus();               
+    	        },
+    	        error: function(jqXHR, textStatus, errorThrown) {
+    	           console.log(textStatus, errorThrown);
+    	        }
+    	    });
 	    }
 
 	</script>

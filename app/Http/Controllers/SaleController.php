@@ -59,7 +59,8 @@ class SaleController extends Controller
 	            for($i=0; $i < $rowCount; $i++){
 	                
 // 	                if (convertAmount($request->amount) <= '200') {
-						// quizas pueda resumirse pero lo cierto es que la variable product no te sirve como objeto a salvar
+						// quizas pueda resumirse pero lo cierto es que la variable
+	                    // product no te sirve como objeto a salvar
 						$producto=new Article();
 						foreach ($product->getAttributes() as $key=>$value){
 							$producto->setAttribute($key, $value);
@@ -76,8 +77,6 @@ class SaleController extends Controller
 // 	                }
 	                
 	            }
-// 	            print_r(json_encode($sale_cart).'-----');
-	            
 	            return $article->name;
 	        } else {
 	            return 0;//El n&uacute;mero esta inhabilitado
@@ -140,52 +139,31 @@ class SaleController extends Controller
 	 */
 	public function process(Request $request)
 	{
-// 		if ($request->client_id != 0) {
-// 			$client = Client::find($request->client_id);
-			
-// 			$sale_invoice = new SaleInvoice();
-// 			$sale_invoice->employee = Auth::user()->firstname.' '.Auth::user()->lastname;
-// 			$sale_invoice->client = $client->name;
-// 			$sale_invoice->doc = $client->doc;
-// 			$sale_invoice->phone = $client->phone;
-// 			$sale_invoice->address = $client->address;
-// 			$sale_invoice->amount_received = convertAmount($request->amount_received);
-// 			$sale_invoice->save();
-// 		} else {
-// 			$sale_invoice = new SaleInvoice();
-// 			$sale_invoice->employee = Auth::user()->firstname.' '.Auth::user()->lastname;
-// 			$sale_invoice->client = 'Publico General';
-// 			$sale_invoice->doc = '---';
-// 			$sale_invoice->phone = '---';
-// 			$sale_invoice->address = '---';
-// 			$sale_invoice->amount_received = convertAmount($request->amount_received);
-// 			$sale_invoice->save();
-// 		}
+		$sale_invoice = new SaleInvoice();
+		$sale_invoice->sellers_agency_id = 1;
+		$sale_invoice->total = $this->total();
+		$sale_invoice->status = 1;
+		$sale_invoice->save();
 		 
-// 		//obtengo el ultimo id para agregarlo a la relacion de la venta
-// 		$sale_invoice_id = SaleInvoice::all();
-		 
-// 		$sale_cart = session()->get('sale_cart');
-// 		foreach ($sale_cart as $sc) {
-// 			//agrego en la tabla de descripcion de ventas
-// 			$sale = new Sale();
-// 			$sale->cod = $sc->cod;
-// 			$sale->product = $sc->name;
-// 			$sale->quantity = $sc->quantity;
-// 			$sale->price = convertAmount($sc->sale_price);
-// 			$sale->sale_invoice_id = $sale_invoice_id->last()->id;
-// 			$sale->save();
+		$sale_cart = session()->get('sale_cart');
+		foreach ($sale_cart as $sc) {
+			//agrego en la tabla sale la descripcion de ventas
+			$sale = new Sale();
+			$sale->sale_invoice_id = $sale_invoice->id;
+			$sale->draws_id = $sc->sorteo;
+			$sale->articles_id = $sc->id;
+			$sale->bet = 1;
+			$sale->save();
 	
-// 			$article = Article::where('cod', $sc->cod)->first();
-// 			//edito en el stok
-// 			Article::where('cod', $sc->cod)->update(['stok' => $article->stok - $sc->quantity]);
+			//edito o agrego algo
 	
-// 		}
+		}
 		 
-// 		//Elimino los datos del carrito
-// 		session()->forget('sale_cart');
+		//Elimino los datos del carrito
+		session()->forget('sale_cart');
+		
+		return 1;
 		 
-// 		return redirect()->route('sale.invoice', $sale_invoice_id->last()->id);
 	}
 	
 	/**

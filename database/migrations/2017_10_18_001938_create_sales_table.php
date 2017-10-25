@@ -24,11 +24,6 @@ class CreateSalesTable extends Migration
             $table->integer('bet'); //apuesta
             $table->timestamps();
             
-//             $table->string('cod'); // cod articulo
-//             $table->string('product');
-//             $table->integer('quantity');
-//             $table->decimal('price', 10, 2);
-  
         });
     }
 
