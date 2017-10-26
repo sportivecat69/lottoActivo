@@ -372,27 +372,24 @@
 						                <div class="input-group">
 						                	<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
 						                    <select id="sorteo" name="sorteo[]" class="selectpicker show-menu-arrow form-control" multiple data-actions-box="true" title="Seleccione Sorteo" data-selected-text-format="count > 2">
-                                              <option value="1">10:00 am</option>
-                                              <option value="2">11:00 am</option>
-                                              <option value="3">12:00 am</option>
-                                              <option value="4">01:00 pm</option>
-                                              <option value="5">04:00 pm</option>
-                                              <option value="6">05:00 pm</option>
-                                              <option value="7">06:00 pm</option>
-                                              <option value="8">07:00 pm</option>
+                                              @foreach($sorteos as $sorteo)
+                                              	@if(date('H') < date('H', strtotime($sorteo->time)))
+                                              		<option value="{{ $sorteo->id }}">{{ $sorteo->time }}</option>
+                                              	@endif
+                                              @endforeach
                                             </select>
 					               		</div>
 				               		</div>
     								<div class="col-md-4">
 						                <div class="input-group">
 						                	<span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span>
-						                    <input type="text" class="form-control" maxlength="2" onkeydown="keyCode_codigo(event)"  id="codigo" name="codigo"  placeholder="Ingrese n&uacute;mero" >
+						                    <input type="text" class="form-control" maxlength="2" onkeydown="keyCode_codigo(event)"  id="codigo" name="codigo"  placeholder="Ingrese n&uacute;mero" autocomplete="off">
 					               		</div>
     								</div>
     								<div class="col-md-4" style=" display: inline-flex;">
 						                <div class="input-group col-md-10">
 						                	<span class="input-group-addon">Bsf.</span>
-						                    <input type="text" class="form-control" onkeydown="keyCode_monto(event)"  id="monto" name="monto"  placeholder="Ingrese Monto" >
+						                    <input type="text" class="form-control" onkeydown="keyCode_monto(event)"  id="monto" name="monto"  placeholder="Ingrese Monto" autocomplete="off">
 					               		</div>
 					               		<div class="col-md-2">
 											<a data-target="#modal-delete" data-toggle="modal" href="#" id="trash" class="btn btn-danger" {{ count($sale_cart) ? '' : 'disabled' }}>
@@ -462,10 +459,6 @@
     							                        </td>
     							                    </tr>
     							                @endforeach
-    							             @else
-    							             	<tr id="no_product">
-    							             		<td colspan="7"><b>No hay productos agregados</b></td>
-    							             	</tr>
     							             @endif
     					                </tbody>
     					            </table>
@@ -528,79 +521,87 @@
 			    var sorteo =  $('#sorteo').val();
 			    var categorie = 1;
 			    if(cod != '' && monto != ''){
-					$('#codigo').val('');
-    			    $('#codigo').focus(); 
-    			    
-    		    	 $.ajax({
-							url: appRoot + "/sale/add/" + cod ,
-    		    	        type: "post",
-    		    	        data: { "_token": "{{ csrf_token() }}", categorie: categorie, sorteo: sorteo, cod: cod, amount: monto  } ,
-    		    	        success: function (data) {
-        		    	        
-        		    	        //Validamos si esta abilitado o se excedio el limite
-        		    	        if(data != 0 && data != 1) {
-        		    	        	$.each(sorteo, function(index){
-//         		    	        		console.log(sorteo[index]);
-        		    	        		var cod_ = cod + sorteo[index].substring(0, 2);
-        			    	        	//SI EXISTE Y LO REPIREN LO REMUEVE 
-        		    	        		$('#'+cod_).remove();
-        		    	        		//END
-        		    	        		
-            							add_ = '<tr id="'+cod_+'">';
-            							add_ += 	'<td>';
-            							if(categorie == 1){ 
-            								add_ += '<h5>Ruleta Activa<h5>'; 
-                						};
-                						add_ += 	'</td>';
-            							add_ += 	'<td><h5>';
-            							add_ += 		cod + ' - ' +data;
-            							add_ += 	'</h5></td>';
-            							add_ += 	'<td><h5>';
-            							add_ += 		sorteo[index];
-            							add_ += 	'</h5></td>';
-            							add_ += 	'<td><h5>';
-            							add_ += 		monto;
-            							add_ += 	'</h5></td>';
-            							add_ +=   '<td>';
-            							add_ +=    	'<a href="#" onclick="delete_(\''+cod_+'\')">';
-            							add_ +=    		'<h5><i class="fa fa-times fa-lg" aria-hidden="true" style="color:#FF0000;"></i></h5>';
-            							add_ +=    	'</a>';
-            							add_ +=	'</td>'
-            							add_ += '</tr>';
-            							$('#no_product').remove();
-            							$('#add_product').append(add_);
-        		    	        	})
-        
-        		    	        	//Calcula el monto
-        							var total = 0;
-        							$('#tabla_product tbody tr').each(function(){
-        								total += parseInt($(this).find('td').eq(3).text()||0,10)
-        							});
-        							$('#total').html(total+',00');
-        							//Calculo de Nro. jugadas
-        							$('#jugadas').html($('#tabla_product tbody tr').size());
-        		    	        } else if( data == 0 ) {
-        		    	        	//Notificacion
-        		    	        	$('#title-alert').html('El n&uacute;mero no esta disponible');
-          		    			    $('.status').show();
-          		    			    setTimeout(function(){ $('.alert').fadeOut(2000) }, 5000); 
-        		    	        } else if( data == 1 ) {
-        		    	        	//Notificacion
-        		    	        	$('#title-alert').html('Se ha excedido el limite de venta');
-          		    			    $('.status').show();
-          		    			    setTimeout(function(){ $('.alert').fadeOut(2000) }, 5000); 
-                		    	}
+				    //validamos si ha selecciondo sorteo
+			    	if($('#sorteo').val() != null){
+    					$('#codigo').val('');
+        			    $('#codigo').focus(); 
+        			    
+        		    	 $.ajax({
+    							url: appRoot + "/sale/add/" + cod ,
+        		    	        type: "post",
+        		    	        data: { "_token": "{{ csrf_token() }}", categorie: categorie, sorteo: sorteo, cod: cod, amount: monto  } ,
+        		    	        success: function (data) {
+            		    	        
+            		    	        //Validamos si esta abilitado o se excedio el limite
+            		    	        if(data != 0 && data != 1) {
+            		    	        	$.each(sorteo, function(index){
+    //         		    	        		console.log(sorteo[index]);
+            		    	        		var cod_ = cod + sorteo[index].substring(0, 2);
+            			    	        	//SI EXISTE Y LO REPIREN LO REMUEVE 
+            		    	        		$('#'+cod_).remove();
+            		    	        		//END
+            		    	        		
+                							add_ = '<tr id="'+cod_+'">';
+                							add_ += 	'<td>';
+                							if(categorie == 1){ 
+                								add_ += '<h5>Ruleta Activa<h5>'; 
+                    						};
+                    						add_ += 	'</td>';
+                							add_ += 	'<td><h5>';
+                							add_ += 		cod + ' - ' +data;
+                							add_ += 	'</h5></td>';
+                							add_ += 	'<td><h5>';
+                							add_ += 		sorteo[index];
+                							add_ += 	'</h5></td>';
+                							add_ += 	'<td><h5>';
+                							add_ += 		monto;
+                							add_ += 	'</h5></td>';
+                							add_ +=   '<td>';
+                							add_ +=    	'<a href="#" onclick="delete_(\''+cod_+'\')">';
+                							add_ +=    		'<h5><i class="fa fa-times fa-lg" aria-hidden="true" style="color:#FF0000;"></i></h5>';
+                							add_ +=    	'</a>';
+                							add_ +=	'</td>'
+                							add_ += '</tr>';
+                							$('#add_product').append(add_);
+            		    	        	})
+            
+            		    	        	//Calcula el monto
+            							var total = 0;
+            							$('#tabla_product tbody tr').each(function(){
+            								total += parseInt($(this).find('td').eq(3).text()||0,10)
+            							});
+            							$('#total').html(total+',00');
+            							//Calculo de Nro. jugadas
+            							$('#jugadas').html($('#tabla_product tbody tr').size());
     
-    		    	        },
-    		    	        error: function(jqXHR, textStatus, errorThrown) {
-    		    	  		  	//Notificacion
-    		    	  		  	$('#title-alert').html('El n&uacute;mero no coincide con ningun registro');
-    		    			    $('.status').show();
-    		    			    setTimeout(function(){ $('.alert').fadeOut(2000) }, 5000);    
-    		    	        }
-    		    	    });
+    									//Habilito el boton de borrar todo
+            							$('#trash').attr('disabled', false);
+            							
+            		    	        } else if( data == 0 ) {
+            		    	        	//Notificacion
+            		    	        	$('#title-alert').html('El n&uacute;mero no esta disponible');
+              		    			    $('.status').show();
+              		    			    setTimeout(function(){ $('.alert').fadeOut(2000) }, 5000); 
+            		    	        } else if( data == 1 ) {
+            		    	        	//Notificacion
+            		    	        	$('#title-alert').html('Se ha excedido el limite de venta');
+              		    			    $('.status').show();
+              		    			    setTimeout(function(){ $('.alert').fadeOut(2000) }, 5000); 
+                    		    	}
+        
+        		    	        },
+        		    	        error: function(jqXHR, textStatus, errorThrown) {
+        		    	  		  	//Notificacion
+        		    	  		  	$('#title-alert').html('El n&uacute;mero no coincide con ningun registro');
+        		    			    $('.status').show();
+        		    			    setTimeout(function(){ $('.alert').fadeOut(2000) }, 5000);    
+        		    	        }
+        		    	    });
     		    	    
-    		    	 return false;
+    		    	 	return false;
+	    	        } else {
+		    	        alert('debe seleccionar un sorteo');
+		    	    }
 			    }else{
 				    if(cod == '') {
 				    	$('#codigo').focus();
@@ -617,23 +618,33 @@
 
 		//DELETE
 		function process() {
-		     $.ajax({
-    	        url: appRoot + "/sale/process",
-    	        type: "post",
-    	        data: { _token: "{{csrf_token()}}" },
-    	        success: function (data) {
-	    	        $('#add_product').html('')
-	    	        
-					$('#total').html('0,00');
-					//Calculo de Nro. jugadas
-					$('#jugadas').html('0');
-						
-    			    $('#codigo').focus();               
-    	        },
-    	        error: function(jqXHR, textStatus, errorThrown) {
-    	           console.log(textStatus, errorThrown);
-    	        }
-    	    });
+			//Valido si hay producto agregados
+		    var nFilas = $("#tabla_product tbody tr").length;
+			if(nFilas != 0){
+				
+    		     $.ajax({
+        	        url: appRoot + "/sale/process",
+        	        type: "post",
+        	        data: { _token: "{{csrf_token()}}" },
+        	        success: function (data) {
+    	    	        $('#add_product').html('')
+    	    	        
+    					$('#total').html('0,00');
+    					//Calculo de Nro. jugadas
+    					$('#jugadas').html('0');
+    					
+    					$('#codigo').val('');
+    					$('#monto').val('');
+        			    $('#codigo').focus();               
+        	        },
+        	        error: function(jqXHR, textStatus, errorThrown) {
+        	           console.log(textStatus, errorThrown);
+        	        }
+        	    });
+
+			} else {
+				alert('No hay productos agregados');
+			}
 	    }
 
 		//DELETE
@@ -653,7 +664,13 @@
 					//Calculo de Nro. jugadas
 					$('#jugadas').html($('#tabla_product tbody tr').size());
 						
-    			    $('#codigo').focus();               
+    			    $('#codigo').focus();  
+
+    			  //Inhabilito el boton de borrar todo
+    			    var nFilas = $("#tabla_product tbody tr").length;
+					if(nFilas == 0){
+						$('#trash').attr('disabled', true);
+					}             
     	        },
     	        error: function(jqXHR, textStatus, errorThrown) {
     	           console.log(textStatus, errorThrown);

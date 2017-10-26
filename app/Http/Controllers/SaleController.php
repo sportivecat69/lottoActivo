@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Response;
+use App\Draw;
 
 class SaleController extends Controller
 {
@@ -28,7 +29,10 @@ class SaleController extends Controller
 	{
 		$sale_cart = session()->get('sale_cart');
 		$total = $this->total();
-		return view('sales.index', ['sale_cart' => $sale_cart, 'total' => $total]);
+		
+		$sorteos = Draw::where('categorie_id', 1)->orderBy('id', 'asc')->get();
+		
+		return view('sales.index', ['sale_cart' => $sale_cart, 'total' => $total, 'sorteos' => $sorteos ]);
 	}
 	
 	/**
@@ -142,7 +146,6 @@ class SaleController extends Controller
 		$sale_invoice = new SaleInvoice();
 		$sale_invoice->sellers_agency_id = 1;
 		$sale_invoice->total = $this->total();
-		$sale_invoice->status = 1;
 		$sale_invoice->save();
 		 
 		$sale_cart = session()->get('sale_cart');
@@ -152,11 +155,8 @@ class SaleController extends Controller
 			$sale->sale_invoice_id = $sale_invoice->id;
 			$sale->draws_id = $sc->sorteo;
 			$sale->articles_id = $sc->id;
-			$sale->bet = 1;
+			$sale->bet = $sc->amount;
 			$sale->save();
-	
-			//edito o agrego algo
-	
 		}
 		 
 		//Elimino los datos del carrito

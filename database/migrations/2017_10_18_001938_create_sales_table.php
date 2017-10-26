@@ -22,6 +22,7 @@ class CreateSalesTable extends Migration
             $table->integer('articles_id')->unsigned(); // numero vendido segun categoria
             $table->foreign('articles_id')->references('id')->on('articles');
             $table->integer('bet'); //apuesta
+            $table->string('status')->default('ACTIVO');
             $table->timestamps();
             
         });
