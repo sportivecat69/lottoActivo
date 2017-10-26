@@ -12,6 +12,6 @@ class Sale extends Model
 	 * @var array
 	 */
 	protected $fillable = [
-			'cod', 'product', 'quantity', 'price',
+	    'sale_invoice_id', 'draws_id', 'articles_id', 'bet', 'status',
 	];
 }
