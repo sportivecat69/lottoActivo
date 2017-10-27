@@ -120,17 +120,46 @@
             <!-- form start -->
               <div class="box-body">
               
-              	@foreach($categories as $categorie)
-				   
-				   	<div class="form-group">
-				   	  <input type="checkbox" class="form-control" id="categorie[]">
-	                  <label for="categorie[]">{{$categorie->name}}</label>
-	                   <label for="categorie[bet_min][]">Apuesta Min</label>
-	                  <input type="number" name="categorie[bet_min][]" value="{{ old('categorie[bet_min][]') }}" class="form-control money" placeholder="Ej:100">
-	                   <label for="categorie[prize_min][]">Premio Min</label>
-	                  <input type="number" name="categorie[prize_min][]" value="{{ old('categorie[prize_min][]') }}" class="form-control money" placeholder="Ej:100">
-               		</div>
-				@endforeach
+              	<div class="panel panel-default">
+                <!-- Default panel contents -->
+                
+            
+                <!-- List group -->
+                <ul class="list-group">
+                    @foreach($categories as $categorie)
+                    <li class="list-group-item">
+                        Bootstrap Switch Success
+                        <div class="material-switch pull-right">
+                            <input id="categorie[<?php echo $categorie->id;?>]" name="categorie[<?php echo $categorie->id;?>]['on']" type="checkbox" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample"/>
+                            <label for="categorie[<?php echo $categorie->id;?>]" class="label-success"></label>
+                        </div>
+                        <div class="collapse" id="collapseExample">
+							  <div class="well">
+							   						<div class="form-group {{ $errors->has('bet_min') ? ' has-error' : '' }}">
+										            	<label for="prize_min">Apuesta M&iacute;nima</label>
+										            	<input type="number" name="categorie[<?php echo $categorie->id;?>][<?php echo $categorie->bet_min;?>]" value="{{ old('bet_min') }}" class="form-control money" placeholder="Ej:100...">
+										           		@if ($errors->has('bet_min'))
+						                                    <span class="help-block">
+						                                        <strong>{{ $errors->first('bet_min') }}</strong>
+						                                    </span>
+						                                @endif
+										            </div>
+										            <div class="form-group {{ $errors->has('prize_min') ? ' has-error' : '' }}">
+										            	<label for="prize_min">Pago M&iacute;nimo</label>
+										            	<input type="number" name="categorie[<?php echo $categorie->id;?>][<?php echo $categorie->prize_min;?>]" value="{{ old('prize_min') }}" class="form-control money" placeholder="Ej:100...">
+										           		@if ($errors->has('prize_min'))
+						                                    <span class="help-block">
+						                                        <strong>{{ $errors->first('prize_min') }}</strong>
+						                                    </span>
+						                                @endif
+										            </div>
+							  </div>
+                        </div>
+                    </li>
+                   @endforeach
+                    
+                </ul>
+            </div> 
               	
                 
               </div>
@@ -155,7 +184,26 @@
 			</div>
         </div>
 </form>
-          
+     
+<!--      <div class="panel panel-default"> -->
+                <!-- Default panel contents -->
+<!--                 <div class="panel-heading">Lista de Loter&iacute;as</div> -->
+              		 <!-- List group -->
+<!--                		 <ul class="list-group"> -->
+<!-- 		              	@foreach($categories as $categorie) -->
+						   
+<!-- 						   	<li class="list-group-item"> -->
+<!-- 		                        {{$categorie->name}} -->
+<!-- 		                        <div class="material-switch pull-right"> -->
+		                            <input id="categorie[<?php echo $categorie->name;?>][<?php echo $categorie->id;?>]" name="categorie[<?php echo $categorie->name;?>][<?php echo $categorie->id;?>]" type="checkbox"/>
+		                            <label for="categorie[categorie[<?php echo $categorie->name;?>][<?php echo $categorie->id;?>]" class="label-success"></label>
+<!-- 		                        </div> -->
+<!-- 		                    </li> -->
+		                    
+<!-- 		              	@endforeach -->
+<!--               		</ul> -->
+                
+<!--    			   </div>           -->
 	
 	</section><!-- /.content -->
 </div><!-- /.content-wrapper -->
@@ -164,3 +212,51 @@
 @push('scripts')
 
 @endpush
+
+<style>
+
+.material-switch > input[type="checkbox"] {
+    display: none;   
+}
+
+.material-switch > label {
+    cursor: pointer;
+    height: 0px;
+    position: relative; 
+    width: 40px;  
+}
+
+.material-switch > label::before {
+    background: rgb(0, 0, 0);
+    box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    content: '';
+    height: 16px;
+    margin-top: -8px;
+    position:absolute;
+    opacity: 0.3;
+    transition: all 0.4s ease-in-out;
+    width: 40px;
+}
+.material-switch > label::after {
+    background: rgb(255, 255, 255);
+    border-radius: 16px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    content: '';
+    height: 24px;
+    left: -4px;
+    margin-top: -8px;
+    position: absolute;
+    top: -4px;
+    transition: all 0.3s ease-in-out;
+    width: 24px;
+}
+.material-switch > input[type="checkbox"]:checked + label::before {
+    background: inherit;
+    opacity: 0.5;
+}
+.material-switch > input[type="checkbox"]:checked + label::after {
+    background: inherit;
+    left: 20px;
+}
+</style>
