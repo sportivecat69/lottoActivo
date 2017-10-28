@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Response;
 use App\Draw;
 
+use Mike42\Escpos\Printer;
+use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+
 class SaleController extends Controller
 {
 	public function __construct()
@@ -158,7 +161,9 @@ class SaleController extends Controller
 			$sale->bet = $sc->amount;
 			$sale->save();
 		}
-		 
+		
+		$this->print($sale_invoice->id);
+		
 		//Elimino los datos del carrito
 		session()->forget('sale_cart');
 		
@@ -171,9 +176,117 @@ class SaleController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
+	public function print($factura_id)
+	{
+        
+	    $sale_cart = session()->get('sale_cart');
+	    
+	    /*
+	     Aquí, en lugar de "POS-58" (que es el nombre de mi impresora)
+	     escribe el nombre de la tuya. Recuerda que debes compartirla
+	     desde el panel de control
+	     */
+	    
+	    $nombre_impresora = "POS-58-Series";
+	    
+	    
+	    $connector = new WindowsPrintConnector($nombre_impresora);
+	    $printer = new Printer($connector);
+	    
+	    # Vamos a alinear al centro lo próximo que imprimamos
+	    $printer->setJustification(Printer::JUSTIFY_LEFT);
+	    
+	    /*
+	     Ahora vamos a imprimir un encabezado
+	     */
+	    
+	    $printer->text("Agencia Mi SUerte II" . "\n");
+	    #La fecha también
+	    $printer->text("Fecha: ".date("d/m/Y") ." Hora: ".date("H:i:s") . "\n");
+	    $printer->text("Ticket: " . $factura_id . "\n");
+	    
+	    
+	    /*
+	     Ahora vamos a imprimir los
+	     productos
+	     */
+	    
+	    //************UNION DE SORTEOS***************
+	    $sorteos_unido = array();
+	    foreach($sale_cart as $val => $key) {
+	        if (!in_array($key->sorteo, $sorteos_unido)) {
+	            $sorteos_unido[] = $key->sorteo;
+	        }
+	    }
+	    //************END UNION DE SORTEOS***************
+
+	    //CREACION DE LA DESCRIPCION DEL TICKET
+	    foreach ($sorteos_unido as $sorteo) {
+	        $s = Draw::find($sorteo);
+	        $printer->text("---- Sorteo " . $s->time . " ----\n");
+	        
+	        foreach ($sale_cart as $sc) {
+	            $sorte = Draw::find($sc->sorteo);
+	            if(date('H', strtotime($s->time)) == date('H', strtotime($sorte->time))){
+	                $article = Article::find($sc->id);
+	                
+	                /*Alinear a la izquierda para la cantidad y el nombre*/
+	                $printer->setJustification(Printer::JUSTIFY_LEFT);
+	                $printer->text($article->name . " x " . $sc->amount . "\n");
+	            }
+	        }
+	    }
+	    //END CREACION DE LA DESCRIPCION DEL TICKET
+
+	    /*
+	     Terminamos de imprimir
+	     los productos, ahora va el total
+	     */
+	    $printer->text("-------------------------\n");
+	    $printer->text("TOTAL Bsf: ". number_format($this->total(),0,",",".") . " Items:". count($sale_cart) ."\n");
+	    $printer->text("-------------------------\n");
+	    
+	    /*
+	     Podemos poner también un pie de página
+	     */
+// 	    $printer->text("\n");
+	    $printer->text("Despues del sorteo \n");
+	    $printer->text("No hay reclamos \n");
+	    $printer->text("Gracias y Suerte");
+	    
+	    /*Alimentamos el papel 3 veces*/
+	    $printer->feed(3);
+	    
+	    /*
+	     Cortamos el papel. Si nuestra impresora
+	     no tiene soporte para ello, no generará
+	     ningún error
+	     */
+	    $printer->cut();
+	    
+	    /*
+	     Por medio de la impresora mandamos un pulso.
+	     Esto es útil cuando la tenemos conectada
+	     por ejemplo a un cajón
+	     */
+	    $printer->pulse();
+	    
+	    /*
+	     Para imprimir realmente, tenemos que "cerrar"
+	     la conexión con la impresora. Recuerda incluir esto al final de todos los archivos
+	     */
+	    $printer->close();
+	    
+	}
+	
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
 	public function report()
 	{
-		$reports = SaleInvoice::paginate(10);
-		return view('sales.reports.index', ['reports' => $reports]);
+	    $reports = SaleInvoice::paginate(10);
+	    return view('sales.reports.index', ['reports' => $reports]);
 	}
 }
