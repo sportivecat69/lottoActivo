@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AgencyCategoriesSell extends Model
 {
+	protected $table = 'agency_categories_sell';
    /**
 	 * Rules for model
 	 *

@@ -19,8 +19,8 @@ class CreateAgencyCategoriesSellTable extends Migration
             $table->foreign('categorie_id')->references('id')->on('categories');
             $table->integer('agencies_id')->unsigned();
             $table->foreign('agencies_id')->references('id')->on('agencies');
-            $table->integer('bet_min'); // apuesta minima
-            $table->integer('prize_min'); // premio minimo
+            $table->decimal('bet_min', 16, 2); // apuesta minima
+            $table->decimal('prize_min', 16, 2); // premio minimo
             $table->timestamps();
         });
     }
