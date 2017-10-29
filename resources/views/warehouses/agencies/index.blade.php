@@ -9,10 +9,10 @@
         <!-- Main content -->
         <section class="content">
         
-         @if (session('status'))
+         @if (session('succes'))
             <div class="alert alert-success alert-dismissable">
 			  <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times"></i></a>
-			  {{ session('status') }}
+			  {{ session('succes') }}
 			</div>
          @endif
          

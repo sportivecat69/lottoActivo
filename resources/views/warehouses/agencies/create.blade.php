@@ -8,7 +8,22 @@
 
 	<!-- Main content -->
 	<section class="content">
-	<form method="POST" action="{{ route('agency.store') }}" accept-charset="UTF-8" autocomplete="off">
+	<div class="row">
+		@if (session('succes'))
+            <div class="alert alert-success alert-dismissable">
+			  <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times"></i></a>
+			  {{ session('succes') }}
+			</div>
+         @endif
+         
+          @if (session('fail'))
+            <div class="alert alert-danger alert-dismissable">
+			  <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times"></i></a>
+			  {{ session('fail') }}
+			</div>
+         @endif
+    </div>
+	<form method="POST" action="{{ route('agency.store') }}" accept-charset="UTF-8" autocomplete="off" id="agency-form">
 		<div class="row">
 			<div class="col-md-6">
 				<div class="box box-info">
@@ -29,7 +44,7 @@
 										    	<div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 ">
 										    		<div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
 										            	<label for="nombre">Nombre</label>
-										            	<input type="text" name="name" value="{{ old('name') }}" class="form-control" placeholder="Nombre...">
+										            	<input type="text" name="name" value="{{ old('name') }}" class="form-control validation-required" placeholder="Nombre...">
 										           		@if ($errors->has('name'))
 						                                    <span class="help-block">
 						                                        <strong>{{ $errors->first('name') }}</strong>
@@ -128,28 +143,28 @@
                 <ul class="list-group">
                     @foreach($categories as $categorie)
                     <li class="list-group-item">
-                        Bootstrap Switch Success
+                        {{ $categorie->name }}
                         <div class="material-switch pull-right">
-                            <input id="categorie[<?php echo $categorie->id;?>]" name="categorie[<?php echo $categorie->id;?>]['on']" type="checkbox" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample"/>
-                            <label for="categorie[<?php echo $categorie->id;?>]" class="label-success"></label>
+                            <input id="categorie-<?php echo $categorie->id;?>" name="categorie[<?php echo $categorie->id;?>][on]" type="checkbox"  <?php if(old('categorie.'.$categorie->id.'.on')=='on'): echo 'checked'; else: echo ''; endif; ?> onclick="$('#collapse'+<?php echo $categorie->id;?>).slideToggle('slow');"/>
+                            <label for="categorie-<?php echo $categorie->id;?>" class="label-success"></label>
                         </div>
-                        <div class="collapse" id="collapseExample">
+                        <div  class="collapse" id="collapse<?php echo $categorie->id;?>">
 							  <div class="well">
-							   						<div class="form-group {{ $errors->has('bet_min') ? ' has-error' : '' }}">
+							   						<div class="form-group <?php echo $errors->has('bet_min-'.$categorie->id) ? ' has-error' : '' ?>">
 										            	<label for="prize_min">Apuesta M&iacute;nima</label>
-										            	<input type="number" name="categorie[<?php echo $categorie->id;?>][<?php echo $categorie->bet_min;?>]" value="{{ old('bet_min') }}" class="form-control money" placeholder="Ej:100...">
-										           		@if ($errors->has('bet_min'))
+										            	<input type="text" id="categorie[<?php echo $categorie->id;?>][bet_min]" name="categorie[<?php echo $categorie->id;?>][bet_min]" value="<?php echo old('categorie.'.$categorie->id.'.bet_min') ?>" class="form-control money" placeholder="Ej:100...">
+										           		<?php if($errors->has('bet_min-'.$categorie->id)): ?>
 						                                    <span class="help-block">
-						                                        <strong>{{ $errors->first('bet_min') }}</strong>
+						                                        <strong><?php  echo $errors->first('bet_min-'.$categorie->id) ?></strong>
 						                                    </span>
-						                                @endif
+						                                <?php endif;?>
 										            </div>
-										            <div class="form-group {{ $errors->has('prize_min') ? ' has-error' : '' }}">
+										            <div class="form-group <?php echo $errors->has('prize_min-'.$categorie->id) ? ' has-error' : '' ?>">
 										            	<label for="prize_min">Pago M&iacute;nimo</label>
-										            	<input type="number" name="categorie[<?php echo $categorie->id;?>][<?php echo $categorie->prize_min;?>]" value="{{ old('prize_min') }}" class="form-control money" placeholder="Ej:100...">
-										           		@if ($errors->has('prize_min'))
+										            	<input type="text" id="categorie[<?php echo $categorie->id;?>]['prize_min']" name="categorie[<?php echo $categorie->id;?>][prize_min]" value="<?php echo old('categorie.'.$categorie->id.'.prize_min') ?>" class="form-control money" placeholder="Ej:100...">
+										           		<?php if($errors->has('prize_min-'.$categorie->id)): ?>
 						                                    <span class="help-block">
-						                                        <strong>{{ $errors->first('prize_min') }}</strong>
+						                                        <strong><?php  echo $errors->first('prize_min-'.$categorie->id) ?></strong>
 						                                    </span>
 						                                @endif
 										            </div>
@@ -184,33 +199,44 @@
 			</div>
         </div>
 </form>
-     
-<!--      <div class="panel panel-default"> -->
-                <!-- Default panel contents -->
-<!--                 <div class="panel-heading">Lista de Loter&iacute;as</div> -->
-              		 <!-- List group -->
-<!--                		 <ul class="list-group"> -->
-<!-- 		              	@foreach($categories as $categorie) -->
-						   
-<!-- 						   	<li class="list-group-item"> -->
-<!-- 		                        {{$categorie->name}} -->
-<!-- 		                        <div class="material-switch pull-right"> -->
-		                            <input id="categorie[<?php echo $categorie->name;?>][<?php echo $categorie->id;?>]" name="categorie[<?php echo $categorie->name;?>][<?php echo $categorie->id;?>]" type="checkbox"/>
-		                            <label for="categorie[categorie[<?php echo $categorie->name;?>][<?php echo $categorie->id;?>]" class="label-success"></label>
-<!-- 		                        </div> -->
-<!-- 		                    </li> -->
-		                    
-<!-- 		              	@endforeach -->
-<!--               		</ul> -->
-                
-<!--    			   </div>           -->
-	
+
 	</section><!-- /.content -->
 </div><!-- /.content-wrapper -->
 <!--Fin-Contenido-->
 @endsection
 @push('scripts')
+<script type="text/javascript">
 
+$(document).ready(function() {
+
+  
+        $('#agency-form input[type=checkbox]').each(function(){
+            if (this.checked) {
+            	var id = $(this).attr("id");
+            	var d = id.split('-');
+            	$("#collapse"+d[1]).slideToggle("slow");
+            }
+        }); 
+
+      
+});
+// 	function formConf(id){
+// 		//alert(id);
+		
+// 		//alert($("#categorie"+id+":checked").val());
+		
+// 		//$("#collapse"+id).slideToggle( "slow");
+// 		if($("#categorie"+id+":checked").val()=='on'){
+// 			$("#collapse"+id).slideToggle( "slow");
+// 		}else{
+// 			alert('dont');
+// 		}
+// 	}
+
+
+
+
+</script>
 @endpush
 
 <style>
@@ -260,3 +286,4 @@
     left: 20px;
 }
 </style>
+

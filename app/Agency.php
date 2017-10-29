@@ -13,7 +13,7 @@ class Agency extends Model
 	
 	public   $rules = [
 		'name' => 'required|alpha_dash|min:3|max:50',
-		'description' => 'required|alpha_dash|min:3|max:200',
+		'description' => 'required|alpha|min:3|max:200',
 		'percentage_gain' => 'required|numeric|between:0,100',
 		'num_cajas' => 'required|integer',
 		'mint_sell' => 'required|integer|between:0,60',
@@ -29,29 +29,31 @@ class Agency extends Model
 		'name', 'description', 'percentage_gain', 'num_cajas', 'mint_sell', 'mint_cancel'
 	];
 	
-	public function insert($request){
+	public function insert($data){
 		
 		$agency = new self();
 		
-		foreach ($request->request as $key=>$value){
-			if(($key!='_token') AND ($key!='_method')):
+		foreach ($data as $key=>$value){
 				$agency->setAttribute($key, $value);
-			endif;
 		}
 
- 		return $agency->save();
+		$val=$agency->save();
+		if($val){
+			return $agency->id;
+		}else{
+			return false;
+		}
+ 		
 		
 	}
 	
 	
-	public function edit($request, $id){
+	public function edit($data, $id){
 	
 		$agency = self::find($id);
 
-		foreach ($request->request as $key=>$value){
-			if(($key!='_token') AND ($key!='_method')):
+		foreach ($data as $key=>$value){
 			$agency->setAttribute($key, $value);
-			endif;
 		}
 	
 		return $agency->save();

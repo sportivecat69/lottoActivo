@@ -40,22 +40,88 @@ class AgencyController extends Controller
      */
     public function store(Request $request)
     {
+    	
     	$agency = new Agency();
     	$agency_cs= new AgencyCategoriesSell();
+    	
+    	$categories=$request->categorie;
+    	$data= $request->except(['categorie','_token','_method']);
+    	
+    	
+    	//debe existir al menos una categoría a seleccionar
+    	if($categories===null){
+    		return redirect()->route('agency.create')
+    		->with('fail', '501, Contacte al Administrador del Sistema')
+    		->withInput();
+    	}
+    	
+    	$array=array();
 
-    	$validator = Validator::make($request->all(), $agency->rules);
+    	foreach ($categories as $k=>$categorie){
+   			if (array_key_exists('on', $categorie)){ // fue seleccionado
+    			$acs=new AgencyCategoriesSell();
+    			$acs->categorie_id = $k;
+    			$acs->bet_min = convertAmount($categorie['bet_min']);
+    			$acs->prize_min = convertAmount($categorie['prize_min']);
+    			$array[]=$acs;
+   			}
+    		
+    	}
+
+    	// debe haber seleccionado al menos una categoría a vender
+    	
+    	if(empty($array)){
+    		return redirect()->route('agency.create')
+    		->with('fail', 'Debe seleccionar al menos una loter&iacute;a a vender')
+    		->withInput();
+    	}
+    	
+    	
+    	$menssages=array();
+    	foreach ($array as $loteria){
+    		$valida = Validator::make($loteria->getAttributes(), $agency_cs->rules);
+			if ($valida->fails()) {
+		   		
+			   $errors=$valida->messages();
+			   
+			   foreach ($loteria->getAttributes() as $att => $valor){
+			   		
+			   		$e=$errors->get($att);
+			   		if(!empty($e)){
+			   			$menssages[$att."-".$loteria->categorie_id]=$e;
+			   		}
+			   }
+			  
+			}
+    	}
     
-    	if ($validator->fails()) {
+    	$data['percentage_gain']=convertAmount($data['percentage_gain']);
+   	
+    	$validator = Validator::make($data, $agency->rules);
+    	
+    
+    	if (($validator->fails()) or (count($menssages)>0)) {
+
+	    	foreach ($menssages as $k=>$menssage){ 	
+	    		$validator->errors()->add($k,$menssage[0]);
+	    	}
+    		
     		return redirect()->route('agency.create')
     		->withErrors($validator)
     		->withInput();
     	} else {
     		 
     		//Almaceno la agencia
-    		$val=$agency->insert($request);
+    		$val=$agency->insert($data);
     		
-    		if(($val)){
-    			return redirect()->route('agency.index')->with('status', 'Se creo la agencia satisfactoriamente');
+    		if(is_int($val)){
+    			
+    			foreach ($array as $loteria){
+    				$loteria->agencies_id=$val;
+    				$loteria->save();
+    			}
+    			
+    			return redirect()->route('agency.index')->with('succes', 'Se creo la agencia satisfactoriamente');
     		}else{
     			return redirect()->route('agency.index')->with('fail', 'Hubo un error intente de nuevo');
     		}
@@ -99,7 +165,7 @@ class AgencyController extends Controller
     		//Edito
     		$val=$agency->edit($request, $id);
     		
-    		if(($val)){
+    		if(is_int($val)){
     			return redirect()->route('agency.index')->with('status', 'Se creo la agencia satisfactoriamente');
     		}else{
     			return redirect()->route('agency.index')->with('fail', 'Hubo un error intente de nuevo');

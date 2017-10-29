@@ -13,7 +13,7 @@ class AgencyCategoriesSell extends Model
 	
 	public   $rules = [
 		'categorie_id' => 'required|integer',
-		'agencies_id' => 'required|integer',
+		//'agencies_id' => 'required|integer',
 		'bet_min' => 'required|numeric',
 		'prize_min' => 'required|numeric',
 	];
@@ -26,4 +26,5 @@ class AgencyCategoriesSell extends Model
 	protected $fillable = [
 		'categorie_id', 'agencies_id', 'bet_min', 'prize_min'
 	];
+	
 }
