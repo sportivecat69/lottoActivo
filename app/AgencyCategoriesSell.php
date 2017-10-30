@@ -28,4 +28,9 @@ class AgencyCategoriesSell extends Model
 		'categorie_id', 'agencies_id', 'bet_min', 'prize_min'
 	];
 	
+	public function categorie()
+	{
+		return $this->hasOne(Categorie::class, 'id', 'categorie_id');
+	}
+	
 }

@@ -8,10 +8,10 @@
 
 	<!-- Main content -->
 	<section class="content">
-	
+		<form method="POST" action="{{ route('agency.update', $agency->id) }}" accept-charset="UTF-8" autocomplete="off">
 		<div class="row">
-			<div class="col-md-12">
-				<div class="box">
+			<div class="col-md-6">
+				<div class="box box-warning">
 					<div class="box-header with-border">
 					<h3 class="box-title">Editar Agencia: {{ $agency->name }}</h3>
 						<div class="box-tools pull-right">
@@ -27,11 +27,11 @@
 							<!--Contenido-->
 								<div class="row">
 									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-									<form method="POST" action="{{ route('agency.update', $agency->id) }}" accept-charset="UTF-8" autocomplete="off">
+									
 										{{ csrf_field() }}
 										{{ method_field('PUT') }}
 										    <div class="row">
-										    	<div class="col-lg-4 col-sm-6 col-md-4 col-xs-12 ">
+										    	<div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 ">
 										    		<div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
 										            	<label for="nombre">Nombre</label>
 										            	<input type="text" name="name" value="{{ old('nombre') ? old('nombre') : $agency->name }}" class="form-control" placeholder="Nombre...">
@@ -42,7 +42,7 @@
 						                                @endif
 										            </div>
 										    	</div>
-										    	<div class="col-lg-4 col-sm-6 col-md-4 col-xs-12 ">
+										    	<div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 ">
 										    		<div class="form-group {{ $errors->has('description') ? ' has-error' : '' }}">
 										            	<label for="description">Descripci&oacute;n</label>
 										            	<input type="text" name="description" value="{{ old('description') ? old('description') : $agency->description }}" class="form-control" placeholder="Ej:Direccion...">
@@ -97,18 +97,9 @@
 						                                @endif
 										            </div>
 										    	</div>
-										    	<div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 text-center">
-										    		<div class="form-group">
-										    			<button type="submit" id="btn-loading" data-loading-text="Cargando..." class="btn btn-primary">
-															Guardar
-														</button>
-										            	<a href="{{ route('agency.index') }}" class="btn btn-danger">
-															Cancelar	
-														</a> 
-										            </div>
-										    	</div>
+										    	
 										    </div>
-										</form>
+										
 									
 									</div>
 								</div>
@@ -119,11 +110,156 @@
 					</div>
 				</div><!-- /.row -->
 			</div><!-- /.box-body -->
+			
+			<!-- left column -->
+        <div class="col-md-6">
+          <!-- general form elements -->
+          <div class="box box-warning">
+            <div class="box-header with-border">
+              <h3 class="box-title">Loterias a Vender</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+              <div class="box-body">
+              
+              	<div class="panel panel-default">
+                <!-- Default panel contents -->
+                
+            
+                <!-- List group -->
+                <ul class="list-group">
+                    @foreach($categories as $categorie)
+                    <li class="list-group-item">
+                        {{ $categorie->name }}
+                        <div class="material-switch pull-right">
+                            <input id="categorie-<?php echo $categorie->id;?>" name="categorie[<?php echo $categorie->id;?>][on]" type="checkbox"  <?php if((old('categorie.'.$categorie->id.'.on')=='on') ): echo 'checked'; else: echo ''; endif; ?> onclick="$('#collapse'+<?php echo $categorie->id;?>).slideToggle('slow');"/>
+                            <label for="categorie-<?php echo $categorie->id;?>" class="label-success"></label>
+                        </div>
+                        <div  class="collapse" id="collapse<?php echo $categorie->id;?>">
+							  <div class="well">
+							   						<div class="form-group <?php echo $errors->has('bet_min-'.$categorie->id) ? ' has-error' : '' ?>">
+										            	<label for="prize_min">Apuesta M&iacute;nima</label>
+										            	<input type="text" id="categorie[<?php echo $categorie->id;?>][bet_min]" name="categorie[<?php echo $categorie->id;?>][bet_min]" value="<?php echo old('categorie.'.$categorie->id.'.bet_min') ?>" class="form-control money" placeholder="Ej:100...">
+										           		<?php if($errors->has('bet_min-'.$categorie->id)): ?>
+						                                    <span class="help-block">
+						                                        <strong><?php  echo $errors->first('bet_min-'.$categorie->id) ?></strong>
+						                                    </span>
+						                                <?php endif;?>
+										            </div>
+										            <div class="form-group <?php echo $errors->has('prize_min-'.$categorie->id) ? ' has-error' : '' ?>">
+										            	<label for="prize_min">Pago M&iacute;nimo</label>
+										            	<input type="text" id="categorie[<?php echo $categorie->id;?>]['prize_min']" name="categorie[<?php echo $categorie->id;?>][prize_min]" value="<?php echo old('categorie.'.$categorie->id.'.prize_min') ?>" class="form-control money" placeholder="Ej:100...">
+										           		<?php if($errors->has('prize_min-'.$categorie->id)): ?>
+						                                    <span class="help-block">
+						                                        <strong><?php  echo $errors->first('prize_min-'.$categorie->id) ?></strong>
+						                                    </span>
+						                                @endif
+										            </div>
+							  </div>
+                        </div>
+                    </li>
+                   @endforeach
+                    
+                </ul>
+            </div> 
+              	
+                
+              </div>
+              <!-- /.box-body -->
+
+          </div>
+          <!-- /.box -->
+		</div>
 		</div><!-- /.box -->
-	
+		
+			 <div class="row">
+												<div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 text-center">
+										    		<div class="form-group">
+										    			<button type="submit" id="btn-loading" data-loading-text="Cargando..." class="btn btn-primary">
+															Guardar
+														</button>
+										            	<a href="{{ route('agency.index') }}" class="btn btn-danger">
+															Cancelar	
+														</a> 
+										            </div>
+										    	</div>
+			 </div>
+		</form>
 	</section><!-- /.content -->
 </div><!-- /.content-wrapper -->
 <!--Fin-Contenido-->
+<?php 
+foreach ($acs as $acs){
+	print_r( $acs->getAttributes('categorie_id'));
+	//if(1==$acs->getAttributes('categorie_id')) echo "yes <br>";
+}
+
+?>
 @endsection
 @push('scripts')
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+  
+        $('#agency-form input[type=checkbox]').each(function(){
+            if (this.checked) {
+            	var id = $(this).attr("id");
+            	var d = id.split('-');
+            	$("#collapse"+d[1]).slideToggle("slow");
+            }
+        }); 
+
+      
+});
+
+</script>
 @endpush
+
+<style>
+
+.material-switch > input[type="checkbox"] {
+    display: none;   
+}
+
+.material-switch > label {
+    cursor: pointer;
+    height: 0px;
+    position: relative; 
+    width: 40px;  
+}
+
+.material-switch > label::before {
+    background: rgb(0, 0, 0);
+    box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    content: '';
+    height: 16px;
+    margin-top: -8px;
+    position:absolute;
+    opacity: 0.3;
+    transition: all 0.4s ease-in-out;
+    width: 40px;
+}
+.material-switch > label::after {
+    background: rgb(255, 255, 255);
+    border-radius: 16px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    content: '';
+    height: 24px;
+    left: -4px;
+    margin-top: -8px;
+    position: absolute;
+    top: -4px;
+    transition: all 0.3s ease-in-out;
+    width: 24px;
+}
+.material-switch > input[type="checkbox"]:checked + label::before {
+    background: inherit;
+    opacity: 0.5;
+}
+.material-switch > input[type="checkbox"]:checked + label::after {
+    background: inherit;
+    left: 20px;
+}
+</style>

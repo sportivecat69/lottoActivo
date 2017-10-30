@@ -26,7 +26,7 @@
 	<form method="POST" action="{{ route('agency.store') }}" accept-charset="UTF-8" autocomplete="off" id="agency-form">
 		<div class="row">
 			<div class="col-md-6">
-				<div class="box box-info">
+				<div class="box box-warning">
 					<div class="box-header with-border">
 					<h3 class="box-title">Datos de la nueva Agencia</h3>
 
@@ -127,7 +127,7 @@
         <!-- left column -->
         <div class="col-md-6">
           <!-- general form elements -->
-          <div class="box box-info">
+          <div class="box box-warning">
             <div class="box-header with-border">
               <h3 class="box-title">Loterias a Vender</h3>
             </div>
@@ -198,7 +198,7 @@
 				</div>
 			</div>
         </div>
-</form>
+	</form>
 
 	</section><!-- /.content -->
 </div><!-- /.content-wrapper -->

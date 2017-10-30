@@ -140,7 +140,10 @@ class AgencyController extends Controller
     public function edit($id)
     {
     	$agency = Agency::find($id);
-    	return view('warehouses.agencies.edit', ['agency' => $agency]);
+    	$categories = Categorie::all();
+    	$acs = AgencyCategoriesSell::where('agencies_id',$id)->get();
+    	
+    	return view('warehouses.agencies.edit', ['agency' => $agency, 'categories' => $categories, 'acs'=>$acs]);
     }
     
     
@@ -182,7 +185,8 @@ class AgencyController extends Controller
     public function show($id)
     {
     	$agency = Agency::find($id);
-    	return view('warehouses.agencies.show', ['agency' => $agency]);
+    	$acs = AgencyCategoriesSell::where('agencies_id',$id)->get();
+    	return view('warehouses.agencies.show', ['agency' => $agency, 'acs'=>$acs]);
     }
     
 }
