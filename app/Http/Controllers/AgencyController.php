@@ -290,5 +290,38 @@ class AgencyController extends Controller
     	$acs = AgencyCategoriesSell::where('agencies_id',$id)->get();
     	return view('warehouses.agencies.show', ['agency' => $agency, 'acs'=>$acs]);
     }
+       
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+    	$agency = Agency::find($id);
+    
+    	$agency->status=false;
+    	$agency->save();
+    	 
+    	return redirect()->route('agency.index')->with('succes', 'Agencia Inactiva');
+    }
+    
+    /**
+     * Add the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function activate($id)
+    {
+    	$agency = Agency::find($id);
+    
+    	$agency->status=true;
+    	$agency->save();
+    
+    	return redirect()->route('agency.index')->with('succes', 'Agencia Activa');
+    }
+    
     
 }

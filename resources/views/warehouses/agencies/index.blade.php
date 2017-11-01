@@ -89,49 +89,76 @@
 															@endif
 														</td>
 														<td>
-															<a href="{{ route('agency.show', $agency->id) }}">
-																<i class="fa fa-eye fa-lg" aria-hidden="true"></i>
-															</a>
-															<a href="{{ route('agency.edit', $agency->id) }}">
-																<i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
-															</a>
-															<a href="" data-target="#modal-delete-{{$agency->id}}" data-toggle="modal">
-																 	<i class="fa fa-times fa-lg" aria-hidden="true"></i>
-	 														</a
+															@if($agency->status === true)
+																<a href="{{ route('agency.show', $agency->id) }}">
+																	<i class="fa fa-eye fa-lg" aria-hidden="true"></i>
+																</a>
+																<a href="{{ route('agency.edit', $agency->id) }}">
+																	<i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
+																</a>
+																<a href="" data-target="#modal-delete-{{$agency->id}}" data-toggle="modal">
+																	 	<i class="fa fa-toggle-off fa-lg" aria-hidden="true"></i>
+		 														</a
+	 														@else
+		 														<a href="" data-target="#modal-activate-{{$agency->id}}" data-toggle="modal">
+																	 	<i class="fa fa-toggle-on fa-lg" aria-hidden="true"></i>
+		 														</a
+	 														@endif
 	 														
 														</td>
-<!-- 														<td> -->
-<!-- 															 <a href="" data-target="#modal-delete-{{$agency->id}}" data-toggle="modal"> -->
-<!-- 															 	<i class="fa fa-times fa-lg" aria-hidden="true"></i> -->
-<!-- 															 </a> -->
-<!-- 														</td> -->
+
 <!-- 													</tr> -->
-<!-- 													<div class="modal fade modal-slide-in-right" aria-hidden="true" role="dialog" tabindex="-1" id="modal-delete-{{$agency->id}}"> -->
-<!-- 														<form method="POST" action="{{ route('agency.destroy', $agency->id) }}" accept-charset="UTF-8"> -->
-<!-- 														{{ csrf_field() }} -->
-<!-- 														{{ method_field('DELETE') }} -->
-<!-- 														<div class="modal-dialog"> -->
-<!-- 															<div class="modal-content"> -->
-<!-- 																<div class="modal-header"> -->
-<!-- 																	<button type="button" class="close" data-dismiss="modal"  -->
-<!-- 																	aria-label="Close"> -->
-<!-- 													                     <i class="fa fa-times"></i> -->
-<!-- 													                </button> -->
-<!-- 													                <h4 class="modal-title">Eliminar Art&iacute;culo</h4> -->
-<!-- 																</div> -->
+													<div class="modal fade modal-slide-in-right" aria-hidden="true" role="dialog" tabindex="-1" id="modal-delete-{{$agency->id}}">
+														<form method="POST" action="{{ route('agency.destroy', $agency->id) }}" accept-charset="UTF-8">
+														{{ csrf_field() }}
+														{{ method_field('DELETE') }}
+														<div class="modal-dialog">
+															<div class="modal-content">
+																<div class="modal-header">
+																	<button type="button" class="close" data-dismiss="modal" 
+																	aria-label="Close">
+													                     <i class="fa fa-times"></i>
+													                </button>
+													                <h4 class="modal-title">Inactiva Agencia</h4>
+																</div>
 																
-<!-- 																<div class="modal-body"> -->
-<!-- 																	<p>Confirme si desea Eliminar el art&iacute;culo <b>{{ $agency->name }}</b></p> -->
-<!-- 																</div> -->
-<!-- 																<div class="modal-footer"> -->
-<!-- 																	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button> -->
-<!-- 																	<button type="submit" class="btn btn-primary">Confirmar</button> -->
-<!-- 																</div> -->
+																<div class="modal-body">
+																	<p>Confirme si desea inactivar <b>{{ $agency->name }}</b></p>
+																</div>
+																<div class="modal-footer">
+																	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+																	<button type="submit" class="btn btn-primary">Confirmar</button>
+																</div>
 																
-<!-- 															</div> -->
-<!-- 														</div> -->
-<!-- 														</form> -->
-<!-- 													</div> -->
+															</div>
+														</div>
+														</form>
+													</div>
+													<div class="modal fade modal-slide-in-right" aria-hidden="true" role="dialog" tabindex="-1" id="modal-activate-{{$agency->id}}">
+														<form method="POST" action="{{ route('agency.activate', $agency->id) }}" accept-charset="UTF-8">
+														{{ csrf_field() }}
+														<div class="modal-dialog">
+															<div class="modal-content">
+																<div class="modal-header">
+																	<button type="button" class="close" data-dismiss="modal" 
+																	aria-label="Close">
+													                     <i class="fa fa-times"></i>
+													                </button>
+													                <h4 class="modal-title">Activar Agencia</h4>
+																</div>
+																
+																<div class="modal-body">
+																	<p>Confirme si desea Activar <b>{{ $agency->name }}</b></p>
+																</div>
+																<div class="modal-footer">
+																	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+																	<button type="submit" class="btn btn-primary">Confirmar</button>
+																</div>
+																
+															</div>
+														</div>
+														</form>
+													</div>
 												@endforeach							
 											</table>
 											

@@ -40,7 +40,11 @@ Route::group(['middleware' => 'auth'], function (){
 	
 	Route::resource('categorie', 'CategorieController');
 	Route::resource('article', 'ArticleController');
+	
+	/******************************* AGENCY ************************************************/
 	Route::resource('agency', 'AgencyController');
+	Route::post('agency/activate/{id}', 'AgencyController@activate')->name('agency.activate');
+	
 	/******************************* SALES ************************************************/
 	Route::resource('client', 'ClientController');
 	Route::get('sale', 'SaleController@index')->name('sale.index');
@@ -61,6 +65,7 @@ Route::group(['middleware' => 'auth'], function (){
 	Route::get('cart/show', 'CartController@show')->name('cart.show');
 	Route::get('cart/add/{product}', 'CartController@add')->name('cart.add');
 	Route::get('cart/delete/{product}', 'CartController@delete')->name('cart.delete');
+
 });
 
 //Auth::routes();
