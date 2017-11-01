@@ -73,8 +73,15 @@
         
         <!-- Main content -->
         <section class="content">
+        
+        <!-- ALERT --> 
+<!--          @if (session('error')) -->
+<!--             <div class="alert alert-danger alert-dismissable"> -->
+<!-- 			  <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times"></i></a> -->
+<!-- 			  {{ session('error') }} -->
+<!-- 			</div> -->
+<!--          @endif -->
 
-		<!-- ALERT -->        
         <div class="alert alert-danger alert-dismissable status" style="display: none;">
 		  <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times"></i></a>
 		  <div id='title-alert'></div>
@@ -380,17 +387,22 @@
                                             </select>
 					               		</div>
 				               		</div>
-    								<div class="col-md-4">
+    								<div class="col-md-3">
 						                <div class="input-group">
 						                	<span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span>
-						                    <input type="text" class="form-control" maxlength="2" onkeydown="keyCode_codigo(event)"  id="codigo" name="codigo"  placeholder="Ingrese n&uacute;mero" autocomplete="off">
+						                    <input type="text" class="form-control" maxlength="2" onkeydown="keyCode_codigo(event)"  id="codigo" name="codigo"  placeholder="N&uacute;mero" autocomplete="off">
 					               		</div>
     								</div>
-    								<div class="col-md-4" style=" display: inline-flex;">
-						                <div class="input-group col-md-10">
+    								<div class="col-md-5" style=" display: inline-flex;">
+						                <div class="input-group col-md-8">
 						                	<span class="input-group-addon">Bsf.</span>
 						                    <input type="text" class="form-control" onkeydown="keyCode_monto(event)"  id="monto" name="monto"  placeholder="Ingrese Monto" autocomplete="off">
 					               		</div>
+					               		<div class="col-md-2">
+											<a href="#" id="print" onclick="print()" class="btn btn-primary" {{ count($sale_cart) ? '' : 'disabled' }}>
+					                        	<i class="fa fa-print" aria-hidden="true"></i>
+					                        </a>
+					                    </div>
 					               		<div class="col-md-2">
 											<a data-target="#modal-delete" data-toggle="modal" href="#" id="trash" class="btn btn-danger" {{ count($sale_cart) ? '' : 'disabled' }}>
 					                        	<i class="fa fa-trash" aria-hidden="true"></i>
@@ -531,52 +543,56 @@
         		    	        type: "post",
         		    	        data: { "_token": "{{ csrf_token() }}", categorie: categorie, sorteo: sorteo, cod: cod, amount: monto  } ,
         		    	        success: function (data) {
-            		    	        
+            		    	        console.log(data);
             		    	        //Validamos si esta abilitado o se excedio el limite
             		    	        if(data != 0 && data != 1) {
-            		    	        	$.each(sorteo, function(index){
-    //         		    	        		console.log(sorteo[index]);
-            		    	        		var cod_ = cod + sorteo[index].substring(0, 2);
-            			    	        	//SI EXISTE Y LO REPIREN LO REMUEVE 
-            		    	        		$('#'+cod_).remove();
-            		    	        		//END
-            		    	        		
-                							add_ = '<tr id="'+cod_+'">';
-                							add_ += 	'<td>';
-                							if(categorie == 1){ 
-                								add_ += '<h5>Ruleta Activa<h5>'; 
-                    						};
-                    						add_ += 	'</td>';
-                							add_ += 	'<td><h5>';
-                							add_ += 		cod + ' - ' +data;
-                							add_ += 	'</h5></td>';
-                							add_ += 	'<td><h5>';
-                							add_ += 		sorteo[index];
-                							add_ += 	'</h5></td>';
-                							add_ += 	'<td><h5>';
-                							add_ += 		monto;
-                							add_ += 	'</h5></td>';
-                							add_ +=   '<td>';
-                							add_ +=    	'<a href="#" onclick="delete_(\''+cod_+'\')">';
-                							add_ +=    		'<h5><i class="fa fa-times fa-lg" aria-hidden="true" style="color:#FF0000;"></i></h5>';
-                							add_ +=    	'</a>';
-                							add_ +=	'</td>'
-                							add_ += '</tr>';
-                							$('#add_product').append(add_);
-            		    	        	})
-            
-            		    	        	//Calcula el monto
-            							var total = 0;
-            							$('#tabla_product tbody tr').each(function(){
-            								total += parseInt($(this).find('td').eq(3).text()||0,10)
-            							});
-            							$('#total').html(total+',00');
-            							//Calculo de Nro. jugadas
-            							$('#jugadas').html($('#tabla_product tbody tr').size());
-    
-    									//Habilito el boton de borrar todo
-            							$('#trash').attr('disabled', false);
-            							
+                		    	        if(data != 'error') {
+                		    	        	$.each(sorteo, function(index){
+        //         		    	        		console.log(sorteo[index]);
+                		    	        		var cod_ = cod + sorteo[index].substring(0, 2);
+                			    	        	//SI EXISTE Y LO REPIREN LO REMUEVE 
+                		    	        		$('#'+cod_).remove();
+                		    	        		//END
+                		    	        		
+                    							add_ = '<tr id="'+cod_+'">';
+                    							add_ += 	'<td>';
+                    							if(categorie == 1){ 
+                    								add_ += '<h5>Ruleta Activa<h5>'; 
+                        						};
+                        						add_ += 	'</td>';
+                    							add_ += 	'<td><h5>';
+                    							add_ += 		cod + ' - ' +data;
+                    							add_ += 	'</h5></td>';
+                    							add_ += 	'<td><h5>';
+                    							add_ += 		sorteo[index];
+                    							add_ += 	'</h5></td>';
+                    							add_ += 	'<td><h5>';
+                    							add_ += 		monto;
+                    							add_ += 	'</h5></td>';
+                    							add_ +=   '<td>';
+                    							add_ +=    	'<a href="#" onclick="delete_(\''+cod_+'\')">';
+                    							add_ +=    		'<h5><i class="fa fa-times fa-lg" aria-hidden="true" style="color:#FF0000;"></i></h5>';
+                    							add_ +=    	'</a>';
+                    							add_ +=	'</td>'
+                    							add_ += '</tr>';
+                    							$('#add_product').append(add_);
+                		    	        	})
+                
+                		    	        	//Calcula el monto
+                							var total = 0;
+                							$('#tabla_product tbody tr').each(function(){
+                								total += parseInt($(this).find('td').eq(3).text()||0,10)
+                							});
+                							$('#total').html(total+',00');
+                							//Calculo de Nro. jugadas
+                							$('#jugadas').html($('#tabla_product tbody tr').size());
+        
+        									//Habilito botones
+                							$('#trash').attr('disabled', false);
+                							$('#print').attr('disabled', false);
+                		    	        } else {
+                		    	        	location.reload();
+                    		    	    }
             		    	        } else if( data == 0 ) {
             		    	        	//Notificacion
             		    	        	$('#title-alert').html('El n&uacute;mero no esta disponible');
@@ -614,6 +630,11 @@
 		    if (x == 27) { // 43 = esc => procesar 
 				process();
 		    }
+		}
+
+		//DELETE
+		function print() {
+			process();
 		}
 
 		//DELETE
@@ -670,6 +691,7 @@
     			    var nFilas = $("#tabla_product tbody tr").length;
 					if(nFilas == 0){
 						$('#trash').attr('disabled', true);
+						$('#print').attr('disabled', true);
 					}             
     	        },
     	        error: function(jqXHR, textStatus, errorThrown) {
