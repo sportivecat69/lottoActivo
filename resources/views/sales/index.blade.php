@@ -380,7 +380,10 @@
 						                	<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
 						                    <select id="sorteo" name="sorteo[]" class="selectpicker show-menu-arrow form-control" multiple data-actions-box="true" title="Seleccione Sorteo" data-selected-text-format="count > 2">
                                               @foreach($sorteos as $sorteo)
-                                              	@if(date('H') < date('H', strtotime($sorteo->time)))
+                                                @php
+                                                	 $horaVenta = strtotime ( '-'.$mint_sell.' minute' , strtotime ( date( 'H:i', strtotime($sorteo->time)) ) ) ;
+                                                @endphp
+                                              	@if(date('H:i') < date('H:i', $horaVenta))
                                               		<option value="{{ $sorteo->id }}">{{ $sorteo->time }}</option>
                                               	@endif
                                               @endforeach
@@ -656,7 +659,13 @@
     					
     					$('#codigo').val('');
     					$('#monto').val('');
-        			    $('#codigo').focus();               
+        			    $('#codigo').focus();       
+          			  //Inhabilito el boton de borrar todo
+        			    var nFilas = $("#tabla_product tbody tr").length;
+    					if(nFilas == 0){
+    						$('#trash').attr('disabled', true);
+    						$('#print').attr('disabled', true);
+    					}             
         	        },
         	        error: function(jqXHR, textStatus, errorThrown) {
         	           console.log(textStatus, errorThrown);

@@ -36,7 +36,9 @@ class SaleController extends Controller
 		
 		$sorteos = Draw::where('categorie_id', 1)->orderBy('id', 'asc')->get();
 		
-		return view('sales.index', ['sale_cart' => $sale_cart, 'total' => $total, 'sorteos' => $sorteos ]);
+		$seller_agency = SellerAgency::where('users_id', Auth::user()->id)->first();
+		
+		return view('sales.index', ['sale_cart' => $sale_cart, 'total' => $total, 'sorteos' => $sorteos, 'mint_sell' => $seller_agency->agency->mint_sell ]);
 	}
 	
 	/**
@@ -72,7 +74,7 @@ class SaleController extends Controller
 	                //Le resto los minutos configurado de la agencia al sorteo seleccionado
 	                $horaVenta = strtotime ( '-'.$seller_agency->agency->mint_sell.' minute' , strtotime ( date( 'H:i', strtotime($draw->time)) ) ) ;
 	                //Valido si la hora del sorteo ya paso
-	                if (date('H:i') < date ( 'H:i', $horaVenta)) {
+	                if (date('H:i') < date('H:i', $horaVenta)) {
 	                    
 //     // 	                if (convertAmount($request->amount) <= '200') {
 //     						// quizas pueda resumirse pero lo cierto es que la variable
