@@ -8,6 +8,21 @@
 
 	<!-- Main content -->
 	<section class="content">
+	<div class="row">
+		@if (session('succes'))
+            <div class="alert alert-success alert-dismissable">
+			  <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times"></i></a>
+			  {{ session('succes') }}
+			</div>
+         @endif
+         
+          @if (session('fail'))
+            <div class="alert alert-danger alert-dismissable">
+			  <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times"></i></a>
+			  {{ session('fail') }}
+			</div>
+         @endif
+    </div>
 		<form method="POST" action="{{ route('agency.update', $agency->id) }}" accept-charset="UTF-8" autocomplete="off">
 		<div class="row">
 			<div class="col-md-6">
@@ -56,7 +71,7 @@
 										    	<div class="col-lg-4 col-sm-6 col-md-4 col-xs-12 ">
 										    		<div class="form-group {{ $errors->has('percentage_gain') ? ' has-error' : '' }}">
 										            	<label for="percentage_gain">Porcentaje de Ganancia</label>
-										            	<input type="text" name="percentage_gain" id="cod" value="{{ old('percentage_gain') ? old('percentage_gain') : $agency->percentage_gain }}" class="form-control" placeholder="Ej:15,00...">
+										            	<input type="text" name="percentage_gain" id="cod" value="{{ old('percentage_gain') ? old('percentage_gain') : $agency->percentage_gain }}" class="form-control money" placeholder="Ej:15,00...">
 										           		@if ($errors->has('percentage_gain'))
 						                                    <span class="help-block">
 						                                        <strong>{{ $errors->first('percentage_gain') }}</strong>
@@ -132,14 +147,14 @@
                     <li class="list-group-item">
                         {{ $categorie->name }}
                         <div class="material-switch pull-right">
-                            <input id="categorie-<?php echo $categorie->id;?>" name="categorie[<?php echo $categorie->id;?>][on]" type="checkbox"  <?php if((old('categorie.'.$categorie->id.'.on')=='on') ): echo 'checked'; else: echo ''; endif; ?> onclick="$('#collapse'+<?php echo $categorie->id;?>).slideToggle('slow');"/>
+                            <input id="categorie-<?php echo $categorie->id;?>" name="categorie[<?php echo $categorie->id;?>][on]" type="checkbox"  <?php if((old('categorie.'.$categorie->id.'.on')=='on') OR (!empty($categorie->bet_min)) ): echo 'checked'; else: echo ''; endif; ?> onclick="$('#collapse'+<?php echo $categorie->id;?>).slideToggle('slow');"/>
                             <label for="categorie-<?php echo $categorie->id;?>" class="label-success"></label>
                         </div>
                         <div  class="collapse" id="collapse<?php echo $categorie->id;?>">
 							  <div class="well">
 							   						<div class="form-group <?php echo $errors->has('bet_min-'.$categorie->id) ? ' has-error' : '' ?>">
 										            	<label for="prize_min">Apuesta M&iacute;nima</label>
-										            	<input type="text" id="categorie[<?php echo $categorie->id;?>][bet_min]" name="categorie[<?php echo $categorie->id;?>][bet_min]" value="<?php echo old('categorie.'.$categorie->id.'.bet_min') ?>" class="form-control money" placeholder="Ej:100...">
+										            	<input type="text" id="categorie[<?php echo $categorie->id;?>][bet_min]" name="categorie[<?php echo $categorie->id;?>][bet_min]" value="<?php echo !empty($categorie->bet_min) ? $categorie->bet_min : old('categorie.'.$categorie->id.'.bet_min'); ?>" class="form-control money" placeholder="Ej:100...">
 										           		<?php if($errors->has('bet_min-'.$categorie->id)): ?>
 						                                    <span class="help-block">
 						                                        <strong><?php  echo $errors->first('bet_min-'.$categorie->id) ?></strong>
@@ -148,7 +163,7 @@
 										            </div>
 										            <div class="form-group <?php echo $errors->has('prize_min-'.$categorie->id) ? ' has-error' : '' ?>">
 										            	<label for="prize_min">Pago M&iacute;nimo</label>
-										            	<input type="text" id="categorie[<?php echo $categorie->id;?>]['prize_min']" name="categorie[<?php echo $categorie->id;?>][prize_min]" value="<?php echo old('categorie.'.$categorie->id.'.prize_min') ?>" class="form-control money" placeholder="Ej:100...">
+										            	<input type="text" id="categorie[<?php echo $categorie->id;?>]['prize_min']" name="categorie[<?php echo $categorie->id;?>][prize_min]" value="<?php echo !empty($categorie->prize_min) ? $categorie->prize_min : old('categorie.'.$categorie->id.'.prize_min') ?>" class="form-control money" placeholder="Ej:100...">
 										           		<?php if($errors->has('prize_min-'.$categorie->id)): ?>
 						                                    <span class="help-block">
 						                                        <strong><?php  echo $errors->first('prize_min-'.$categorie->id) ?></strong>
@@ -185,16 +200,19 @@
 										    	</div>
 			 </div>
 		</form>
+
+<?php 
+//print_r($acs[0]->getAttribute('categorie_id'));
+// foreach ($acs as $acs){
+// 	print_r( $acs->getAttributes('categorie_id'));
+// 	//if(1==$acs->getAttributes('categorie_id')) echo "yes <br>";
+// }
+
+?>		
 	</section><!-- /.content -->
 </div><!-- /.content-wrapper -->
 <!--Fin-Contenido-->
-<?php 
-foreach ($acs as $acs){
-	print_r( $acs->getAttributes('categorie_id'));
-	//if(1==$acs->getAttributes('categorie_id')) echo "yes <br>";
-}
 
-?>
 @endsection
 @push('scripts')
 <script type="text/javascript">

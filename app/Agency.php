@@ -56,7 +56,12 @@ class Agency extends Model
 			$agency->setAttribute($key, $value);
 		}
 	
-		return $agency->save();
+		$val=$agency->save();
+		if($val){
+			return $agency->id;
+		}else{
+			return false;
+		}
 	
 	}
 }
