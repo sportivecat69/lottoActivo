@@ -42,7 +42,7 @@
 										</form>	
 									</div>
 									<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-										<a class="btn btn-success" href="{{ route('user-management.create') }}">Nuevo</a>
+										<a class="btn btn-success" href="{{ route('usermanagement.create') }}">Nuevo</a>
 									</div>
 								</div>
 
@@ -72,10 +72,10 @@
 									                  <td>{{ $user->email }}</td>
 									                  <td> @foreach ($user->rol as $rol){{ $rol->display_name }}	@endforeach </td>
 									                  <td>
-									                    <form  method="POST" action="{{ route('user-management.destroy', ['id' => $user->id]) }}" onsubmit = "return confirm('Are you sure?')">
+									                    <form  method="POST" action="{{ route('usermanagement.destroy', ['id' => $user->id]) }}" onsubmit = "return confirm('Are you sure?')">
 									                        <input type="hidden" name="_method" value="DELETE">
 									                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-									                        <a href="{{ route('user-management.edit', ['id' => $user->id]) }}">
+									                        <a href="{{ route('usermanagement.edit', ['id' => $user->id]) }}">
 									                       	 <i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
 									                        </a>
 									                    </form>
@@ -89,7 +89,7 @@
 														</td>
 													</tr>
 													<div class="modal fade modal-slide-in-right" aria-hidden="true" role="dialog" tabindex="-1" id="modal-delete-{{$user->id}}">
-														<form method="POST" action="{{ route('user-management.destroy', $user->id) }}" accept-charset="UTF-8">
+														<form method="POST" action="{{ route('usermanagement.destroy', $user->id) }}" accept-charset="UTF-8">
 														{{ csrf_field() }}
 														{{ method_field('DELETE') }}
 															<div class="modal-dialog">

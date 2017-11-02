@@ -11,7 +11,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Editar Usuario</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ route('user-management.update', ['id' => $user->id]) }}">
+                    <form class="form-horizontal" role="form" method="POST" action="{{ route('usermanagement.update', ['id' => $user->id]) }}">
                         <input type="hidden" name="_method" value="PATCH">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <div class="form-group{{ $errors->has('firstname') ? ' has-error' : '' }}">
@@ -80,7 +80,7 @@
 				    			<button type="submit" id="btn-loading" data-loading-text="Cargando..." class="btn btn-primary">
 									Guardar
 								</button>
-				            	<a href="{{ route('user-management.index') }}" class="btn btn-danger">
+				            	<a href="{{ route('usermanagement.index') }}" class="btn btn-danger">
 									Cancelar	
 								</a> 
                             </div>

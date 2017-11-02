@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\User;
 use App\Security\Role;
 use App\Security\RolesUsuario;
+use Illuminate\Support\Facades\Auth;
 
 class UserManagementController extends Controller
 {
@@ -15,7 +16,7 @@ class UserManagementController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/user-management';
+    protected $redirectTo = '/usermanagement';
 
          /**
      * Create a new controller instance.
@@ -34,7 +35,12 @@ class UserManagementController extends Controller
      */
     public function index()
     {
-        $users = User::paginate(5);
+        $users = User::paginate(10);
+//     	if(Auth::user()->hasRole('rooter')){
+//     		$users = User::paginate(10);
+//     	}elseif(Auth::user()->hasRole('banker')){
+    		
+//     	}
 
         return view('users-mgmt.index', ['users' => $users]);
     }
@@ -48,6 +54,12 @@ class UserManagementController extends Controller
     {
     	//$Roles= Role::pluck('display_name', 'id');
     	//$Roles= Role::where('name','<>','rooter')->pluck('display_name', 'id')->prepend('Seleccione', 0);
+    	
+    	//administrador
+//     	if(Auth::user()->hasRole('rooter')){
+//     		$Roles= Role::all()->pluck('display_name', 'id');
+//     	}
+    	
     	$Roles= Role::where('name','<>','rooter')->where('name','<>','banker')->pluck('display_name', 'id')->all();
     	return view('users-mgmt/create')->with('Roles', $Roles);
     	
@@ -76,7 +88,7 @@ class UserManagementController extends Controller
     	$role=(int)$request['user_level'];
         $user->attachRole($role);
         
-        return redirect()->intended('/user-management');
+        return redirect()->intended('/usermanagement');
     }
 
     /**
@@ -102,7 +114,7 @@ class UserManagementController extends Controller
         $Roles= Role::where('name','<>','rooter')->where('name','<>','banker')->pluck('display_name', 'id')->prepend('Seleccione', null);
         // Redirect to user list if updating user wasn't existed
         if ($user == null || count($user) == 0) {
-            return redirect()->intended('/user-management');
+            return redirect()->intended('/usermanagement');
         }
 
         return view('users-mgmt/edit', ['user' => $user, 'Roles' =>$Roles]);
@@ -138,7 +150,7 @@ class UserManagementController extends Controller
         $role=(int)$request['user_level'];
         $user->attachRole($role);
         
-        return redirect()->intended('/user-management');
+        return redirect()->intended('/usermanagement');
     }
 
     /**
@@ -151,7 +163,7 @@ class UserManagementController extends Controller
     {
     	RolesUsuario::where('user_id', $id)->delete();
         User::where('id', $id)->delete();
-         return redirect()->intended('/user-management');
+         return redirect()->intended('/usermanagement');
     }
 
 

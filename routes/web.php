@@ -57,7 +57,7 @@ Route::group(['middleware' => 'auth'], function (){
 	Route::get('sale/print', 'SaleController@print')->name('sale.print');
 	/******************************* END ************************************************/
 	
-	Route::resource('user-management', 'UserManagementController');
+	Route::resource('usermanagement', 'UserManagementController');
 	Route::get('profile', 'ProfileController@index');
 	
 	/*************************** Cart *************************************/

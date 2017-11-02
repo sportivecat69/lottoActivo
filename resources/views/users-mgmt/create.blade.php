@@ -12,7 +12,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Crear Usuario</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ route('user-management.store') }}">
+                    <form class="form-horizontal" role="form" method="POST" action="{{ route('usermanagement.store') }}">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
@@ -107,7 +107,7 @@
 				    			<button type="submit" class="btn btn-primary">
 									Guardar
 								</button>
-				            	<a href="{{ route('user-management.index') }}" class="btn btn-danger">
+				            	<a href="{{ route('usermanagement.index') }}" class="btn btn-danger">
 									Cancelar	
 								</a> 
                             </div>

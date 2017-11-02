@@ -117,7 +117,7 @@
         	<a href="{{ route('agency.index') }}"><i class="fa fa-university" aria-hidden="true"></i> <span>Agencias</span></a>
         </li>
         <li class="{{ $url === '/user-management' ? 'active' : '' }}">
-        	<a href="{{ route('user-management.index') }}"><i class="fa fa-users" aria-hidden="true"></i> <span>Usuarios</span></a>
+        	<a href="{{ route('usermanagement.index') }}"><i class="fa fa-users" aria-hidden="true"></i> <span>Usuarios</span></a>
         </li>
         <li>
         	<a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
