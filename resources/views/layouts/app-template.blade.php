@@ -91,7 +91,7 @@
         <!-- Optionally, you can add icons to the links -->
         <li class="{{ $url === '' ? 'active' : '' }}"><a href="{{ url('/') }}"><i class="fa fa-home fa-lg" aria-hidden="true"></i> <span>Inicio</span></a></li>
   		<li class="{{ $url === '/categorie' ? 'active' : ''}}  {{ $url === '/article' ? 'active' : ''}} treeview">
-          <a href="#"><i class="fa fa-university " aria-hidden="true"></i> <span>Productos</span>
+          <a href="#"><i class="fa fa-shopping-bag " aria-hidden="true"></i> <span>Productos</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -114,7 +114,7 @@
           </ul>
         </li>
         <li class="{{ $url === '/agency' ? 'active' : '' }}">
-        	<a href="{{ route('agency.index') }}"><i class="fa fa-users" aria-hidden="true"></i> <span>Agencias</span></a>
+        	<a href="{{ route('agency.index') }}"><i class="fa fa-university" aria-hidden="true"></i> <span>Agencias</span></a>
         </li>
         <li class="{{ $url === '/user-management' ? 'active' : '' }}">
         	<a href="{{ route('user-management.index') }}"><i class="fa fa-users" aria-hidden="true"></i> <span>Usuarios</span></a>
