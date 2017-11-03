@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
+use Illuminate\Support\Facades\Validator;
 
 class User extends Authenticatable
 {
@@ -12,6 +13,28 @@ class User extends Authenticatable
     use EntrustUserTrait;
     
     public $user_level; // role
+    
+    protected $dates = ['deleted_at'];
+    
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+    'documento', 'email', 'password', 'firstname', 'lastname'
+    ];
+    
+    
+    public $rules = array(
+    		'documento'       => 'required|min:10|max:15|unique:users,documento',
+    		'firstname'       => 'required|min:3|max:255',
+    		'lastname'       => 'required|min:3|max:255',
+    		'email' 	 => 'required|email|max:255|unique:users,email',
+    		'user_level' => 'required|numeric'
+    );
+    
+    
     /**
     * The attributes that aren't mass assignable.
     *
@@ -31,5 +54,35 @@ class User extends Authenticatable
     public function rol()
     {
     	return $this->belongsToMany('App\Security\Role', 'role_user');
+    }
+    
+    public function crearUsuario($datos)
+    {
+    	   
+    		unset($datos['user_level']);
+    		$datos['password']=bcrypt($datos['documento']);
+    		
+    		if($id=User::insertGetId($datos)){
+    			return $id;
+    		}else{
+    			return false;
+    		}
+    
+    		
+    }
+    
+    public function editarUsuario($datos, $id)
+    {
+//     	self::$rules['email'] .= ",{$user->id}";
+//     	self::$rules['documento'] .= ",{$user->id}";
+    	$user = User::find($id);
+    	unset($datos['user_level']);
+    	$datos['password']=bcrypt($datos['documento']);
+    	if($user->update($datos)){
+    		return $user->id;
+    	}else{
+    		return false;
+    	}
+
     }
 }

@@ -8,6 +8,9 @@ use App\User;
 use App\Security\Role;
 use App\Security\RolesUsuario;
 use Illuminate\Support\Facades\Auth;
+use App\SellerAgency;
+use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class UserManagementController extends Controller
 {
@@ -18,15 +21,6 @@ class UserManagementController extends Controller
      */
     protected $redirectTo = '/usermanagement';
 
-         /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 
     /**
      * Display a listing of the resource.
@@ -35,13 +29,12 @@ class UserManagementController extends Controller
      */
     public function index()
     {
-        $users = User::paginate(10);
-//     	if(Auth::user()->hasRole('rooter')){
-//     		$users = User::paginate(10);
-//     	}elseif(Auth::user()->hasRole('banker')){
-    		
-//     	}
-
+    	//El sistema tendrá un mini administrador que será el rol banker y todos los demás son vendedores
+        $users = User::paginate(10); // falta  sacar el rooter y banker
+//     	$users = User::whereHas(['rol' => function($q){
+//     		$q->where('name', '=','seller');
+//     	}])->get();
+//     	dd($users);die();
         return view('users-mgmt.index', ['users' => $users]);
     }
 
@@ -52,15 +45,8 @@ class UserManagementController extends Controller
      */
     public function create()
     {
-    	//$Roles= Role::pluck('display_name', 'id');
-    	//$Roles= Role::where('name','<>','rooter')->pluck('display_name', 'id')->prepend('Seleccione', 0);
-    	
-    	//administrador
-//     	if(Auth::user()->hasRole('rooter')){
-//     		$Roles= Role::all()->pluck('display_name', 'id');
-//     	}
-    	
-    	$Roles= Role::where('name','<>','rooter')->where('name','<>','banker')->pluck('display_name', 'id')->all();
+
+    	$Roles= Role::where('name','=','seller')->pluck('display_name', 'id')->all();
     	return view('users-mgmt/create')->with('Roles', $Roles);
     	
        
@@ -74,21 +60,32 @@ class UserManagementController extends Controller
      */
     public function store(Request $request)
     {
-    	$this->validateInput($request);
+    	$user=new User();
+    	$data= $request->except(['_token','_method']);
+    	
+    	$validator = Validator::make($data, $user->rules);
         
-        $user=User::create([
-            'email' => $request['email'],
-            'password' => bcrypt($request['password']),
-            'firstname' => $request['firstname'],
-            'lastname' => $request['lastname'],
-         	'documento' => $request['documento'],
-        ]);
-        
-        
-    	$role=(int)$request['user_level'];
-        $user->attachRole($role);
-        
-        return redirect()->intended('/usermanagement');
+    	if ($validator->fails()){
+    		return redirect()->route('usermanagement.create')
+    		->withErrors($validator)
+    		->withInput();
+    	}else{
+    		
+    		$val=$user->crearUsuario($data);
+    		
+    		if(is_int($val)){
+    			 
+    			$role=(int)$request['user_level'];
+    			$user = User::find($val);
+    			$user->attachRole($role);
+    			 
+    			return redirect()->route('usermanagement.index')->with('succes', 'Usuario registrado');
+    		}else{
+    			return redirect()->route('usermanagement.index')->with('fail', 'Hubo un error intente de nuevo');
+    		}
+    		
+    	}
+    	
     }
 
     /**
@@ -99,9 +96,10 @@ class UserManagementController extends Controller
      */
     public function show($id)
     {
-        //
+    	$user = User::find($id);
+    	
+    	return view('users-mgmt/show', ['user' => $user]);
     }
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -111,7 +109,8 @@ class UserManagementController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        $Roles= Role::where('name','<>','rooter')->where('name','<>','banker')->pluck('display_name', 'id')->prepend('Seleccione', null);
+        //$Roles= Role::where('name','<>','rooter')->where('name','<>','banker')->pluck('display_name', 'id')->prepend('Seleccione', null);
+        $Roles= Role::where('name','=','seller')->pluck('display_name', 'id')->all();
         // Redirect to user list if updating user wasn't existed
         if ($user == null || count($user) == 0) {
             return redirect()->intended('/usermanagement');
@@ -129,28 +128,38 @@ class UserManagementController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User::findOrFail($id);
-        $constraints = [
-            'firstname'=> 'required|max:60',
-            'lastname' => 'required|max:60',
-            ];
-        $input = [
-            'firstname' => $request['firstname'],
-            'lastname' => $request['lastname'],
-        ];
-        if ($request['password'] != null && strlen($request['password']) > 0) {
-            $constraints['password'] = 'required|min:6|confirmed';
-            $input['password'] =  bcrypt($request['password']);
-        }
-        $this->validate($request, $constraints);
-        User::where('id', $id)
-            ->update($input);
-            
-        RolesUsuario::where('user_id', $id)->delete();
-        $role=(int)$request['user_level'];
-        $user->attachRole($role);
+        $user = User::find($id);
+ 
+    	$data= $request->except(['_token','_method']);
+    	$rules=$user->rules;
+    	
+    	
+    	$rules['email'] .= ",{$user->id}";
+    	$rules['documento'] .= ",{$user->id}";
+    	
+    	$validator = Validator::make($data, $rules);
         
-        return redirect()->intended('/usermanagement');
+    	if ($validator->fails()){
+    		return redirect()->route('usermanagement.edit', $id)
+    		->withErrors($validator)
+    		->withInput();
+    	}else{
+    		
+    		$val=$user->editarUsuario($data, $id);
+    		
+    		if(is_int($val)){
+    			 
+    			RolesUsuario::where('user_id', $id)->delete();
+    			$role=(int)$request['user_level'];
+    			$user->attachRole($role);
+    			 
+    			return redirect()->route('usermanagement.index')->with('succes', 'Usuario modificado');
+    		}else{
+    			return redirect()->route('usermanagement.index')->with('fail', 'Hubo un error intente de nuevo');
+    		}
+    		
+    	}
+            
     }
 
     /**
@@ -161,20 +170,21 @@ class UserManagementController extends Controller
      */
     public function destroy($id)
     {
-    	RolesUsuario::where('user_id', $id)->delete();
-        User::where('id', $id)->delete();
-         return redirect()->intended('/usermanagement');
+    	//RolesUsuario::where('user_id', $id)->delete();
+        //User::where('id', $id)->delete();
+    	$user = User::find($id);
+
+    	if(empty($user->deleted_at)){
+    		$user->deleted_at=Carbon::now();
+    		$user->update();
+    		return redirect()->route('usermanagement.index')->with('succes', 'Usuario Inactivo');
+    	}else{
+    		$user->deleted_at=null; 
+    		$user->update();
+    		return redirect()->route('usermanagement.index')->with('succes', 'Usuario Activo');
+    	}
+    	
+    	
     }
 
-
-    private function validateInput($request) {
-        $this->validate($request, [
-        'email' 	 => 'required|email|max:255|unique:users,email',
-        'user_level' => 'required|numeric',
-        'password' => 'required|min:6|confirmed',
-        'firstname' => 'required|max:60',
-        'lastname' => 'required|max:60',
-        'documento' => 'required|max:255|unique:users', //documento
-    ]);
-    }
 }

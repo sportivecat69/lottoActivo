@@ -37,7 +37,6 @@ use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
     	
     	// creación del permiso sintaxis nameController-nameAction
     	$permiso=$controller.'-'.$this->nameAction;
-    	
     	$array_exception=array('Login', 'Reminders');// excepciones para aquellos controladores no requieran este middleware
     	if(!in_array($controller, $array_exception)){
     		$this->middleware('access:'.$permiso); // filtro de ruta

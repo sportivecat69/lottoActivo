@@ -25,7 +25,7 @@
           
           <div class="row">
             <div class="col-md-12">
-              <div class="box">
+              <div class="box box-warning">
                 <div class="box-header with-border">
                   <h3 class="box-title">
 					Listado de Agencias 
@@ -83,7 +83,7 @@
 														<td>{{ $agency->mint_cancel }}</td>
 														<td>
 															@if($agency->status === true)
-																<i class="fa fa-check-circle fa-lg" aria-hidden="true" style="color:#68D332;"></i>
+																<i class="fa fa-check-circle fa-lg" aria-hidden="true" style="color:#00a65a;"></i>
 															@else
 																<i class="fa fa-minus-circle fa-lg" aria-hidden="true" style="color:#FF0000;"></i>
 															@endif

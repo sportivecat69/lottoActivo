@@ -10,16 +10,25 @@
         <!-- Main content -->
         <section class="content">
         
-         @if (session('status'))
-            <div class="alert alert-success alert-dismissable">
-			  <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times"></i></a>
-			  {{ session('status') }}
-			</div>
-         @endif
+         <div class="row">
+			@if (session('succes'))
+	            <div class="alert alert-success alert-dismissable">
+				  <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times"></i></a>
+				  {{ session('succes') }}
+				</div>
+	         @endif
+	         
+	          @if (session('fail'))
+	            <div class="alert alert-danger alert-dismissable">
+				  <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times"></i></a>
+				  {{ session('fail') }}
+				</div>
+	         @endif
+	    </div>
           
           <div class="row">
             <div class="col-md-12">
-              <div class="box">
+              <div class="box box-warning">
                 <div class="box-header with-border">
                   <h3 class="box-title">Listado de Usuarios</h3>
                 </div>
@@ -57,8 +66,8 @@
 													<th>Cedula</th>
 													<th>Correo</th>
 													<th>Role</th>
-													<th>Editar</th>
-													<th>Eliminar</th>
+													<th>Estatus</th>
+													<th>Acciones</th>
 												</thead>
 												@php
 													$i = 1;
@@ -72,20 +81,29 @@
 									                  <td>{{ $user->email }}</td>
 									                  <td> @foreach ($user->rol as $rol){{ $rol->display_name }}	@endforeach </td>
 									                  <td>
-									                    <form  method="POST" action="{{ route('usermanagement.destroy', ['id' => $user->id]) }}" onsubmit = "return confirm('Are you sure?')">
-									                        <input type="hidden" name="_method" value="DELETE">
-									                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-									                        <a href="{{ route('usermanagement.edit', ['id' => $user->id]) }}">
-									                       	 <i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
-									                        </a>
-									                    </form>
-									                  </td>
-														<td>
-										                  	@if ($user->email != Auth::user()->email)
-																 <a href="" data-target="#modal-delete-{{$user->id}}" data-toggle="modal">
-																 	<i class="fa fa-times fa-lg" aria-hidden="true"></i>
-																 </a>
-									                        @endif
+															@if($user->deleted_at == null)
+																<i class="fa fa-check-circle fa-lg" aria-hidden="true" style="color:#00a65a;"></i>
+															@else
+																<i class="fa fa-minus-circle fa-lg" aria-hidden="true" style="color:#FF0000;"></i>
+															@endif
+														</td>
+									                  <td>
+															@if($user->deleted_at === null)
+																<a href="{{ route('usermanagement.show', $user->id) }}">
+																	<i class="fa fa-eye fa-lg" aria-hidden="true"></i>
+																</a>
+																<a href="{{ route('usermanagement.edit', $user->id) }}">
+																	<i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
+																</a>
+																<a href="" data-target="#modal-delete-{{$user->id}}" data-toggle="modal">
+																	 	<i class="fa fa-toggle-off fa-lg" aria-hidden="true"></i>
+		 														</a
+	 														@else
+		 														<a href="" data-target="#modal-activate-{{$user->id}}" data-toggle="modal">
+																	 	<i class="fa fa-toggle-on fa-lg" aria-hidden="true"></i>
+		 														</a
+	 														@endif
+	 														
 														</td>
 													</tr>
 													<div class="modal fade modal-slide-in-right" aria-hidden="true" role="dialog" tabindex="-1" id="modal-delete-{{$user->id}}">
@@ -113,6 +131,33 @@
 																</div>
 															</div>
 														</form>
+													</div>
+													<div class="modal fade modal-slide-in-right" aria-hidden="true" role="dialog" tabindex="-1" id="modal-activate-{{$user->id}}">
+														<form method="POST" action="{{ route('usermanagement.destroy', $user->id) }}" accept-charset="UTF-8">
+														{{ csrf_field() }}
+														{{ method_field('DELETE') }}
+														<div class="modal-dialog">
+															<div class="modal-content">
+																<div class="modal-header">
+																	<button type="button" class="close" data-dismiss="modal" 
+																	aria-label="Close">
+													                     <i class="fa fa-times"></i>
+													                </button>
+													                <h4 class="modal-title">Activar Agencia</h4>
+																</div>
+																
+																<div class="modal-body">
+																	<p>Confirme si desea Activar el usuario <b>{{ $user->lastname.' '.$user->firstname }}</b></p>
+																</div>
+																<div class="modal-footer">
+																	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+																	<button type="submit" class="btn btn-primary">Confirmar</button>
+																</div>
+																
+															</div>
+														</div>
+														</form>
+													</div>
 													@php
 														$i++;
 													@endphp

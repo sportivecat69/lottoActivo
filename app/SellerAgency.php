@@ -20,4 +20,9 @@ class SellerAgency extends Model
     {
         return $this->hasOne(Agency::class, 'id', 'agencies_id');
     }
+    
+    public function user()
+    {
+    	return $this->hasOne(User::class, 'id', 'user_id');
+    }
 }
