@@ -24,6 +24,8 @@ return [
     | services your application utilizes. Set this in your ".env" file.
     |
     */
+    
+    'default' => env('CACHE_DRIVER', 'array'),
 
     'env' => env('APP_ENV', 'production'),
 

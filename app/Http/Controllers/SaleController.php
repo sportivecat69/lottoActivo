@@ -295,6 +295,54 @@ class SaleController extends Controller
 		 
 		return $total;
 	}
+	
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function anular(Request $request)
+	{
+	    //Consulto el id de la agencia mediante el usuario
+	    $seller_agency = SellerAgency::where('users_id', Auth::user()->id)->first();
+	    
+	    //Consulto el ticket
+	    $saleInvoice = SaleInvoice::find($request->ticket);
+	    
+	    //Valido i el ticket existe
+	    if ($saleInvoice) {
+	        //verifico si el ticket pertenece a la agencia correcta
+	        if ($seller_agency->agency->id != $saleInvoice->sellerAgency->agency->id) {
+	            
+	            return redirect()->route('sale.index')->with('error', 'El ticket Nro. '.$request->ticket.' no pertenece a esta agencia');
+	            
+	        } else {
+	            
+	            //Le resto los minutos configurado de la agencia a la hora actual
+	            $horaAnulacion = strtotime ( '-'.$seller_agency->agency->mint_cancel.' minute' , strtotime ( date( 'H:i') ) ) ;
+	            //Valido si esta en la hora para anular
+	            if (date('Y-m-d', strtotime($saleInvoice->created_at)) == date('Y-m-d') && date('H:i:s', strtotime($saleInvoice->created_at)) > date('H:i:s', $horaAnulacion)) {
+	                
+	                //Edito el esttus de los producto del ticket y el ticket
+	                $sale_Invoice = SaleInvoice::where('id', $request->ticket)->update(['status' => 'ANULADO']);
+	                
+	                $sale = Sale::where('sale_invoice_id', $request->ticket)->update(['status' => 'ANULADO']);
+	                
+	                if ($sale_Invoice && $sale) {
+	                    return redirect()->route('sale.index')->with('success', 'El ticket Nro. '.$request->ticket.' fue anulado con exito');
+	                } else {
+	                    return redirect()->route('sale.index')->with('error', 'Error al anular ticket Nro. '.$request->ticket.' intente de nuevo');
+	                }
+	            } else {
+	                return redirect()->route('sale.index')->with('error', 'A superado el tiempo para anular ticket');
+	            }
+	            
+	        }
+	    } else {
+	        return redirect()->route('sale.index')->with('error', 'El ticket Nro. '.$request->ticket.' no existe');
+	    }
+	}
 
 	/**
 	 * Display a listing of the resource.

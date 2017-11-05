@@ -53,8 +53,7 @@ Route::group(['middleware' => 'auth'], function (){
 	Route::get('sale/trash', 'SaleController@trash')->name('sale.trash');
 	Route::post('sale/process', 'SaleController@process')->name('sale.process');
 	Route::get('sale/report', 'SaleController@report')->name('sale.report');
-	
-	Route::get('sale/print', 'SaleController@print')->name('sale.print');
+	Route::post('sale/anular', 'SaleController@anular')->name('sale.anular');
 	/******************************* END ************************************************/
 	
 	Route::resource('usermanagement', 'UserManagementController');

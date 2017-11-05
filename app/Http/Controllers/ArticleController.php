@@ -110,7 +110,6 @@ class ArticleController extends Controller
     		->withInput();
     	} else {
     		
-    		//Almaceno el equipo
     		$article = Article::find($id);
     		$article->sale_price = convertAmount($request->precio_venta);
     		$article->status = $request->estado;

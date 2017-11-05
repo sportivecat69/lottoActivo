@@ -14,4 +14,9 @@ class SaleInvoice extends Model
     protected $fillable = [
         'sellers_agency_id', 'total', 'status',
     ];
+    
+    public function sellerAgency()
+    {
+        return $this->hasOne(SellerAgency::class, 'id', 'sellers_agency_id');
+    }
 }

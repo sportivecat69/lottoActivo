@@ -75,12 +75,19 @@
         <section class="content">
         
         <!-- ALERT --> 
-<!--          @if (session('error')) -->
-<!--             <div class="alert alert-danger alert-dismissable"> -->
-<!-- 			  <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times"></i></a> -->
-<!-- 			  {{ session('error') }} -->
-<!-- 			</div> -->
-<!--          @endif -->
+         @if (session('error'))
+            <div class="alert alert-danger alert-dismissable">
+			  <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times"></i></a>
+			  {{ session('error') }}
+			</div>
+         @endif
+         
+		@if (session('success'))
+            <div class="alert alert-success alert-dismissable">
+			  <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times"></i></a>
+			  {{ session('success') }}
+			</div>
+         @endif
 
         <div class="alert alert-danger alert-dismissable status" style="display: none;">
 		  <a href="#" class="close" data-dismiss="alert" aria-label="close"><i class="fa fa-times"></i></a>
@@ -92,70 +99,28 @@
             <div class="col-md-12">
               <div class="box">
                 <div class="box-header with-border">
-                  <div class="col-md-11">
-                  	<h3 class="box-title">Gestor de Ventas </h3>
+                
+                  <div class="col-md-10">
+                  	<a data-target="#modal-info" data-toggle="modal" href="#" class="">
+                       <i class="fa fa-info-circle fa-lg" aria-hidden="true" style="color:#367fa9;"></i>
+                    </a>
+                  	<h3 class="box-title">&nbsp;Gestor de Ventas </h3>
                   </div>
-                  <div class="col-md-1">
-              		<div class="text-right">
-                        <a data-target="#modal-info" data-toggle="modal" href="#" class="">
-                        	<i class="fa fa-info-circle fa-lg" aria-hidden="true" style="color:#367fa9;"></i>
+                  
+                  <!-- BTN Anular y Pagar  -->	
+                  <div class="col-md-2">
+              		<div class="text-right" style="margin-right: 10px;">
+						<a href="#"  id="print" onclick="print()" class="btn btn-success" {{ count($sale_cart) ? '' : 'disabled' }} data-toggle="tooltip" title="Pagar" data-placement="bottom">
+                        	<i class="fa fa-money" aria-hidden="true"></i>
+                        </a>
+                        
+						<a href="#" class="btn btn-danger" data-placement="bottom" data-target="#modal-anular" data-toggle="modal">
+                        	<i class="fa fa-ban" aria-hidden="true"></i>
                         </a>
                     </div>
-			        <!-- Modal de informacion shortcuts  -->		
-					<div class="modal fade modal-slide-in-right" aria-hidden="true" role="dialog" tabindex="-1" id="modal-info">
-						<div class="modal-dialog">
-							<div class="modal-content">
-								<div class="modal-header">
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					                     <i class="fa fa-times"></i>
-					                </button>
-					                <h4 class="modal-title">Teclas de acceso r&aacute;pido</h4>
-								</div>
-								
-								<div class="modal-body">
-									<div class="shortcut-list-item">
-										<h3 class="shortcut-list-item-header">A&ntilde;adir producto a la lista</h3>
-										<div class="shortcut-list-item-keys">
-											<span class="keyboard-key">ENTER</span>
-										</div>
-										<div class="short-list-item-desc">
-											<p>
-												Si pulsa &laquo; enter &raquo;, se a&ntilde;adira el articulo a 
-												la lista siempre y cuando estes parado sobre el monto.
-											</p>
-										</div>
-									</div>
-									<div class="shortcut-list-item">
-										<h3 class="shortcut-list-item-header">Fijar foco en el codigo</h3>
-										<div class="shortcut-list-item-keys">
-											<span class="keyboard-key">C</span>
-										</div>
-										<div class="short-list-item-desc">
-											<p>
-												Si pulsa &laquo; c &raquo;, se fijara el foco en el input del codigo.
-											</p>
-										</div>
-									</div>
-									<div class="shortcut-list-item">
-										<h3 class="shortcut-list-item-header">Fijar foco en la monto</h3>
-										<div class="shortcut-list-item-keys">
-											<span class="keyboard-key">M</span>
-										</div>
-										<div class="short-list-item-desc">
-											<p>
-												Si pulsa &laquo; m &raquo;, se fijara el foco en el input de monto.
-											</p>
-										</div>
-									</div>
-								</div>
-								<div class="modal-footer">
-									<button type="button" class="btn btn-default"  data-dismiss="modal">Cerrar</button>
-								</div>
-								
-							</div>
-						</div>
-					</div>
                   </div>
+                  <!-- END BTN Anular y Pagar -->	
+                  
                 </div>
                 <!-- /.box-header -->
 	                <div class="box-body ">
@@ -393,7 +358,7 @@
     								<div class="col-md-3">
 						                <div class="input-group">
 						                	<span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span>
-						                    <input type="text" class="form-control" maxlength="2" onkeydown="keyCode_codigo(event)"  id="codigo" name="codigo"  placeholder="N&uacute;mero" autocomplete="off">
+						                    <input type="text" class="form-control number" maxlength="2" onkeydown="keyCode_codigo(event)"  id="codigo" name="codigo"  placeholder="N&uacute;mero" autocomplete="off">
 					               		</div>
     								</div>
     								<div class="col-md-5" style=" display: inline-flex;">
@@ -410,30 +375,6 @@
 											<a data-target="#modal-delete" data-toggle="modal" href="#" id="trash" class="btn btn-danger" {{ count($sale_cart) ? '' : 'disabled' }}>
 					                        	<i class="fa fa-trash" aria-hidden="true"></i>
 					                        </a>
-									        <!-- Modal de confirmacion para vaciar carrito -->		
-			       							<div class="modal fade modal-slide-in-right" aria-hidden="true" role="dialog" tabindex="-1" id="modal-delete">
-												<div class="modal-dialog">
-													<div class="modal-content">
-														<div class="modal-header">
-															<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-											                     <i class="fa fa-times"></i>
-											                </button>
-											                <h4 class="modal-title">Borrar Productos</h4>
-														</div>
-														
-														<div class="modal-body">
-															<p>Confirme si desea borrar todos</p>
-														</div>
-														<div class="modal-footer">
-															<button type="button" class="btn btn-default"  data-dismiss="modal">Cerrar</button>
-															<a href="{{ route('sale.trash') }}" id="btn-loading" data-loading-text="Cargando..." class="btn btn-primary">
-									                        	Confirmar
-									                        </a>
-														</div>
-														
-													</div>
-												</div>
-											</div>
 										</div>
     								</div>
 								</div>
@@ -486,11 +427,131 @@
 		</div>
 	</section>
 </div>
+<!--Modales -->
+    <!-- Modal de informacion shortcuts  -->		
+	<div class="modal fade modal-slide-in-right" aria-hidden="true" role="dialog" tabindex="-1" id="modal-info">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                     <i class="fa fa-times"></i>
+	                </button>
+	                <h4 class="modal-title">Teclas de acceso r&aacute;pido</h4>
+				</div>
+				
+				<div class="modal-body">
+					<div class="shortcut-list-item">
+						<h3 class="shortcut-list-item-header">A&ntilde;adir producto a la lista</h3>
+						<div class="shortcut-list-item-keys">
+							<span class="keyboard-key">ENTER</span>
+						</div>
+						<div class="short-list-item-desc">
+							<p>
+								Si pulsa &laquo; enter &raquo;, se a&ntilde;adira el articulo a 
+								la lista siempre y cuando estes parado sobre el monto.
+							</p>
+						</div>
+					</div>
+					<div class="shortcut-list-item">
+						<h3 class="shortcut-list-item-header">Fijar foco en el codigo</h3>
+						<div class="shortcut-list-item-keys">
+							<span class="keyboard-key">C</span>
+						</div>
+						<div class="short-list-item-desc">
+							<p>
+								Si pulsa &laquo; c &raquo;, se fijara el foco en el input del codigo.
+							</p>
+						</div>
+					</div>
+					<div class="shortcut-list-item">
+						<h3 class="shortcut-list-item-header">Fijar foco en la monto</h3>
+						<div class="shortcut-list-item-keys">
+							<span class="keyboard-key">M</span>
+						</div>
+						<div class="short-list-item-desc">
+							<p>
+								Si pulsa &laquo; m &raquo;, se fijara el foco en el input de monto.
+							</p>
+						</div>
+					</div>
+					<div class="shortcut-list-item">
+						<h3 class="shortcut-list-item-header">Imprimir</h3>
+						<div class="shortcut-list-item-keys">
+							<span class="keyboard-key">M</span>
+						</div>
+						<div class="short-list-item-desc">
+							<p>
+								Si pulsa &laquo; esc &raquo;, se imprimir el ticket.
+							</p>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default"  data-dismiss="modal">Cerrar</button>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+    <!-- Modalpara anular tickets -->		
+	<div class="modal fade modal-slide-in-right" aria-hidden="true" role="dialog" tabindex="-1" id="modal-anular">
+		<form method="POST" action="{{ route('sale.anular') }}">
+           {{ csrf_field() }}
+    		<div class="modal-dialog">
+    			<div class="modal-content">
+    				<div class="modal-header">
+    					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    	                     <i class="fa fa-times"></i>
+    	                </button>
+    	                <h4 class="modal-title">Anular Ticket</h4>
+    				</div>
+    				
+    				<div class="modal-body">
+        				<div class="form-group">
+                          <label for="usr">Ingrese n&uacute;mero de ticket:</label>
+                          <input type="text" class="form-control number" id="ticket" name="ticket" placeholder="N&uacute;mero" autocomplete="off">
+                        </div>
+                    </div>
+                    
+    				<div class="modal-footer">
+    					<button type="button" class="btn btn-default"  data-dismiss="modal">Cerrar</button>
+						<button type="submit" class="btn btn-primary" id="btn-loading" data-loading-text="Cargando...">
+							Confirmar
+						</button>
+    				</div>
+    			</div>
+    		</div>
+    	</form>
+	</div>
+    <!-- Modal de confirmacion para vaciar carrito -->		
+	<div class="modal fade modal-slide-in-right" aria-hidden="true" role="dialog" tabindex="-1" id="modal-delete">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                     <i class="fa fa-times"></i>
+	                </button>
+	                <h4 class="modal-title">Borrar Productos</h4>
+				</div>
+				
+				<div class="modal-body">
+					<p>Confirme si desea borrar todos</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default"  data-dismiss="modal">Cerrar</button>
+					<a href="{{ route('sale.trash') }}" id="btn-loading" data-loading-text="Cargando..." class="btn btn-primary">
+                    	Confirmar
+                    </a>
+				</div>
+				
+			</div>
+		</div>
+	</div>
 <!--Fin Contenido-->
 @endsection
 @push('scripts')
 	<script>
-        $('#codigo').on('input', function () { 
+        $('.number').on('input', function () { 
             this.value = this.value.replace(/[^0-9-.]/g,'');
         });
 

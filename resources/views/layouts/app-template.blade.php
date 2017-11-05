@@ -102,7 +102,7 @@
           </ul>
         </li>
   		<li class="{{ $url === '/sale' ? 'active' : ''}}  {{ $url === '/client' ? 'active' : ''}} {{ $url === '/sale/report' ? 'active' : ''}} treeview">
-          <a href="#"><i class="fa fa-money " aria-hidden="true"></i> <span>Ventas</span>
+          <a href="#"><i class="fa fa-ticket " aria-hidden="true"></i> <span>Ventas</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>

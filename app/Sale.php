@@ -14,4 +14,9 @@ class Sale extends Model
 	protected $fillable = [
 	    'sale_invoice_id', 'draws_id', 'articles_id', 'bet', 'status',
 	];
+	
+	public function saleInvoice()
+	{
+	    return $this->hasOne(SaleInvoice::class, 'id', 'sale_invoice_id');
+	}
 }
