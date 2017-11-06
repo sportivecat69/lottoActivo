@@ -19,6 +19,8 @@ class CreateSellersAgencyTable extends Migration
             $table->foreign('agencies_id')->references('id')->on('agencies');
             $table->integer('users_id')->unsigned();
             $table->foreign('users_id')->references('id')->on('users');
+            $table->integer('printer_id')->unsigned();
+            $table->foreign('printer_id')->references('id')->on('printers');
             $table->timestamps();
         });
     }

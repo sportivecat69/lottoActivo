@@ -83,6 +83,34 @@
                             </div>
                         </div>
                         
+                        <div class="form-group{{ $errors->has('agency') ? ' has-error' : '' }}">
+                            <label for="user_level" class="col-md-4 control-label">Agencia</label>
+
+                            <div class="col-md-6">
+                            {{ Form::select('agency', [null=>'Seleccione'] + $Agencies, old('agency') or $user->seller_agency()->id, array('class' => 'form-control')) }}
+
+                                @if ($errors->has('agency'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('agency') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                        
+                        <div class="form-group{{ $errors->has('printer') ? ' has-error' : '' }}">
+                            <label for="user_level" class="col-md-4 control-label">Impresora</label>
+
+                            <div class="col-md-6">
+                            {{ Form::select('printer', [null=>'Seleccione'] + $Printers, old('printer') or null, array('class' => 'form-control')) }}
+
+                                @if ($errors->has('printer'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('printer') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                        
                         <div class="form-group{{ $errors->has('user_level') ? ' has-error' : '' }}">
                             <label for="user_level" class="col-md-4 control-label">Role</label>
 

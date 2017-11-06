@@ -14,6 +14,10 @@ class User extends Authenticatable
     
     public $user_level; // role
     
+    public $agency; // agency associated
+    
+    public $printer; // printer associated
+    
     protected $dates = ['deleted_at'];
     
     /**
@@ -31,7 +35,9 @@ class User extends Authenticatable
     		'firstname'       => 'required|min:3|max:255',
     		'lastname'       => 'required|min:3|max:255',
     		'email' 	 => 'required|email|max:255|unique:users,email',
-    		'user_level' => 'required|numeric'
+    		'user_level' => 'required|numeric',
+    		'agency' => 'required|numeric',
+    		'printer' => 'required|numeric'
     );
     
     
@@ -56,10 +62,17 @@ class User extends Authenticatable
     	return $this->belongsToMany('App\Security\Role', 'role_user');
     }
     
+	public function seller_agency()
+    {
+    	return $this->hasOne('App\SellerAgency', 'id', 'user_id');
+    }
+    
     public function crearUsuario($datos)
     {
     	   
     		unset($datos['user_level']);
+    		unset($datos['agency']);
+    		unset($datos['printer']);
     		$datos['password']=bcrypt($datos['documento']);
     		
     		if($id=User::insertGetId($datos)){
@@ -77,6 +90,8 @@ class User extends Authenticatable
 //     	self::$rules['documento'] .= ",{$user->id}";
     	$user = User::find($id);
     	unset($datos['user_level']);
+    	unset($datos['agency']);
+    	unset($datos['printer']);
     	$datos['password']=bcrypt($datos['documento']);
     	if($user->update($datos)){
     		return $user->id;

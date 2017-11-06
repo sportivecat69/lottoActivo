@@ -13,7 +13,7 @@ class SellerAgency extends Model
      */
     protected $table = 'sellers_agency';
     protected $fillable = [
-        'agencies_id', 'user_id',
+        'agencies_id', 'user_id', 'printer_id'
     ];
     
     public function agency()
@@ -24,5 +24,10 @@ class SellerAgency extends Model
     public function user()
     {
     	return $this->hasOne(User::class, 'id', 'user_id');
+    }
+    
+    public function printer()
+    {
+    	return $this->hasOne(Printers::class, 'id', 'printer_id');
     }
 }

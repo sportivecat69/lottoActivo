@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use App\SellerAgency;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
+use App\Printer;
+use App\Agency;
 
 class UserManagementController extends Controller
 {
@@ -47,7 +49,9 @@ class UserManagementController extends Controller
     {
 
     	$Roles= Role::where('name','=','seller')->pluck('display_name', 'id')->all();
-    	return view('users-mgmt/create')->with('Roles', $Roles);
+    	$Agencies= Agency::all()->pluck('name', 'id')->all();
+    	$Printers= Printer::all()->pluck('name', 'id')->all();
+    	return view('users-mgmt/create')->with(['Roles'=>$Roles, 'Agencies'=>$Agencies, 'Printers'=>$Printers]);
     	
        
     }
@@ -78,6 +82,12 @@ class UserManagementController extends Controller
     			$role=(int)$request['user_level'];
     			$user = User::find($val);
     			$user->attachRole($role);
+    			
+    			$sellers_agency= new SellerAgency();
+    			$sellers_agency->agencies_id=(int)$request['agency'];
+    			$sellers_agency->printer_id=(int)$request['printer'];
+    			$sellers_agency->users_id=$val;
+    			$sellers_agency->save();
     			 
     			return redirect()->route('usermanagement.index')->with('succes', 'Usuario registrado');
     		}else{
@@ -112,11 +122,15 @@ class UserManagementController extends Controller
         //$Roles= Role::where('name','<>','rooter')->where('name','<>','banker')->pluck('display_name', 'id')->prepend('Seleccione', null);
         $Roles= Role::where('name','=','seller')->pluck('display_name', 'id')->all();
         // Redirect to user list if updating user wasn't existed
+        
+        $Agencies= Agency::all()->pluck('name', 'id')->all();
+        $Printers= Printer::all()->pluck('name', 'id')->all();
+        
         if ($user == null || count($user) == 0) {
             return redirect()->intended('/usermanagement');
         }
 
-        return view('users-mgmt/edit', ['user' => $user, 'Roles' =>$Roles]);
+        return view('users-mgmt/edit', ['user' => $user, 'Roles' =>$Roles, 'Agencies'=>$Agencies, 'Printers'=>$Printers]);
     }
 
     /**
@@ -152,6 +166,13 @@ class UserManagementController extends Controller
     			RolesUsuario::where('user_id', $id)->delete();
     			$role=(int)$request['user_level'];
     			$user->attachRole($role);
+    			
+    			SellerAgency::where('user_id', $id)->delete();
+    			$sellers_agency= new SellerAgency();
+    			$sellers_agency->agencies_id=(int)$request['agency'];
+    			$sellers_agency->printer_id=(int)$request['printer'];
+    			$sellers_agency->users_id=$id;
+    			$sellers_agency->save();
     			 
     			return redirect()->route('usermanagement.index')->with('succes', 'Usuario modificado');
     		}else{
