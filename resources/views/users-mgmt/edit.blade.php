@@ -87,7 +87,7 @@
                             <label for="user_level" class="col-md-4 control-label">Agencia</label>
 
                             <div class="col-md-6">
-                            {{ Form::select('agency', [null=>'Seleccione'] + $Agencies, old('agency') or $user->seller_agency()->id, array('class' => 'form-control')) }}
+                            {{ Form::select('agency', [null=>'Seleccione'] + $Agencies, old('agency') or $user->seller_agency->agencies_id, array('class' => 'form-control')) }}
 
                                 @if ($errors->has('agency'))
                                     <span class="help-block">
@@ -101,7 +101,7 @@
                             <label for="user_level" class="col-md-4 control-label">Impresora</label>
 
                             <div class="col-md-6">
-                            {{ Form::select('printer', [null=>'Seleccione'] + $Printers, old('printer') or null, array('class' => 'form-control')) }}
+                            {{ Form::select('printer', [null=>'Seleccione'] + $Printers, old('printer') or $user->seller_agency->printer_id, array('class' => 'form-control')) }}
 
                                 @if ($errors->has('printer'))
                                     <span class="help-block">

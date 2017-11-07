@@ -32,11 +32,9 @@ class UserManagementController extends Controller
     public function index()
     {
     	//El sistema tendrá un mini administrador que será el rol banker y todos los demás son vendedores
-        $users = User::paginate(10); // falta  sacar el rooter y banker
-//     	$users = User::whereHas(['rol' => function($q){
-//     		$q->where('name', '=','seller');
-//     	}])->get();
-//     	dd($users);die();
+		// listar solo los vendedores 
+        $users = User::where('id', '!=', Auth::id())->where('id', '!=', 1)->paginate(10);
+
         return view('users-mgmt.index', ['users' => $users]);
     }
 
@@ -78,10 +76,16 @@ class UserManagementController extends Controller
     		$val=$user->crearUsuario($data);
     		
     		if(is_int($val)){
-    			 
-    			$role=(int)$request['user_level'];
+
+    			
+//     			$role=(int)$request['user_level'];
+//     			$user = User::find($val);
+//     			$user->attachRole($role);
+
+				// sólo se pueden crear usuarios con rol vendedor
+    			$role=Role::where('name','=','seller')->first();
     			$user = User::find($val);
-    			$user->attachRole($role);
+    			$user->attachRole($role->id);
     			
     			$sellers_agency= new SellerAgency();
     			$sellers_agency->agencies_id=(int)$request['agency'];
@@ -107,7 +111,6 @@ class UserManagementController extends Controller
     public function show($id)
     {
     	$user = User::find($id);
-    	
     	return view('users-mgmt/show', ['user' => $user]);
     }
     /**
@@ -126,7 +129,8 @@ class UserManagementController extends Controller
         $Agencies= Agency::all()->pluck('name', 'id')->all();
         $Printers= Printer::all()->pluck('name', 'id')->all();
         
-        if ($user == null || count($user) == 0) {
+        // no se permite editar el usuario admin ni el usuario en sesión este debe editar su perfil 
+        if ($user == null || count($user) == 0 || $user->id == 1 || $user->id == Auth::id()) {
             return redirect()->intended('/usermanagement');
         }
 
@@ -163,11 +167,16 @@ class UserManagementController extends Controller
     		
     		if(is_int($val)){
     			 
-    			RolesUsuario::where('user_id', $id)->delete();
-    			$role=(int)$request['user_level'];
-    			$user->attachRole($role);
+     			RolesUsuario::where('user_id', $id)->delete();
+     			
+//     			$role=(int)$request['user_level'];
+//     			$user->attachRole($role);
+
+    			// sólo se pueden crear usuarios con rol vendedor
+    			$role=Role::where('name','=','seller')->first();
+    			$user->attachRole($role->id);
     			
-    			SellerAgency::where('user_id', $id)->delete();
+    			SellerAgency::where('users_id', $id)->delete();
     			$sellers_agency= new SellerAgency();
     			$sellers_agency->agencies_id=(int)$request['agency'];
     			$sellers_agency->printer_id=(int)$request['printer'];

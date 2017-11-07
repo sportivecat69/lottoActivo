@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder
              'lastname' => 'Mr.',
              'firstname' => 'Admin',
              'documento' => 'V-00000000',
-             //'role' => 'ADMINISTRADOR'
          ]);
          
 

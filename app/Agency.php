@@ -12,8 +12,8 @@ class Agency extends Model
 	 */
 	
 	public   $rules = [
-		'name' => 'required|alpha_dash|min:3|max:50',
-		'description' => 'required|alpha|min:3|max:200',
+		'name' => 'required|min:3|max:50',
+		'description' => 'required|min:3|max:200',
 		'percentage_gain' => 'required|numeric|between:0,100',
 		'num_cajas' => 'required|integer',
 		'mint_sell' => 'required|integer|between:0,60',

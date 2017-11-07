@@ -64,7 +64,7 @@ class User extends Authenticatable
     
 	public function seller_agency()
     {
-    	return $this->hasOne('App\SellerAgency', 'id', 'user_id');
+    	return $this->hasOne(SellerAgency::class, 'users_id', 'id');
     }
     
     public function crearUsuario($datos)

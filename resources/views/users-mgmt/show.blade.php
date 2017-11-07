@@ -25,9 +25,10 @@
 			                <tr><th>C&eacute;dula</th><td>{{ $user->documento }}</td></tr>
 							<tr><th>Correo</th><td>{{ $user->email }}</td></tr>
 							<tr><th>Rol</th><td> @foreach ($user->rol as $rol){{ $rol->display_name }}	@endforeach </td></tr>
+							<tr><th>Agencia</th><td>{{ $user->seller_agency->agency->name }}</td></tr>
+							<tr><th>Impresora</th><td>{{ $user->seller_agency->printer->name }}</td></tr>
 							<tr><th>Estatus</th><td>{{ empty($user->deleted_at) ? 'ACTIVO' : 'INACTIVO' }}</td></tr>
 
-							<tr><th>Agencia</th><td>...</td></tr>
 		              </table>
 		        </div>
 		        <!-- /.box-body -->
