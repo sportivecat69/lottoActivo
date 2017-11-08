@@ -9,7 +9,6 @@
         
         <!-- Main content -->
         <section class="content">
-        
          <div class="row">
 			@if (session('succes'))
 	            <div class="alert alert-success alert-dismissable">
@@ -117,11 +116,11 @@
 																		aria-label="Close">
 														                     <i class="fa fa-times"></i>
 														                </button>
-														                <h4 class="modal-title">Eliminar Usuario</h4>
+														                <h4 class="modal-title">Inactivar Usuario</h4>
 																	</div>
 																	
 																	<div class="modal-body">
-																		<p>Confirme si desea Eliminar el usuario <b>{{ $user->lastname.' '.$user->firstname }}</b></p>
+																		<p>Confirme si desea Inactivar el usuario <b>{{ $user->lastname.' '.$user->firstname }}</b></p>
 																	</div>
 																	<div class="modal-footer">
 																		<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -143,9 +142,9 @@
 																	aria-label="Close">
 													                     <i class="fa fa-times"></i>
 													                </button>
-													                <h4 class="modal-title">Activar Agencia</h4>
+													                <h4 class="modal-title">Activar Usuario</h4>
 																</div>
-																
+																@if($user->seller_agency->agency->status===true)
 																<div class="modal-body">
 																	<p>Confirme si desea Activar el usuario <b>{{ $user->lastname.' '.$user->firstname }}</b></p>
 																</div>
@@ -153,6 +152,16 @@
 																	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 																	<button type="submit" class="btn btn-primary">Confirmar</button>
 																</div>
+																@else
+																
+																<div class="modal-body">
+																	<p>El usuario no puede ser activado, la agencia esta inactiva</b></p>
+																</div>
+																<div class="modal-footer">
+																	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+																</div>
+																
+																@endif
 																
 															</div>
 														</div>

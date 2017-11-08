@@ -7,6 +7,9 @@ use App\Agency;
 use App\Categorie;
 use Illuminate\Support\Facades\Validator;
 use App\AgencyCategoriesSell;
+use App\User;
+use App\SellerAgency;
+use Carbon\Carbon;
 
 class AgencyController extends Controller
 {
@@ -303,7 +306,16 @@ class AgencyController extends Controller
     
     	$agency->status=false;
     	$agency->save();
-    	 
+    	
+    	// inactivar usuarios
+    	$sellers_agency=SellerAgency::where('agencies_id', $id)->get();
+
+    	foreach ($sellers_agency as $sa){
+    		$user=User::find($sa->users_id);
+    		$user->deleted_at=Carbon::now();
+    		$user->update();
+    	}
+    	
     	return redirect()->route('agency.index')->with('succes', 'Agencia Inactiva');
     }
     

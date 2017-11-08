@@ -124,11 +124,7 @@
                                 @endif
                             </div>
                         </div>
-                        
-                        <div class="alert alert-info">
-						  <strong>El password ser&aacute; igual al n&uacute;mero de c&eacute;dula</strong>
-						</div>
-                        
+
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
 				    			<button type="submit" class="btn btn-primary">
@@ -142,9 +138,17 @@
                     </form>
                 </div>
             </div>
+            
+            <div class="bs-callout bs-callout-danger" id="callout-buttons-ie-disabled"> <h4>Clave del usuario: </h4> <p>Ser&aacute; la <code>c&eacute;dula</code> registrada con el formato establecido <code>(V/E-00.000.000/.-0)</code>.</p> </div>
+                        
         </div>
     </div>
 </div>
   </div> 	
 @endsection
+<style>
+.bs-callout-danger {
+    border-left-color: #337ab7;
+}
+</style>
 

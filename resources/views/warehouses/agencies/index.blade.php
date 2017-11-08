@@ -31,9 +31,7 @@
 					Listado de Agencias 
 				  </h3>
                   <div class="box-tools pull-right">
-                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     
-                    <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                   </div>
                 </div>
                 <!-- /.box-header -->
@@ -119,11 +117,12 @@
 																	aria-label="Close">
 													                     <i class="fa fa-times"></i>
 													                </button>
-													                <h4 class="modal-title">Inactiva Agencia</h4>
+													                <h4 class="modal-title">Inactivar Agencia</h4>
 																</div>
 																
 																<div class="modal-body">
 																	<p>Confirme si desea inactivar <b>{{ $agency->name }}</b></p>
+																	<p>Los usuarios asociados ser&aacute;n inactivados</b></p>
 																</div>
 																<div class="modal-footer">
 																	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -149,6 +148,7 @@
 																
 																<div class="modal-body">
 																	<p>Confirme si desea Activar <b>{{ $agency->name }}</b></p>
+																	<p>Los usuarios asociados deben ser activados manualmente</b></p>
 																</div>
 																<div class="modal-footer">
 																	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>

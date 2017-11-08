@@ -31,10 +31,22 @@ class UserManagementController extends Controller
      */
     public function index()
     {
-    	//El sistema tendrá un mini administrador que será el rol banker y todos los demás son vendedores
-		// listar solo los vendedores 
-        $users = User::where('id', '!=', Auth::id())->where('id', '!=', 1)->paginate(10);
+    	/***
+    	 * El sistema tendrá un mini administrador que será el rol banker y todos los demás son vendedores
+    	 * Se listan sólo los vendedores 
+    	 */
 
+        //$users = User::where('id', '!=', Auth::id())->where('id', '!=', 1)->paginate(10);
+        //$users = User::with(['rol' => function ($query) {$query->where('name','seller');}])->paginate(10);
+        
+        $users = User::query()
+        ->select('users.*')
+        ->leftjoin('role_user as ru','ru.user_id', '=', 'users.id')
+        ->leftjoin('roles as r','r.id', '=', 'ru.role_id')
+        ->where('r.name','seller')
+        ->where('users.id', '!=', 1) // solo por seguridad
+        ->paginate(10);    
+        
         return view('users-mgmt.index', ['users' => $users]);
     }
 
@@ -46,6 +58,10 @@ class UserManagementController extends Controller
     public function create()
     {
 
+    	/***
+    	 * Sólo se lista el rol seller
+    	 */
+    	
     	$Roles= Role::where('name','=','seller')->pluck('display_name', 'id')->all();
     	$Agencies= Agency::all()->pluck('name', 'id')->all();
     	$Printers= Printer::all()->pluck('name', 'id')->all();
@@ -82,7 +98,10 @@ class UserManagementController extends Controller
 //     			$user = User::find($val);
 //     			$user->attachRole($role);
 
-				// sólo se pueden crear usuarios con rol vendedor
+				/***
+				 * Sólo se pueden crear usuarios con rol seller
+				 */
+    			
     			$role=Role::where('name','=','seller')->first();
     			$user = User::find($val);
     			$user->attachRole($role->id);
@@ -122,15 +141,17 @@ class UserManagementController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        //$Roles= Role::where('name','<>','rooter')->where('name','<>','banker')->pluck('display_name', 'id')->prepend('Seleccione', null);
         $Roles= Role::where('name','=','seller')->pluck('display_name', 'id')->all();
         // Redirect to user list if updating user wasn't existed
         
         $Agencies= Agency::all()->pluck('name', 'id')->all();
         $Printers= Printer::all()->pluck('name', 'id')->all();
+
+        /***
+         * NO se permite editar el usuario admin ni el usuario en sesión este debe editar su perfil, tampoco un usuario con rol banker
+         */
         
-        // no se permite editar el usuario admin ni el usuario en sesión este debe editar su perfil 
-        if ($user == null || count($user) == 0 || $user->id == 1 || $user->id == Auth::id()) {
+        if ($user == null || count($user) == 0 || $user->id == 1 || $user->id == Auth::id() || $user->hasRole('banker')) {
             return redirect()->intended('/usermanagement');
         }
 
@@ -172,7 +193,10 @@ class UserManagementController extends Controller
 //     			$role=(int)$request['user_level'];
 //     			$user->attachRole($role);
 
-    			// sólo se pueden crear usuarios con rol vendedor
+    			/***
+				 * Sólo se pueden crear usuarios con rol seller
+				 */
+     			
     			$role=Role::where('name','=','seller')->first();
     			$user->attachRole($role->id);
     			
@@ -200,8 +224,13 @@ class UserManagementController extends Controller
      */
     public function destroy($id)
     {
+    	/***
+    	 * Se evalua por fecha deleted_at, si la misma no existe se inactiva el usuario de lo contrario se activa
+    	 */
+    	
     	//RolesUsuario::where('user_id', $id)->delete();
         //User::where('id', $id)->delete();
+        
     	$user = User::find($id);
 
     	if(empty($user->deleted_at)){
@@ -209,9 +238,17 @@ class UserManagementController extends Controller
     		$user->update();
     		return redirect()->route('usermanagement.index')->with('succes', 'Usuario Inactivo');
     	}else{
-    		$user->deleted_at=null; 
-    		$user->update();
-    		return redirect()->route('usermanagement.index')->with('succes', 'Usuario Activo');
+    		
+    		//validar si la agencia esta activa
+    		if($user->seller_agency->agency->status===true){
+	    		$user->deleted_at=null; 
+	    		$user->update();
+	    		return redirect()->route('usermanagement.index')->with('succes', 'Usuario Activo');
+	    		
+    		}else{
+    			return redirect()->route('usermanagement.index')->with('fail', 'El usuario no puede ser activado, la agencia esta inactiva');
+    		}
+    		
     	}
     	
     	
