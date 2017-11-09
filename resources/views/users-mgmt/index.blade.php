@@ -24,7 +24,9 @@
 				</div>
 	         @endif
 	    </div>
-          
+          <?php //$x=App\User::find(1); 
+          		//echo $x->auth->logout();
+          ?>
           <div class="row">
             <div class="col-md-12">
               <div class="box box-warning">
