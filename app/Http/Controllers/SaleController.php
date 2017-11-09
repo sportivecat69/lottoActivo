@@ -16,6 +16,7 @@ use App\Draw;
 use Mike42\Escpos\Printer;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use App\SellerAgency;
+use App\AgencyCategoriesSell;
 
 class SaleController extends Controller
 {
@@ -297,7 +298,6 @@ class SaleController extends Controller
 	}
 	
 	/**
-	 * Store a newly created resource in storage.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
@@ -344,6 +344,89 @@ class SaleController extends Controller
 	    }
 	}
 
+	/**
+	 * Pagar a newly created resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function pagar(Request $request)
+	{
+	    //Consulto el id de la agencia mediante el usuario
+	    $seller_agency = SellerAgency::where('users_id', Auth::user()->id)->first();
+	    
+	    //Consulto agency_categories_sell para ver cuanto es el precio 
+	    //minima de venta y por cuanto se paga 
+	    $agencyCategoriesSell = AgencyCategoriesSell::where([
+	                                                          ['agencies_id', $seller_agency->agency->id],
+	                                                          ['categorie_id', 1]
+	                                                        ])->first();
+    	    
+	    //Consulto el ticket
+	    $saleInvoice = SaleInvoice::find($request->ticket);
+	    
+	    //Valido i el ticket existe
+	    if ($saleInvoice) {
+	        //verifico si el ticket pertenece a la agencia correcta
+	        if ($seller_agency->agency->id != $saleInvoice->sellerAgency->agency->id) {
+	            
+	            return redirect()->route('sale.index')->with('error', 'El ticket Nro. '.$request->ticket.' no pertenece a esta agencia');
+	            
+	        } else {
+	            
+	            if ($saleInvoice->status != 'ANULADO') {
+	                
+	                //Le resto los minutos configurado de la agencia a la hora actual
+	                $fechaVencimiento = strtotime ( '+3 day' , strtotime( date('Y-m-d', strtotime($saleInvoice->created_at))) );
+	                
+	                //Valido si esta en la fecha para pagar
+	                if (date('Y-m-d') <= date('Y-m-d', $fechaVencimiento)) {
+	                    
+	                    //Verifico si el ticket tiene premio
+	                    $sale_detalles = Sale::where([
+                            	                        ['sale_invoice_id', $request->ticket],
+                            	                        ['status', 'GANADOR']
+                            	                    ])->get();
+	                    
+                        if (count($sale_detalles) > 0) {
+	                        
+                            $monto_jugada = 0;
+                            
+                            //verifico y sumo el monto de juagdas de los premiados
+                            foreach ($sale_detalles as $sale_detalle){
+                                $monto_jugada += $sale_detalle->bet;
+                            }
+                            
+                            //Calculo para el pago de ticket
+                            $premio = ($monto_jugada * $agencyCategoriesSell->prize_min)/$agencyCategoriesSell->bet_min;
+                            
+                            //Edito el esttus de los producto del ticket
+                            $sale = Sale::where([
+                                                    ['sale_invoice_id', $request->ticket],
+                                                    ['status', 'GANADOR']
+                                                ])->update(['status' => 'PAGADO']);
+                            
+                                                return redirect()->route('sale.index')->with('success', 'El ticket fue pagado con exito, Total: '.number_format($premio,2,",","."));
+	                    } else {
+	                        return redirect()->route('sale.index')->with('error', 'El ticket Nro. '.$request->ticket.' no esta premiado');
+	                    }
+	                    
+	                } else {
+	                    return redirect()->route('sale.index')->with('error', 'El ticket ha caducado');
+	                }
+	                
+	            } else {
+	                
+	                return redirect()->route('sale.index')->with('error', 'El ticket esta anulado');
+	                
+	            }
+
+	        }
+	    } else {
+	        return redirect()->route('sale.index')->with('error', 'El ticket Nro. '.$request->ticket.' no existe');
+	    }
+	}
+	
 	/**
 	 * Display a listing of the resource.
 	 *

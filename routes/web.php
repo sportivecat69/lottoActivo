@@ -54,6 +54,7 @@ Route::group(['middleware' => 'auth'], function (){
 	Route::post('sale/process', 'SaleController@process')->name('sale.process');
 	Route::get('sale/report', 'SaleController@report')->name('sale.report');
 	Route::post('sale/anular', 'SaleController@anular')->name('sale.anular');
+	Route::post('sale/pagar', 'SaleController@pagar')->name('sale.pagar');
 	/******************************* END ************************************************/
 	
 	Route::resource('usermanagement', 'UserManagementController');

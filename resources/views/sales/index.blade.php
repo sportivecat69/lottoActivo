@@ -110,10 +110,10 @@
                   <!-- BTN Anular y Pagar  -->	
                   <div class="col-md-2">
               		<div class="text-right" style="margin-right: 10px;">
-						<a href="#"  id="print" onclick="print()" class="btn btn-success" {{ count($sale_cart) ? '' : 'disabled' }} data-toggle="tooltip" title="Pagar" data-placement="bottom">
+                        <a href="#" class="btn btn-success" data-placement="bottom" data-target="#modal-pagar" data-toggle="modal">
                         	<i class="fa fa-money" aria-hidden="true"></i>
                         </a>
-                        
+
 						<a href="#" class="btn btn-danger" data-placement="bottom" data-target="#modal-anular" data-toggle="modal">
                         	<i class="fa fa-ban" aria-hidden="true"></i>
                         </a>
@@ -504,6 +504,36 @@
     	                     <i class="fa fa-times"></i>
     	                </button>
     	                <h4 class="modal-title">Anular Ticket</h4>
+    				</div>
+    				
+    				<div class="modal-body">
+        				<div class="form-group">
+                          <label for="usr">Ingrese n&uacute;mero de ticket:</label>
+                          <input type="text" class="form-control number" id="ticket" name="ticket" placeholder="N&uacute;mero" autocomplete="off">
+                        </div>
+                    </div>
+                    
+    				<div class="modal-footer">
+    					<button type="button" class="btn btn-default"  data-dismiss="modal">Cerrar</button>
+						<button type="submit" class="btn btn-primary" id="btn-loading" data-loading-text="Cargando...">
+							Confirmar
+						</button>
+    				</div>
+    			</div>
+    		</div>
+    	</form>
+	</div>
+	<!-- Modal para pagar tickets -->		
+	<div class="modal fade modal-slide-in-right" aria-hidden="true" role="dialog" tabindex="-1" id="modal-pagar">
+		<form method="POST" action="{{ route('sale.pagar') }}">
+           {{ csrf_field() }}
+    		<div class="modal-dialog">
+    			<div class="modal-content">
+    				<div class="modal-header">
+    					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    	                     <i class="fa fa-times"></i>
+    	                </button>
+    	                <h4 class="modal-title">Pagar Ticket</h4>
     				</div>
     				
     				<div class="modal-body">
