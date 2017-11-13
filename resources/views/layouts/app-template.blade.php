@@ -68,6 +68,7 @@
           <p>{{ Auth::user()->firstname.' '.Auth::user()->lastname }}</p>
           <!-- Status -->
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+          <a href="{{ route('profile') }}"><i class="fa fa-cog text-warning"></i>Settings</a>
         </div>
       </div>
 

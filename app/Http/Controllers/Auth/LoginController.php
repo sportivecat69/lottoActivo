@@ -55,14 +55,22 @@ class LoginController extends Controller
      *
      * @return Response
      */
-    public function authenticate()
-    {
-    	if (Auth::attempt(['email' => $email, 'password' => $password, 'app_status' => TRUE], $remember)) {
+//     public function authenticate()
+//     {
+//     	if (Auth::attempt(['email' => $email, 'password' => $password, 'app_status' => TRUE], $remember)) {
     		
-    		Auth::user()->session=TRUE;
-    		Auth::user()->update();
-    		// Authentication passed...
-    		return redirect()->intended('dashboard');
-    	}
+//     		Auth::user()->session=TRUE;
+//     		Auth::user()->update();
+//     		// Authentication passed...
+//     		return redirect()->intended('dashboard');
+//     	}
+//     }
+
+    protected function credentials($request)
+    {
+    	$request['app_status'] = true; // app activa
+    	$request['session'] = false; // no posee session
+    	$request['deleted_at'] = null; // esta activo
+    	return $request->only($this->username(), 'password', 'app_status', 'session', 'deleted_at');
     }
 }

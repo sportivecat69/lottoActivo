@@ -132,6 +132,8 @@ class UserManagementController extends Controller
     	$user = User::find($id);
     	return view('users-mgmt/show', ['user' => $user]);
     }
+
+    
     /**
      * Show the form for editing the specified resource.
      *
@@ -251,6 +253,41 @@ class UserManagementController extends Controller
     		
     	}
     	
+    	
+    }
+    
+    public function changePassword(){
+    	
+    	return view('auth.passwords.change');
+    }
+    
+    public function updatePassword(Request $request){
+    	
+    	$user = User::find(Auth::id());
+ 
+    	$data= $request->except(['_token','_method']);
+    	//$rules=$user->rules;
+    	
+    	
+    	$rules['password'] = "required|min:8|max:10";
+    	$rules['confirm_password'] = "same:password";
+    	 
+    	$validator = Validator::make($data, $rules);
+    	
+    	if ($validator->fails()){
+    		return redirect()->route('password.change')
+    		->withErrors($validator)
+    		->withInput();
+    	}else{
+    		
+    		$user->password=bcrypt($request->password);
+    		if($user->update()){
+    			return redirect()->route('dashboard')->with('succes', 'La clave se ha cambiado con &eacute;xito.');
+    		}else{
+    			return redirect()->route('dashboard')->with('fail', 'Ocurri&oacute; un error intente de nuevo.');
+    		}
+    		
+    	}
     	
     }
 

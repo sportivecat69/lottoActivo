@@ -13,19 +13,24 @@ use App\Agency;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Auth::routes();
 
-Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-Route::post('login', 'Auth\LoginController@login');
-Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+// Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+// Route::post('login', 'Auth\LoginController@login');
+// Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
-// // Password Reset Routes...
-Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm');
-Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+// // // Password Reset Routes...
+// Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+// Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+// Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm');
+// Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+
 
 
 Route::group(['middleware' => 'auth'], function (){
+	
+	Route::get('password/change', 'UserManagementController@changePassword')->name('password.change');
+	Route::post('password/update', 'UserManagementController@updatePassword')->name('password.update');
 	
 	//Inyeccion de dependencia para agregar los productos
 	Route::bind('product', function ($cod) {
@@ -36,7 +41,7 @@ Route::group(['middleware' => 'auth'], function (){
 		return view('dashboard');
 	})->middleware('auth');
 	
-	Route::get('dashboard', 'DashboardController@index');
+	Route::get('dashboard', 'DashboardController@index')->name('dashboard');;
 	
 	Route::resource('categorie', 'CategorieController');
 	Route::resource('article', 'ArticleController');
@@ -58,7 +63,7 @@ Route::group(['middleware' => 'auth'], function (){
 	/******************************* END ************************************************/
 	
 	Route::resource('usermanagement', 'UserManagementController');
-	Route::get('profile', 'ProfileController@index');
+	Route::get('profile', 'ProfileController@profile')->name('profile');
 	
 	/*************************** Cart *************************************/
 	
@@ -68,6 +73,5 @@ Route::group(['middleware' => 'auth'], function (){
 
 });
 
-//Auth::routes();
 
 
