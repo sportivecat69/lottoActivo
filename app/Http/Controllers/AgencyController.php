@@ -336,22 +336,4 @@ class AgencyController extends Controller
     }
     
     
-    /**
-     * today's sales for specified agency
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public static function todaySales($id){
-    	// falta filtrar por agencia
-    	$ventas = DB::table('sale_invoices')
-    	->select('SUM(total) as ventas')
-    	->where('created_at','>=', Carbon::now())
-    	->where('created_at','>=', Carbon::now()->addDay(1))
-    	->get();
-    	
-    	return $ventas['ventas'];
-    }
-    
-    
 }

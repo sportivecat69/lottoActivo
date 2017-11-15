@@ -101,7 +101,7 @@
 
             <div class="info-box-content">
               <span class="info-box-text">Venta de Hoy</span>
-              <span class="info-box-number"><?php //echo App\Agency::todaySales($agency->id); ?></span>
+              <span class="info-box-number"><?php echo number_format(App\Agency::todaySales($agency->id),2,",","."); ?></span>
             </div>
             <!-- /.info-box-content -->
           </div>
@@ -114,7 +114,7 @@
 
             <div class="info-box-content">
               <span class="info-box-text">Ganancia</span>
-              <span class="info-box-number">410</span>
+              <span class="info-box-number"><?php echo number_format(App\Agency::gainOfBanker($agency->id),2,",","."); ?></span>
             </div>
             <!-- /.info-box-content -->
           </div>
@@ -127,7 +127,7 @@
 
             <div class="info-box-content">
               <span class="info-box-text">Tickets Vendidos</span>
-              <span class="info-box-number">13,648</span>
+              <span class="info-box-number"><?php echo App\Agency::todayTickets($agency->id,'ACTIVO'); ?></span>
             </div>
             <!-- /.info-box-content -->
           </div>
