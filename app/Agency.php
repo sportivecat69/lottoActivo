@@ -66,6 +66,17 @@ class Agency extends Model
 	
 	}
 	
+	/**
+	 * Sellers for specified agency
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public static function sellersAgency($id){
+
+		$sellers=SellerAgency::where('agencies_id', $id)->get();
+		return $sellers;
+	}
 	
 	
 	/**
@@ -75,14 +86,24 @@ class Agency extends Model
 	 * @return \Illuminate\Http\Response
 	 */
 	public static function todaySales($id){
-		// falta filtrar por agencia
-		$ventas = \DB::table('sale_invoices')
-		->select(\DB::raw("SUM(total) as ventas"))
-		->where('created_at','>=', Carbon::today())
- 		->where('created_at','<=', Carbon::today()->addDay(1))
-		->get();
-		 
-		return $ventas[0]->ventas;
+
+		$total=0;
+		$sellers=self::sellersAgency($id); // se recorre por usuario asociado a la agencia
+		
+		foreach ($sellers as $seller){
+			
+			$ventas = \DB::table('sale_invoices')
+			->select(\DB::raw("SUM(total) as ventas"))
+			->where('created_at','>=', Carbon::today())
+			->where('created_at','<=', Carbon::today()->addDay(1))
+			->get();
+				
+			$total=$ventas[0]->ventas;
+			
+		}
+		
+		return $total;
+		
 	}
 	
 	
@@ -111,20 +132,26 @@ class Agency extends Model
 	 * @return \Illuminate\Http\Response
 	 */
 	public static function todayTickets($id, $status=null){
-		// falta filtrar por agencia
-		$WHERE="'1','=','1'";
-		if(!is_null($status)){
-       			$WHERE="'status','=',".$status;
+		
+		$status = !is_null($status) ? array($status) : array('ACTIVO','INACTIVO','PREMIADO','ANULADO','CADUCADO');
+				
+		$total=0;
+		$sellers=self::sellersAgency($id); // se recorre por usuario asociado a la agencia
+		
+		foreach ($sellers as $seller){
+		
+			$tickets = \DB::table('sale_invoices')
+			->select(\DB::raw("count(*) as tickets"))
+			->where('created_at','>=', Carbon::today())
+			->where('created_at','<=', Carbon::today()->addDay(1))
+			->whereIn('status',$status)
+			->get();
+			
+			$total=$tickets[0]->tickets;
+			
 		}
 		
-		$tickets = \DB::table('sale_invoices')
-		->select(\DB::raw("SUM(*) as tickets"))
-		->where('created_at','>=', Carbon::today())
-		->where('created_at','<=', Carbon::today()->addDay(1))
-		->where($WHERE)
-		->get();
-			
-		return $$tickets[0]->tickets;
+		return $total;
 	}
 }
 
