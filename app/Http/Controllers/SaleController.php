@@ -370,7 +370,7 @@ class SaleController extends Controller
 	        //verifico si el ticket pertenece a la agencia correcta
 	        if ($seller_agency->agency->id != $saleInvoice->sellerAgency->agency->id) {
 	            
-	            return redirect()->route('sale.index')->with('error', 'El ticket Nro. '.$request->ticket.' no pertenece a esta agencia');
+	            return redirect()->route('sale.index')->with('error', 'El ticket Nro. '.$request->ticket.' no existe');
 	            
 	        } else {
 	            
@@ -385,7 +385,7 @@ class SaleController extends Controller
 	                    //Verifico si el ticket tiene premio
 	                    $sale_detalles = Sale::where([
                             	                        ['sale_invoice_id', $request->ticket],
-                            	                        ['status', 'GANADOR']
+                            	                        ['status', 'PREMIADO']
                             	                    ])->get();
 	                    
                         if (count($sale_detalles) > 0) {
@@ -403,7 +403,7 @@ class SaleController extends Controller
                             //Edito el esttus de los producto del ticket
                             $sale = Sale::where([
                                                     ['sale_invoice_id', $request->ticket],
-                                                    ['status', 'GANADOR']
+                                                    ['status', 'PREMIADO']
                                                 ])->update(['status' => 'PAGADO']);
                             
                                                 return redirect()->route('sale.index')->with('success', 'El ticket fue pagado con exito, Total: '.number_format($premio,2,",","."));
