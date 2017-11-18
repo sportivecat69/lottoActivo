@@ -13,8 +13,8 @@ class Agency extends Model
 	 */
 	
 	public   $rules = [
-		'name' => 'required|min:3|max:50',
-		'description' => 'required|min:3|max:200',
+		'name' => 'required|min:3|max:35',
+		'description' => 'required|min:3|max:35',
 		'percentage_gain' => 'required|numeric|between:0,100',
 		'num_cajas' => 'required|integer',
 		'mint_sell' => 'required|integer|between:0,60',
@@ -90,20 +90,43 @@ class Agency extends Model
 		$total=0;
 		$sellers=self::sellersAgency($id); // se recorre por usuario asociado a la agencia
 		
-		foreach ($sellers as $seller){
-			
-			$ventas = \DB::table('sale_invoices')
+		foreach ($sellers as $seller){ // ventas por usuarios asociados a la agencia
+			$array_sellers[]=$seller->id;
+		}
+		
+		$ventas = \DB::table('sale_invoices')
 			->select(\DB::raw("SUM(total) as ventas"))
 			->where('created_at','>=', Carbon::today())
 			->where('created_at','<=', Carbon::today()->addDay(1))
+			->whereIn('sellers_agency_id', $array_sellers)
 			->get();
 				
-			$total=$ventas[0]->ventas;
-			
-		}
-		
+		$total=$ventas[0]->ventas;
+
 		return $total;
 		
+	}
+	
+	
+	/**
+	 * today's sales for specified user agency
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public static function todaySalesUser($id){ // sellers_agency_id
+
+		$ventas = \DB::table('sale_invoices')
+			->select(\DB::raw("SUM(total) as ventas"))
+			->where('created_at','>=', Carbon::today())
+			->where('created_at','<=', Carbon::today()->addDay(1))
+			->where('sellers_agency_id',$id)
+			->get();
+	
+			$total=$ventas[0]->ventas;
+			
+		return $total;
+	
 	}
 	
 	
@@ -133,25 +156,70 @@ class Agency extends Model
 	 */
 	public static function todayTickets($id, $status=null){
 		
-		$status = !is_null($status) ? array($status) : array('ACTIVO','INACTIVO','PREMIADO','ANULADO','CADUCADO');
+		$status = !is_null($status) ? array($status) : array('ACTIVO','INACTIVO','ANULADO','CADUCADO'); // caducado no aplica para el día
 				
 		$total=0;
 		$sellers=self::sellersAgency($id); // se recorre por usuario asociado a la agencia
+		$array_sellers=array();
 		
-		foreach ($sellers as $seller){
+		foreach ($sellers as $seller){ // ventas por usuarios asociados a la agencia
+			$array_sellers[]=$seller->id;
+		}
 		
-			$tickets = \DB::table('sale_invoices')
+		$tickets = \DB::table('sale_invoices')
 			->select(\DB::raw("count(*) as tickets"))
 			->where('created_at','>=', Carbon::today())
 			->where('created_at','<=', Carbon::today()->addDay(1))
 			->whereIn('status',$status)
+			->whereIn('sellers_agency_id', $array_sellers)
 			->get();
 			
 			$total=$tickets[0]->tickets;
 			
-		}
 		
 		return $total;
+	}
+	
+	/**
+	 * today's plays sold for specified agency
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public static function todayPlays($id, $status=null){
+	
+		$status = !is_null($status) ? array($status) : array('ACTIVO','INACTIVO','PREMIADO','PAGADO','ANULADO','CADUCADO');
+	
+		$total=0;
+		$array_sellers=array();
+		$array_invoices=array();
+		$sellers=self::sellersAgency($id); // se recorre por usuario asociado a la agencia
+		
+		foreach ($sellers as $seller){ // ventas por usuarios asociados a la agencia
+			$array_sellers[]=$seller->id;
+		}
+		
+		
+		$invoices = \DB::table('sale_invoices')
+		->select('id')
+		->where('created_at','>=', Carbon::today())
+		->where('created_at','<=', Carbon::today()->addDay(1))
+		->whereIn('sellers_agency_id', $array_sellers)
+		->get();
+		
+		foreach ($invoices as $invo){ // recorre jugadas asociadas a las ventas
+			$array_invoices[]=$invo->id;
+		}
+		
+		
+		
+		$sales = \DB::table('sales')
+		->select(\DB::raw("count(*) as plays"))
+		->whereIn('sale_invoice_id', $array_invoices)
+		->whereIn('status',$status)
+		->get();
+		
+		return $sales[0]->plays;
 	}
 }
 

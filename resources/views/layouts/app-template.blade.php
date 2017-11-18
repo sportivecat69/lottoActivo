@@ -27,6 +27,8 @@
       apply the skin class to the body tag so the changes take effect.
       -->
     <link href="{{ asset("/bower_components/AdminLTE/dist/css/skins/_all-skins.min.css")}}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset("/bower_components/AdminLTE/dist/css/jvectormap/jquery-jvectormap.css")}}" rel="stylesheet" type="text/css" />
+    <!-- jvectormap -->
     <link href="{{ asset('css/app-template.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
     <link href="{{ asset("/css/bootstrap-select.css") }}" rel="stylesheet" type="text/css" />
@@ -165,8 +167,15 @@
     <!-- AdminLTE App -->
     <script src="{{ asset ("/bower_components/AdminLTE/dist/js/app.min.js") }}" type="text/javascript"></script>
     <script src="{{ asset ("/bower_components/AdminLTE/dist/js/demo.js") }}" type="text/javascript"></script>
-     <script src="{{ asset ("/js/bootstrap-select.js") }}" type="text/javascript"></script>
-     <script>var appRoot = '{{ url("/") }}'</script> 
+    <!-- ChartJS -->
+	<script src="{{ asset ("/bower_components/AdminLTE/dist/js/Chart.js") }}" type="text/javascript"></script>
+	<script src="{{ asset ("/bower_components/AdminLTE/dist/js/jvectormap/jquery-jvectormap-1.2.2.min.js") }}" type="text/javascript"></script>
+	<script src="{{ asset ("/bower_components/AdminLTE/dist/js/jvectormap/jquery-jvectormap-world-mill-en.js") }}" type="text/javascript"></script>
+	<!-- jvectormap  -->
+	<script src="{{ asset ("/bower_components/AdminLTE/dist/js/jquery-sparkline/jquery.sparkline.min.js") }}" type="text/javascript"></script>
+	<!-- Sparkline -->
+    <script src="{{ asset ("/js/bootstrap-select.js") }}" type="text/javascript"></script>
+    <script>var appRoot = '{{ url("/") }}'</script> 
     <!-- Optionally, you can add Slimscroll and FastClick plugins.
       Both of these plugins are recommended to enhance the
       user experience. Slimscroll is required when using the

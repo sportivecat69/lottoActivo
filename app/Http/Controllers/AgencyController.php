@@ -291,7 +291,8 @@ class AgencyController extends Controller
     {
     	$agency = Agency::find($id);
     	$acs = AgencyCategoriesSell::where('agencies_id',$id)->get();
-    	return view('warehouses.agencies.show', ['agency' => $agency, 'acs'=>$acs]);
+    	$sellers=SellerAgency::where('agencies_id', $id)->get();
+    	return view('warehouses.agencies.show', ['agency' => $agency, 'acs'=>$acs, 'sellers'=>$sellers]);
     }
        
     /**

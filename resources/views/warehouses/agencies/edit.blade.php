@@ -49,7 +49,7 @@
 										    	<div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 ">
 										    		<div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
 										            	<label for="nombre">Nombre</label>
-										            	<input type="text" name="name" value="{{ old('nombre') ? old('nombre') : $agency->name }}" class="form-control" placeholder="Nombre...">
+										            	<input type="text" name="name" value="{{ old('nombre') ? old('nombre') : $agency->name }}" maxlength="35" class="form-control" placeholder="Nombre...">
 										           		@if ($errors->has('name'))
 						                                    <span class="help-block">
 						                                        <strong>{{ $errors->first('name') }}</strong>
@@ -60,7 +60,7 @@
 										    	<div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 ">
 										    		<div class="form-group {{ $errors->has('description') ? ' has-error' : '' }}">
 										            	<label for="description">Descripci&oacute;n</label>
-										            	<input type="text" name="description" value="{{ old('description') ? old('description') : $agency->description }}" class="form-control" placeholder="Ej:Direccion...">
+										            	<input type="text" name="description" value="{{ old('description') ? old('description') : $agency->description }}" maxlength="35" class="form-control" placeholder="Ej:Direccion...">
 										           		@if ($errors->has('description'))
 						                                    <span class="help-block">
 						                                        <strong>{{ $errors->first('description') }}</strong>
