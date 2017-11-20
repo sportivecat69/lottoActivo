@@ -98,7 +98,7 @@
 										    			<button type="submit" id="btn-loading" data-loading-text="Cargando..." class="btn btn-primary">
 															Guardar
 														</button>
-										            	<a href="{{ route('article.index') }}" class="btn btn-danger">
+										            	<a href="{{ url()->previous() }}" class="btn btn-danger">
 															Cancelar	
 														</a> 
 										            </div>

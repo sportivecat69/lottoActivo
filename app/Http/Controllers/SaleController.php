@@ -30,16 +30,16 @@ class SaleController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function index()
+	public function index($category)
 	{
 		$sale_cart = session()->get('sale_cart');
 		$total = $this->total();
 		
-		$sorteos = Draw::where('categorie_id', 1)->orderBy('id', 'asc')->get();
+		$sorteos = Draw::where('categorie_id', $category)->orderBy('id', 'asc')->get();
 		
 		$seller_agency = SellerAgency::where('users_id', Auth::user()->id)->first();
 		
-		return view('sales.index', ['sale_cart' => $sale_cart, 'total' => $total, 'sorteos' => $sorteos, 'mint_sell' => $seller_agency->agency->mint_sell ]);
+		return view('sales.index', ['sale_cart' => $sale_cart, 'total' => $total, 'sorteos' => $sorteos, 'mint_sell' => $seller_agency->agency->mint_sell, 'category' => $category ]);
 	}
 	
 	/**
@@ -87,6 +87,7 @@ class SaleController extends Controller
     						
     
         	                $sale_cart = session()->get('sale_cart');
+        	                $producto->categorie = $article->categorie->name;
         	                $producto->sorteo = $request->sorteo[$i];
         	                $producto->amount = convertAmount($request->amount);
         	                $sale_cart[$producto->cod.substr($request->sorteo[$i],0,2)] = $producto;
@@ -205,7 +206,7 @@ class SaleController extends Controller
 	                
 	                /*Alinear a la izquierda para la cantidad y el nombre*/
 	                $printer->setJustification(Printer::JUSTIFY_LEFT);
-	                $printer->text($article->cod .' - '. $article->name . " x " . number_format($sc->amount,0,",",".") . "\n");
+	                $printer->text($article->cod .' - '. $article->name ." x ". number_format($sc->amount,0,",",".") ." - " . ($article->categorie->name) . "\n");
 	            }
 	        }
 	    }
@@ -273,11 +274,11 @@ class SaleController extends Controller
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function trash()
+	public function trash($category)
 	{
 	    session()->forget('sale_cart');
 	
-		return redirect()->route('sale.index');
+	    return redirect()->route('sale.index', $category);
 	}
 	
 	/**
@@ -302,7 +303,7 @@ class SaleController extends Controller
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function anular(Request $request)
+	public function anular(Request $request, $category)
 	{
 	    //Consulto el id de la agencia mediante el usuario
 	    $seller_agency = SellerAgency::where('users_id', Auth::user()->id)->first();
@@ -315,7 +316,7 @@ class SaleController extends Controller
 	        //verifico si el ticket pertenece a la agencia correcta
 	        if ($seller_agency->agency->id != $saleInvoice->sellerAgency->agency->id) {
 	            
-	            return redirect()->route('sale.index')->with('error', 'El ticket Nro. '.$request->ticket.' no pertenece a esta agencia');
+	            return redirect()->route('sale.index', $category)->with('error', 'El ticket Nro. '.$request->ticket.' no pertenece a esta agencia');
 	            
 	        } else {
 	            
@@ -330,17 +331,17 @@ class SaleController extends Controller
 	                $sale = Sale::where('sale_invoice_id', $request->ticket)->update(['status' => 'ANULADO']);
 	                
 	                if ($sale_Invoice && $sale) {
-	                    return redirect()->route('sale.index')->with('success', 'El ticket Nro. '.$request->ticket.' fue anulado con exito');
+	                    return redirect()->route('sale.index', $category)->with('success', 'El ticket Nro. '.$request->ticket.' fue anulado con exito');
 	                } else {
-	                    return redirect()->route('sale.index')->with('error', 'Error al anular ticket Nro. '.$request->ticket.' intente de nuevo');
+	                    return redirect()->route('sale.index', $category)->with('error', 'Error al anular ticket Nro. '.$request->ticket.' intente de nuevo');
 	                }
 	            } else {
-	                return redirect()->route('sale.index')->with('error', 'A superado el tiempo para anular ticket');
+	                return redirect()->route('sale.index', $category)->with('error', 'A superado el tiempo para anular ticket');
 	            }
 	            
 	        }
 	    } else {
-	        return redirect()->route('sale.index')->with('error', 'El ticket Nro. '.$request->ticket.' no existe');
+	        return redirect()->route('sale.index', $category)->with('error', 'El ticket Nro. '.$request->ticket.' no existe');
 	    }
 	}
 
@@ -350,7 +351,7 @@ class SaleController extends Controller
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function pagar(Request $request)
+	public function pagar(Request $request, $category)
 	{
 	    //Consulto el id de la agencia mediante el usuario
 	    $seller_agency = SellerAgency::where('users_id', Auth::user()->id)->first();
@@ -370,7 +371,7 @@ class SaleController extends Controller
 	        //verifico si el ticket pertenece a la agencia correcta
 	        if ($seller_agency->agency->id != $saleInvoice->sellerAgency->agency->id) {
 	            
-	            return redirect()->route('sale.index')->with('error', 'El ticket Nro. '.$request->ticket.' no existe');
+	            return redirect()->route('sale.index', $category)->with('error', 'El ticket Nro. '.$request->ticket.' no existe');
 	            
 	        } else {
 	            
@@ -406,24 +407,24 @@ class SaleController extends Controller
                                                     ['status', 'PREMIADO']
                                                 ])->update(['status' => 'PAGADO']);
                             
-                                                return redirect()->route('sale.index')->with('success', 'El ticket fue pagado con exito, Total: '.number_format($premio,2,",","."));
+                                                return redirect()->route('sale.index', $category)->with('success', 'El ticket fue pagado con exito, Total: '.number_format($premio,2,",","."));
 	                    } else {
-	                        return redirect()->route('sale.index')->with('error', 'El ticket Nro. '.$request->ticket.' no esta premiado');
+	                        return redirect()->route('sale.index', $category)->with('error', 'El ticket Nro. '.$request->ticket.' no esta premiado');
 	                    }
 	                    
 	                } else {
-	                    return redirect()->route('sale.index')->with('error', 'El ticket ha caducado');
+	                    return redirect()->route('sale.index', $category)->with('error', 'El ticket ha caducado');
 	                }
 	                
 	            } else {
 	                
-	                return redirect()->route('sale.index')->with('error', 'El ticket esta anulado');
+	                return redirect()->route('sale.index', $category)->with('error', 'El ticket esta anulado');
 	                
 	            }
 
 	        }
 	    } else {
-	        return redirect()->route('sale.index')->with('error', 'El ticket Nro. '.$request->ticket.' no existe');
+	        return redirect()->route('sale.index', $category)->with('error', 'El ticket Nro. '.$request->ticket.' no existe');
 	    }
 	}
 	

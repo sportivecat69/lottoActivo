@@ -14,10 +14,11 @@ class ArticleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($category)
     {
-    	$articles = Article::paginate(10);
-    	return view('warehouses.articles.index', ['articles' => $articles]);
+        $categorie = Categorie::find($category);
+        $articles = Article::where('categorie_id', $category)->paginate(10);
+        return view('warehouses.articles.index', ['articles' => $articles, 'categorie' => $categorie]);
     }
 
     /**
@@ -25,11 +26,11 @@ class ArticleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-    	$categories = Categorie::all();
-    	return view('warehouses.articles.create', ['categories' => $categories]);
-    }
+//     public function create()
+//     {
+//     	$categories = Categorie::all();
+//     	return view('warehouses.articles.create', ['categories' => $categories]);
+//     }
 
     /**
      * Store a newly created resource in storage.
@@ -37,34 +38,34 @@ class ArticleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-    	$validator = Validator::make($request->all(), [
-    			'cod' => 'required|max:255|unique:articles',
-    			'categoria' => 'required|max:255',
-    			'nombre' => 'required|max:255',
-    			'precio_venta' => 'required|max:255',
-    			'estado' => 'required|max:255',
-    	]);
+//     public function store(Request $request)
+//     {
+//     	$validator = Validator::make($request->all(), [
+//     			'cod' => 'required|max:255|unique:articles',
+//     			'categoria' => 'required|max:255',
+//     			'nombre' => 'required|max:255',
+//     			'precio_venta' => 'required|max:255',
+//     			'estado' => 'required|max:255',
+//     	]);
     	 
-    	if ($validator->fails()) {
-    		return redirect()->route('article.create')
-    		->withErrors($validator)
-    		->withInput();
-    	} else {
+//     	if ($validator->fails()) {
+//     		return redirect()->route('article.create')
+//     		->withErrors($validator)
+//     		->withInput();
+//     	} else {
     	
-    		//Almaceno el equipo
-    		$article = new Article();
-    		$article->cod = $request->cod;
-    		$article->categorie_id = $request->categoria;
-    		$article->name = $request->nombre;
-    		$article->sale_price = convertAmount($request->precio_venta);
-    		$article->status = $request->estado;
-    		$article->save();
+//     		//Almaceno el equipo
+//     		$article = new Article();
+//     		$article->cod = $request->cod;
+//     		$article->categorie_id = $request->categoria;
+//     		$article->name = $request->nombre;
+//     		$article->sale_price = convertAmount($request->precio_venta);
+//     		$article->status = $request->estado;
+//     		$article->save();
     	
-    		return redirect()->route('article.index')->with('status', 'Se creo el articulo con exito');
-    	}
-    }
+//     		return redirect()->route('article.index')->with('status', 'Se creo el articulo con exito');
+//     	}
+//     }
 
     /**
      * Display the specified resource.
@@ -72,10 +73,10 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
+//     public function show($id)
+//     {
+//         //
+//     }
 
     /**
      * Show the form for editing the specified resource.
@@ -85,9 +86,9 @@ class ArticleController extends Controller
      */
     public function edit($id)
     {
-    	$categories = Categorie::all();
     	$article = Article::find($id);
-    	return view('warehouses.articles.edit', ['article' => $article, 'categories' => $categories]);
+    	$category = Categorie::find($article->categorie_id);
+    	return view('warehouses.articles.edit', ['article' => $article, 'category' => $category]);
     }
 
     /**
@@ -115,7 +116,7 @@ class ArticleController extends Controller
     		$article->status = $request->estado;
     		$article->save();
     		 
-    		return redirect()->route('article.index')->with('status', 'Se edito el articulo con exito');
+    		return redirect()->route('article.index', $article->categorie_id)->with('status', 'Se edito el articulo con exito');
     	}
     }
 
@@ -125,12 +126,12 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-    	$article =  Article::find($id);
+//     public function destroy($id)
+//     {
+//     	$article =  Article::find($id);
     	 
-    	$article->delete();
+//     	$article->delete();
     	
-    	return redirect()->route('article.index')->with('status', 'Se elimino el articulo con exito');
-    }
+//     	return redirect()->route('article.index')->with('status', 'Se elimino el articulo con exito');
+//     }
 }

@@ -44,7 +44,8 @@ Route::group(['middleware' => 'auth'], function (){
 	Route::get('dashboard', 'DashboardController@index')->name('dashboard');;
 	
 	Route::resource('categorie', 'CategorieController');
-	Route::resource('article', 'ArticleController');
+	Route::get('article/{category}', 'ArticleController@index')->name('article.index');
+	Route::resource('article', 'ArticleController', ['except' => [ 'index' ]]);
 	
 	/******************************* AGENCY ************************************************/
 	Route::resource('agency', 'AgencyController');
@@ -52,14 +53,14 @@ Route::group(['middleware' => 'auth'], function (){
 	
 	/******************************* SALES ************************************************/
 	Route::resource('client', 'ClientController');
-	Route::get('sale', 'SaleController@index')->name('sale.index');
+	Route::get('sale/{category}', 'SaleController@index')->name('sale.index');
 	Route::post('sale/add/{product}', 'SaleController@add')->name('sale.add');
 	Route::get('sale/delete/{producto}', 'SaleController@delete')->name('sale.delete');
-	Route::get('sale/trash', 'SaleController@trash')->name('sale.trash');
+	Route::get('sale/trash/{category}', 'SaleController@trash')->name('sale.trash');
 	Route::post('sale/process', 'SaleController@process')->name('sale.process');
 	Route::get('sale/report', 'SaleController@report')->name('sale.report');
-	Route::post('sale/anular', 'SaleController@anular')->name('sale.anular');
-	Route::post('sale/pagar', 'SaleController@pagar')->name('sale.pagar');
+	Route::post('sale/anular/{category}', 'SaleController@anular')->name('sale.anular');
+	Route::post('sale/pagar/{category}', 'SaleController@pagar')->name('sale.pagar');
 	/******************************* END ************************************************/
 	
 	Route::resource('usermanagement', 'UserManagementController');

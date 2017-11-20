@@ -13,7 +13,7 @@
 			<div class="col-md-12">
 				<div class="box">
 					<div class="box-header with-border">
-					<h3 class="box-title">Editar Art&iacute;culo: {{ $article->name }}</h3>
+					<h3 class="box-title">{{$category->name}}: {{ $article->name }}</h3>
 						<div class="box-tools pull-right">
 						<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
 						
@@ -27,7 +27,7 @@
 							<!--Contenido-->
 								<div class="row">
 									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-									<form method="POST" action="{{ route('article.update', $article->id) }}" accept-charset="UTF-8" autocomplete="off">
+									<form method="POST" action="{{ route('article.update', $article->id, $category) }}" accept-charset="UTF-8" autocomplete="off">
 										{{ csrf_field() }}
 										{{ method_field('PUT') }}
 										    <div class="row">	
@@ -83,7 +83,7 @@
 										    			<button type="submit" id="btn-loading" data-loading-text="Cargando..." class="btn btn-primary">
 															Guardar
 														</button>
-										            	<a href="{{ route('article.index') }}" class="btn btn-danger">
+										            	<a href="{{ url()->previous() }}" class="btn btn-danger">
 															Cancelar	
 														</a> 
 										            </div>

@@ -100,8 +100,8 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li class="{{ $url === '/article' ? 'active' : ''}}"><a href="{{ route('article.index') }}">Animalitos</a></li>
-<!--             <li class="{{ $url === '/categorie' ? 'active' : ''}}"><a href="{{ route('categorie.index') }}">Categor&iacute;as</a></li> -->
+            <li class="{{ $url === '/article' ? 'active' : ''}}"><a href="{{ route('article.index', 1) }}">Lotto Activo</a></li>
+	        <li class="{{ $url === '/article' ? 'active' : ''}}"><a href="{{ route('article.index', 2) }}">La Granjita</a></li>
           </ul>
         </li>
   		<li class="{{ $url === '/sale' ? 'active' : ''}}  {{ $url === '/client' ? 'active' : ''}} {{ $url === '/sale/report' ? 'active' : ''}} treeview">
@@ -111,8 +111,8 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li class="{{ $url === '/sale' ? 'active' : ''}}"><a href="{{ route('sale.index') }}">Animalitos</a></li>
-<!--             <li class="{{ $url === '/client' ? 'active' : ''}}"><a href="{{ route('client.index') }}">Cliente</a></li> -->
+            <li class="{{ $url === '/sale' ? 'active' : ''}}"><a href="{{ route('sale.index', 1) }}">Lottoactivo</a></li>
+            <li class="{{ $url === '/sale' ? 'active' : ''}}"><a href="{{ route('sale.index', 2) }}">Granjita</a></li>
 <!--             <li class="{{ $url === '/sale/report' ? 'active' : ''}}"><a href="{{ route('sale.report') }}">Reporte</a></li> -->
           </ul>
         </li>
@@ -140,14 +140,14 @@
     <!-- /.content-wrapper -->
     <!-- Footer -->
   <!-- Main Footer -->
-  <footer class="main-footer" >
+<!--   <footer class="main-footer" > -->
     <!-- To the right -->
-    <div class="pull-right hidden-xs">
-     	Version 1.0
-    </div>
+<!--     <div class="pull-right hidden-xs"> -->
+<!--      	Version 1.0 -->
+<!--     </div> -->
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2017-{{ date('Y') }}, <a href="#">Innovaciones Tecnologicas T&T, C.A</a>.</strong> Todos los derechos reservados.
-  </footer>
+<!--     <strong>Copyright &copy; 2017-{{ date('Y') }}, <a href="#">Innovaciones Tecnologicas T&T, C.A</a>.</strong> Todos los derechos reservados. -->
+<!--   </footer> -->
     <!-- ./wrapper -->
     <!-- REQUIRED JS SCRIPTS -->
     <!-- jQuery 2.1.3 -->
