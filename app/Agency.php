@@ -89,6 +89,7 @@ class Agency extends Model
 
 		$total=0;
 		$sellers=self::sellersAgency($id); // se recorre por usuario asociado a la agencia
+		$array_sellers=array();
 		
 		foreach ($sellers as $seller){ // ventas por usuarios asociados a la agencia
 			$array_sellers[]=$seller->id;
@@ -221,5 +222,29 @@ class Agency extends Model
 		
 		return $sales[0]->plays;
 	}
+	
+	
+	/**
+	 * today's sold for specified agency and lottery
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+ 	public static function todaySalesLottery($id_agency, $id_categorie){
+		
+		$sales = \DB::table('sales')
+			->leftJoin('articles', 'sales.articles_id', '=', 'articles.id')
+			->leftJoin('categories', 'articles.categorie_id', '=', 'categories.id')
+			->select(\DB::raw("SUM(bet) as ventas"))
+			//->select('sales.*', 'articles.id as article', 'categories.id as categorie')
+			->where('categories.id',$id_categorie)
+			->get();
+		
+		// falta filtrar por agencia
+		
+		dd($sales);die();
+		
+ 	}
+	
 }
 

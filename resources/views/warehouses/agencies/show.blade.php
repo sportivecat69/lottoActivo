@@ -4,6 +4,7 @@
 <?php $todaySold=App\Agency::todaySales($agency->id);
 App\Agency::todayPlays($agency->id);
 
+App\Agency::todaySalesLottery($agency->id, 2);
 
 ?>
 <!-- Content Wrapper. Contains page content -->
@@ -102,21 +103,24 @@ App\Agency::todayPlays($agency->id);
                   </p>
 				  
 				  <?php $colors=array('progress-bar-aqua','progress-bar-red','progress-bar-green','progress-bar-yellow'); $i=0;?>
-				  
-                  @foreach($sellers as $seller)
-                  		
-	                  <div class="progress-group"><?php $soldUser=App\Agency::todaySalesUser($seller->id); $porc=($soldUser*100)/$todaySold; ?>
-	                    <span class="progress-text">{{$seller->user->firstname}}  {{$seller->user->lastname}} </span>
-	                    <span class="progress-number"><b><?php echo number_format($soldUser,2,",",".");?></b>/{{ number_format($porc,2,",",".")}}%</span>
-	
-	                    <div class="progress sm">
-	                      <div class="progress-bar {{$colors[$i]}}" style="width: {{$porc}}%"></div>
-	                    </div>
-	                  </div>
-	                   <?php $i= ($i<4) ? $i+1 : 0;?>
-	                  <!-- /.progress-group -->
-                  @endforeach
-                  
+				  @if(!count($sellers)==0)
+	                  @foreach($sellers as $seller)
+	                  		
+		                  <div class="progress-group"><?php $soldUser=App\Agency::todaySalesUser($seller->id); $porc=($todaySold>0) ? (($soldUser*100)/$todaySold) : 0; ?>
+		                    <span class="progress-text">{{$seller->user->firstname}}  {{$seller->user->lastname}} </span>
+		                    <span class="progress-number"><b><?php echo number_format($soldUser,2,",",".");?></b>/{{ number_format($porc,2,",",".")}}%</span>
+		
+		                    <div class="progress sm">
+		                      <div class="progress-bar {{$colors[$i]}}" style="width: {{$porc}}%"></div>
+		                    </div>
+		                  </div>
+		                   <?php $i= ($i<4) ? $i+1 : 0;?>
+		                  <!-- /.progress-group -->
+	                  @endforeach
+                  @else
+                  	<div class="alert alert-warning show" role="alert"><span>No hay vendedores activos</span></div>
+                  @endif
+                  	 
                   </div>
                 </div>
 				<!-- /.col -->
