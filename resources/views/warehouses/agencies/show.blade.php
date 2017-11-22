@@ -1,10 +1,7 @@
 @extends('layouts.app-template')
 @section('title', 'Agencias')
 @section('content')
-<?php $todaySold=App\Agency::todaySales($agency->id);
-App\Agency::todayPlays($agency->id);
-
-?>
+<?php $todaySold=App\Agency::todaySales($agency->id);?>
 <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     
@@ -169,7 +166,7 @@ App\Agency::todayPlays($agency->id);
         <!-- /.col -->
         <div class="col-md-3 col-sm-6 col-xs-12">
           <div class="info-box">
-            <span class="info-box-icon bg-yellow accent-2"><i class="fa fa-ticket"></i></span>
+            <span class="info-box-icon bg-red accent-2"><i class="fa fa-ticket"></i></span>
 
             <div class="info-box-content">
               <span class="info-box-text">Tickets Anulados</span>
@@ -190,40 +187,75 @@ App\Agency::todayPlays($agency->id);
             <span class="info-box-icon bg-purple"><i class="fa fa-shopping-cart"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">Total Jugadas</span>
-              <span class="info-box-number"><?php echo App\Agency::todayPlays($agency->id); ?></span>
+              <span class="info-box-text">Total Jugadas</span><?php $jugadas=App\Agency::todayPlays($agency->id);?>
+              <span class="info-box-number"><?php echo $jugadas->plays; ?></span>
             </div>
             <!-- /.info-box-content -->
           </div>
           <!-- /.info-box -->
         </div>
         <!-- /.col -->
+        <?php $pendientes=App\Agency::todayPlays($agency->id,'PREMIADO');?>
+        <?php $pagados=App\Agency::todayPlays($agency->id,'PAGADO'); ?>
+        <?php $premiados=$pendientes->plays+$pagados->plays;?>
+        <?php $premiadosSum=$pendientes->ventas+$pagados->ventas;?>
         <div class="col-md-3 col-sm-6 col-xs-12">
-          <div class="info-box">
-            <span class="info-box-icon bg-red"><i class="fa fa-star-o"></i></span>
-
-            <div class="info-box-content">
-              <span class="info-box-text">Jugadas Premiadas</span>
-              <span class="info-box-number"><?php echo App\Agency::todayPlays($agency->id,'PREMIADO'); ?></span>
-            </div>
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
-        </div>
-        <!-- /.col -->
-		<div class="col-md-3 col-sm-6 col-xs-12">
-          <div class="info-box">
-            <span class="info-box-icon bg-orange"><i class="fa fa-arrow-down"></i></span>
-
-            <div class="info-box-content">
-              <span class="info-box-text">Jugadas Pagadas</span>
-              <span class="info-box-number"><?php echo App\Agency::todayPlays($agency->id,'PAGADO'); ?></span>
-            </div>
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
-        </div>
-        <!-- /.col -->
+	        <div class="info-box bg-blue">
+	            <span class="info-box-icon"><i class="ion ion-ios-pricetag-outline"></i></span>
+	
+	            <div class="info-box-content">
+	              <span class="info-box-text">Jugadas Premiadas</span>
+	              <span class="info-box-number"><?php echo  $premiados; ?></span>
+	
+	              <div class="progress">
+	                <div class="progress-bar" style="width: 50%"></div>
+	              </div>
+	              <span class="progress-description">
+	                    {{ number_format($premiadosSum,2,",",".") }}
+	                  </span>
+	            </div>
+	            <!-- /.info-box-content -->
+	          </div> 
+         </div>
+          <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+	        <div class="info-box bg-red">
+	            <span class="info-box-icon"><i class="ion ion-ios-pricetag-outline"></i></span>
+	
+	            <div class="info-box-content">
+	              <span class="info-box-text">Pagos Pendientes</span>
+	              <span class="info-box-number"><?php echo  $pendientes->plays; ?></span>
+	
+	              <div class="progress">
+	                <div class="progress-bar" style="width: 50%"></div>
+	              </div>
+	              <span class="progress-description">
+	                    {{ number_format($pendientes->ventas,2,",",".") }}
+	                  </span>
+	            </div>
+	            <!-- /.info-box-content -->
+	          </div> 
+         </div>
+          <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+	        <div class="info-box bg-orange">
+	            <span class="info-box-icon"><i class="ion ion-ios-pricetag-outline"></i></span>
+	
+	            <div class="info-box-content">
+	              <span class="info-box-text">Pagos Realizados</span>
+	              <span class="info-box-number"><?php echo  $pagados->plays; ?></span>
+	
+	              <div class="progress">
+	                <div class="progress-bar" style="width: 50%"></div>
+	              </div>
+	              <span class="progress-description">
+	                    {{ number_format($pagados->ventas,2,",",".")  }}
+	                  </span>
+	            </div>
+	            <!-- /.info-box-content -->
+	          </div> 
+         </div>
+          <!-- /.col -->
       </div>
       <!-- /.row -->
 

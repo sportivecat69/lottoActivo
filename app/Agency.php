@@ -217,12 +217,12 @@ class Agency extends Model
 		
 		
 		$sales = \DB::table('sales')
-		->select(\DB::raw("count(*) as plays"))
+		->select([\DB::raw("count(*) as plays"), \DB::raw("SUM(bet) as ventas")])
 		->whereIn('sale_invoice_id', $array_invoices)
 		->whereIn('status',$status)
 		->get();
 		
-		return $sales[0]->plays;
+		return $sales[0];
 	}
 	
 	
