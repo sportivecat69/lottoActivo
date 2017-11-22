@@ -64,48 +64,66 @@ class SaleController extends Controller
 	    if (!$article) {
 	        return 'not registro';
 	    } else {
-
+	        
 	        if($article->status != 0){
-	            $rowCount = count($request->sorteo);
-	            for($i=0; $i < $rowCount; $i++){
-	                //Consulto la hora de sorteo
-	                $draw = Draw::find($request->sorteo[$i]);
-	                //Consulto el minuto configurado para cancelar venta
-	                $seller_agency = SellerAgency::where('users_id', Auth::user()->id)->first();
-	                //Le resto los minutos configurado de la agencia al sorteo seleccionado
-	                $horaVenta = strtotime ( '-'.$seller_agency->agency->mint_sell.' minute' , strtotime ( date( 'H:i', strtotime($draw->time)) ) ) ;
-	                //Valido si la hora del sorteo ya paso
-	                if (date('H:i') < date('H:i', $horaVenta)) {
-	                    
-//     // 	                if (convertAmount($request->amount) <= '200') {
-//     						// quizas pueda resumirse pero lo cierto es que la variable
-//     	                    // product no te sirve como objeto a salvar
-    						$producto=new Article();
-    						foreach ($product->getAttributes() as $key=>$value){
-    							$producto->setAttribute($key, $value);
-    						}
-    						
-    
-        	                $sale_cart = session()->get('sale_cart');
-        	                $producto->categorie = $article->categorie->name;
-        	                $producto->sorteo = $request->sorteo[$i];
-        	                $producto->amount = convertAmount($request->amount);
-        	                $sale_cart[$producto->cod.substr($request->sorteo[$i],0,2)] = $producto;
-        	                session()->put('sale_cart', $sale_cart);
-//     // 	                } else {
-//     // 	                    return 1;//Se ha excedido el limite de venta
-//     // 	                }
-    
-	                } else {
-	                   return 'error';
+	            
+	            //Calculo lavenat por hora del articulo
+	            $sales = Sale::where('articles_id', $article->id)->get();
+	            
+	            $rest = 0;
+	            foreach ($sales as $sale){
+	                if (date('Y-m-d', strtotime($sale->created_at)) === date('Y-m-d')){
+	                    $rest += $sale->bet + $rest;
 	                }
 	            }
-	            return $article->name;
+	            
+	            $rest_article = $article->sale_price - $rest;
+	            
+	            return $rest_article;die;
+	            
+	            //     // 	                if (convertAmount($request->amount) <= '200') {
+	            
+    	            $rowCount = count($request->sorteo);
+    	            for($i=0; $i < $rowCount; $i++){
+    	                //Consulto la hora de sorteo
+    	                $draw = Draw::find($request->sorteo[$i]);
+    	                //Consulto el minuto configurado para cancelar venta
+    	                $seller_agency = SellerAgency::where('users_id', Auth::user()->id)->first();
+    	                //Le resto los minutos configurado de la agencia al sorteo seleccionado
+    	                $horaVenta = strtotime ( '-'.$seller_agency->agency->mint_sell.' minute' , strtotime ( date( 'H:i', strtotime($draw->time)) ) ) ;
+    	                //Valido si la hora del sorteo ya paso
+    	                if (date('H:i') < date('H:i', $horaVenta)) {
+    	                    
+    //     						// quizas pueda resumirse pero lo cierto es que la variable
+    //     	                    // product no te sirve como objeto a salvar
+        						$producto=new Article();
+        						foreach ($product->getAttributes() as $key=>$value){
+        							$producto->setAttribute($key, $value);
+        						}
+        						
+        
+            	                $sale_cart = session()->get('sale_cart');
+            	                $producto->categorie = $article->categorie->name;
+            	                $producto->sorteo = $request->sorteo[$i];
+            	                $producto->amount = convertAmount($request->amount);
+            	                $sale_cart[$producto->cod.substr($request->sorteo[$i],0,2)] = $producto;
+            	                session()->put('sale_cart', $sale_cart);
+        
+    	                } else {
+    	                   return 'error';
+    	                }
+    	            }
+	               return $article->name;
+	               
+	               //     // 	                } else {
+	               //     // 	                    return 1;//Se ha excedido el limite de venta
+	               //     // 	                }
 	        } else {
 	            return 0;//El n&uacute;mero esta inhabilitado
 	        }
-
+	        
 	    }
+	    
 	}
 	
 	/**
