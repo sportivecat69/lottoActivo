@@ -99,6 +99,7 @@ class Agency extends Model
 			->select(\DB::raw("SUM(total) as ventas"))
 			->where('created_at','>=', Carbon::today())
 			->where('created_at','<=', Carbon::today()->addDay(1))
+			->where('status','<>', 'ANULADO') // NO SE CONSIDERAN LOS ANULADOS
 			->whereIn('sellers_agency_id', $array_sellers)
 			->get();
 				
@@ -121,6 +122,7 @@ class Agency extends Model
 			->select(\DB::raw("SUM(total) as ventas"))
 			->where('created_at','>=', Carbon::today())
 			->where('created_at','<=', Carbon::today()->addDay(1))
+			->where('status','<>', 'ANULADO') // NO SE CONSIDERAN LOS ANULADOS
 			->where('sellers_agency_id',$id)
 			->get();
 	
@@ -232,17 +234,45 @@ class Agency extends Model
 	 */
  	public static function todaySalesLottery($id_agency, $id_categorie){
 		
+ 		$total=0;
+ 		
+ 		$array_sellers=array();
+ 		$array_invoices=array();
+ 		$sellers=self::sellersAgency($id_agency); // se recorre por usuario asociado a la agencia
+ 		
+ 		foreach ($sellers as $seller){ // ventas por usuarios asociados a la agencia
+ 			$array_sellers[]=$seller->id;
+ 		}
+ 		
+ 		
+ 		$invoices = \DB::table('sale_invoices')
+ 		->select('id')
+ 		->where('created_at','>=', Carbon::today())
+ 		->where('created_at','<=', Carbon::today()->addDay(1))
+ 		->whereIn('sellers_agency_id', $array_sellers)
+ 		->get();
+ 		
+ 		foreach ($invoices as $invo){ // recorre jugadas asociadas a las ventas
+ 			$array_invoices[]=$invo->id;
+ 		}
+ 		
+ 		
+ 		
+ 		
 		$sales = \DB::table('sales')
 			->leftJoin('articles', 'sales.articles_id', '=', 'articles.id')
 			->leftJoin('categories', 'articles.categorie_id', '=', 'categories.id')
 			->select(\DB::raw("SUM(bet) as ventas"))
-			//->select('sales.*', 'articles.id as article', 'categories.id as categorie')
-			->where('categories.id',$id_categorie)
+			->where('sales.status','<>', 'ANULADO') // NO SE CONSIDERAN LOS ANULADOS
+			->where('categories.id',$id_categorie) // filtro por categoria
+			->whereIn('sale_invoice_id', $array_invoices) // filtro por agencia
 			->get();
 		
-		// falta filtrar por agencia
-		
-		dd($sales);die();
+		if(isset($sales[0]->ventas) and !is_null($sales[0]->ventas)){
+			return $sales[0]->ventas;
+		}else{
+			return 0;
+		}
 		
  	}
 	

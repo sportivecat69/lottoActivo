@@ -4,8 +4,6 @@
 <?php $todaySold=App\Agency::todaySales($agency->id);
 App\Agency::todayPlays($agency->id);
 
-App\Agency::todaySalesLottery($agency->id, 2);
-
 ?>
 <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -70,6 +68,7 @@ App\Agency::todaySalesLottery($agency->id, 2);
 		                    <th>Item</th>
 		                    <th>Apuesta M&iacute;nima</th>
 		                    <th>Pago M&iacute;nimo</th>
+		                    <th>Venta de Hoy</th>
 		                  </tr>
 		                  </thead>
 		                  <tbody>
@@ -78,6 +77,7 @@ App\Agency::todaySalesLottery($agency->id, 2);
 			                    <td>{{ $loteria->categorie->name }}</td>
 			                     <td>{{ number_format($loteria->bet_min,2,",",".")}}</td>
 			                    <td>{{ number_format($loteria->prize_min,2,",",".")}}</td>
+			                    <td>{{ number_format(App\Agency::todaySalesLottery($agency->id, $loteria->categorie->id),2,",",".")}}</td>
 			                  </tr>
 			                 @endforeach
 		                  </tbody>
@@ -128,7 +128,7 @@ App\Agency::todaySalesLottery($agency->id, 2);
           </div> <!-- /.row -->
       <!--  -->
       <div class="row">
-        <div class="col-md-2 col-sm-4 col-xs-12">
+        <div class="col-md-3 col-sm-6 col-xs-12">
           <div class="info-box">
             <span class="info-box-icon bg-aqua"><i class="fa fa-money"></i></span>
 
@@ -141,7 +141,7 @@ App\Agency::todaySalesLottery($agency->id, 2);
           <!-- /.info-box -->
         </div>
         <!-- /.col -->
-        <div class="col-md-2 col-sm-4 col-xs-12">
+        <div class="col-md-3 col-sm-6 col-xs-12">
           <div class="info-box">
             <span class="info-box-icon bg-green"><i class="fa fa-usd"></i></span>
 
@@ -154,12 +154,12 @@ App\Agency::todaySalesLottery($agency->id, 2);
           <!-- /.info-box -->
         </div>
         <!-- /.col -->
-        <div class="col-md-2 col-sm-4 col-xs-12">
+        <div class="col-md-3 col-sm-6 col-xs-12">
           <div class="info-box">
             <span class="info-box-icon bg-yellow accent-2"><i class="fa fa-ticket"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">Tickets</span>
+              <span class="info-box-text">Tickets Vendidos</span>
               <span class="info-box-number"><?php echo App\Agency::todayTickets($agency->id); ?></span>
             </div>
             <!-- /.info-box-content -->
@@ -167,7 +167,25 @@ App\Agency::todaySalesLottery($agency->id, 2);
           <!-- /.info-box -->
         </div>
         <!-- /.col -->
-        <div class="col-md-2 col-sm-4 col-xs-12">
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-yellow accent-2"><i class="fa fa-ticket"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Tickets Anulados</span>
+              <span class="info-box-number"><?php echo App\Agency::todayTickets($agency->id, 'ANULADO'); ?></span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        
+        </div>
+        <!-- /.row -->
+        
+        <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12">
           <div class="info-box">
             <span class="info-box-icon bg-purple"><i class="fa fa-shopping-cart"></i></span>
 
@@ -180,12 +198,12 @@ App\Agency::todaySalesLottery($agency->id, 2);
           <!-- /.info-box -->
         </div>
         <!-- /.col -->
-        <div class="col-md-2 col-sm-4 col-xs-12">
+        <div class="col-md-3 col-sm-6 col-xs-12">
           <div class="info-box">
             <span class="info-box-icon bg-red"><i class="fa fa-star-o"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">Premios</span>
+              <span class="info-box-text">Jugadas Premiadas</span>
               <span class="info-box-number"><?php echo App\Agency::todayPlays($agency->id,'PREMIADO'); ?></span>
             </div>
             <!-- /.info-box-content -->
@@ -193,12 +211,12 @@ App\Agency::todaySalesLottery($agency->id, 2);
           <!-- /.info-box -->
         </div>
         <!-- /.col -->
-		<div class="col-md-2 col-sm-4 col-xs-12">
+		<div class="col-md-3 col-sm-6 col-xs-12">
           <div class="info-box">
             <span class="info-box-icon bg-orange"><i class="fa fa-arrow-down"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">Pagos</span>
+              <span class="info-box-text">Jugadas Pagadas</span>
               <span class="info-box-number"><?php echo App\Agency::todayPlays($agency->id,'PAGADO'); ?></span>
             </div>
             <!-- /.info-box-content -->
