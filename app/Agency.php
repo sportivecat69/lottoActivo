@@ -275,6 +275,61 @@ class Agency extends Model
 		}
 		
  	}
+ 	
+ 	/**
+ 	 * today's articles sold for specified agency and lottery best seller
+ 	 *
+ 	 * @param  int  $id
+ 	 * @return \Illuminate\Http\Response
+ 	 */
+ 	public static function bestSeller($id, $id_categorie){
+ 		
+ 		$total=0;
+ 		$array_sellers=array();
+ 		$array_invoices=array();
+ 		$sellers=self::sellersAgency($id); // se recorre por usuario asociado a la agencia
+ 		
+ 		foreach ($sellers as $seller){ // ventas por usuarios asociados a la agencia
+ 			$array_sellers[]=$seller->id;
+ 		}
+ 		
+ 		
+ 		$invoices = \DB::table('sale_invoices')
+ 		->select('id')
+ 		->where('created_at','>=', Carbon::today())
+ 		->where('created_at','<=', Carbon::today()->addDay(1))
+ 		->whereIn('sellers_agency_id', $array_sellers)
+ 		->get();
+ 		
+ 		foreach ($invoices as $invo){ // recorre jugadas asociadas a las ventas
+ 			$array_invoices[]=$invo->id;
+ 		}
+ 		
+ 		
+ 		$sales = \DB::table('sales')
+ 		->leftJoin('articles', 'sales.articles_id', '=', 'articles.id')
+ 		->leftJoin('categories', 'articles.categorie_id', '=', 'categories.id')
+ 		->select(['articles_id', \DB::raw("count(articles_id) as plays"), \DB::raw("SUM(bet) as ventas")])
+ 		->where('sales.status','<>', 'ANULADO') // NO SE CONSIDERAN LOS ANULADOS
+ 		->whereIn('sale_invoice_id', $array_invoices) // filtro por agencia
+ 		->where('categories.id',$id_categorie) // filtro por categoria
+ 		->groupBy('sales.articles_id')
+		->orderBy('plays','DESC')
+ 		->get(); // verificar
+ 		
+//  		$sales = \DB::table('sales')
+//  		->select(['articles_id', \DB::raw("count(articles_id) as plays"), \DB::raw("SUM(bet) as ventas")])
+//  		->where('status','<>', 'ANULADO')
+//  		->whereIn('sale_invoice_id', $array_invoices)
+//  		->where('categories.id',$id_categorie) // filtro por categoria
+//  		->groupBy('articles_id')
+//  		->orderBy('2','DESC')
+//  		->get();
+ 		
+ 		dd($sales);die();
+ 		
+ 		return $sales[0];
+ 	}
 	
 }
 
