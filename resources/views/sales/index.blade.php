@@ -1,6 +1,53 @@
 @extends('layouts.app-template')
 @section('title', 'Gestor de Venta') 
 @push('css')
+<?php 
+use Carbon\Carbon;
+
+/*
+$date = '17:00'; // lo que obtienes del sorteo
+
+
+$tickets = \DB::table('sales')
+->where('created_at','>=', Carbon::parse($date)->subHour(1))  // desde las 16:00
+->where('created_at','<=', Carbon::parse($date))  // hasta las 17:00
+->where('status','<>', 'ANULADO') // NO SE CONSIDERAN LOS ANULADOS
+->get();
+
+// $sales=App\Sale::where([
+		
+// 		['created_at','>=', Carbon::parse($date)->subHour(1)], 
+// 		['created_at','<=', Carbon::parse($date)],
+// 		['status','<>', 'ANULADO']
+		
+// ])->get();
+
+// esto retorna todas las jugadas de hoy entre las 4pm y 5pm 
+dd($tickets); die();   
+
+*/
+
+/***
+ * PERO ESTO NOS NOS SIRVE JAJAJAJAJAJAJAJA
+ * PORQUE YO PUEDO JUGAR EL SORTEO DE LAS 5 A LA 1PM 
+ * ASI QUE LA MANERA CORRECTA ES TRAER TODAS LAS JUGADAS DE HOY QUE HAY PARA UN SORTEO ESPESIFICO
+ * 
+ * 
+ * 
+ */
+// aqui falta filtro de la agencia que te la tienes que traer por los id de sales_invoices
+// $ventas = \DB::table('sales')
+// ->select(\DB::raw("SUM(bet) as ventas"))
+// ->where('created_at','>=', Carbon::today())
+// ->where('created_at','<=', Carbon::today()->addDay(1))
+// ->where('status','<>', 'ANULADO') // NO SE CONSIDERAN LOS ANULADOS
+// ->where('articles_id', 1) // filtro por articulo
+// ->where('draws_id', 2)  // filtro por sorteo
+// ->get();
+
+// dd($ventas[0]->ventas); die();
+
+?>
 	<style>
 		#imaginary_container{
 	    margin-top:20%; /* Don't copy this */
