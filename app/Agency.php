@@ -318,19 +318,52 @@ class Agency extends Model
 		->limit($limit)
  		->get(); // verificar
  		
-//  		$sales = \DB::table('sales')
-//  		->select(['articles_id', \DB::raw("count(articles_id) as plays"), \DB::raw("SUM(bet) as ventas")])
-//  		->where('status','<>', 'ANULADO')
-//  		->whereIn('sale_invoice_id', $array_invoices)
-//  		->where('categories.id',$id_categorie) // filtro por categoria
-//  		->groupBy('articles_id')
-//  		->orderBy('2','DESC')
-//  		->get();
  		
  		//dd($sales);die();
  		
  		return $sales;
  	}
+ 	
+ 	/**
+	 * today's plays prizes for specified agency
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public static function todayPrizes($id, $total=false, $status=null){ // only PREMIADO, PAGADO
+		
+		$status = !is_null($status) ? array($status) : array('PREMIADO','PAGADO');
+		
+		$sum=0;
+		
+		$prizes = \DB::table('sales')
+		->leftJoin('articles', 'sales.articles_id', '=', 'articles.id')
+		->leftJoin('categories', 'articles.categorie_id', '=', 'categories.id')
+		->leftJoin('agency_categories_sell', 'categories.id', '=', 'agency_categories_sell.categorie_id')
+		->select(['sales.id','sales.bet','sales.status', 'articles_id', 'categories.id','agency_categories_sell.agencies_id', 'agency_categories_sell.bet_min', 'agency_categories_sell.prize_min', \DB::raw("((sales.bet*agency_categories_sell.prize_min)/agency_categories_sell.bet_min) as premio")])
+		->where('agency_categories_sell.agencies_id',$id)
+		->whereIn('sales.status',$status)
+		->where('sales.created_at','>=', Carbon::today())
+		->where('sales.created_at','<=', Carbon::today()->addDay(1))
+		->get();
+		
+		//dd($prizes); die();
+		
+		if($total==true){
+			
+			foreach ($prizes as $prize){
+				$sum+=$prize->premio;
+			}
+			return $sum;
+		}else{
+			return $prizes;
+		}
+		
+		
+		
+		
+		
+	}
 	
 }
 

@@ -1,11 +1,32 @@
 @extends('layouts.app-template')
 @section('title', 'Agencias')
 @section('content')
-<?php $todaySold=App\Agency::todaySales($agency->id);
-//App\Agency::bestSeller($agency->id, 2);
+<?php 
+$todaySold=App\Agency::todaySales($agency->id);
+
+$pendientes=App\Agency::todayPlays($agency->id,'PREMIADO')->plays;
+$pagados=App\Agency::todayPlays($agency->id,'PAGADO')->plays;
+$premiados=$pendientes+$pagados;
+
+$premiadosSum=App\Agency::todayPrizes($agency->id, true);
+
+$pendientes_=App\Agency::todayPrizes($agency->id, true, 'PREMIADO');
+$pagados_=App\Agency::todayPrizes($agency->id, true, 'PAGADO');
+
+
+
+
+$percentage=($todaySold*$agency->percentage_gain)/100;
+$utilidad=$todaySold-$percentage-$premiadosSum;
+
+$string = ($utilidad>0) ? '<i class="fa fa-thumbs-up" aria-hidden="true"></i>   &iexcl;Felicidades! tienes una utilidad de ' : '<i class="fa fa-thumbs-down" aria-hidden="true"></i>   &iexcl;Valla! parece que tienes perdidas por '
 ?>
 <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
+     <div class="row"  style="padding: 20px 30px; background: rgb(243, 156, 18); font-size: 16px; font-weight: 600;">
+      <div><span style="color: rgba(255, 255, 255, 0.9); display: inline-block; margin-right: 10px; text-decoration: none;">Aqu&iacute; podr&aacute;s ver el detalle de la actividad de tu agencia el d&iacute;a de Hoy... </span><span class="pull-right" style="color: rgba(255, 255, 255, 0.9); display: inline-block; margin-right: 10px; text-decoration: none;"><?php echo $string; ?> <span class="btn btn-default btn-sm" style="margin-left: 10px; border: 0px; box-shadow: none; color: rgb(243, 156, 18); font-weight: 600; background: rgb(255, 255, 255);">{{ number_format($utilidad,2,",",".") }} Bs.</span></span></div>
+   </div>
+   <!-- /.row  -->
     
     <!-- Main content -->
     <section class="content">
@@ -125,8 +146,8 @@
 				<!-- /.col -->
 				
           </div> <!-- /.row -->
-      <!--  -->
-      <div class="row">
+
+        <div class="row">
         <div class="col-md-3 col-sm-6 col-xs-12">
           <div class="info-box">
             <span class="info-box-icon bg-aqua"><i class="fa fa-money"></i></span>
@@ -197,10 +218,7 @@
           <!-- /.info-box -->
         </div>
         <!-- /.col -->
-        <?php $pendientes=App\Agency::todayPlays($agency->id,'PREMIADO');?>
-        <?php $pagados=App\Agency::todayPlays($agency->id,'PAGADO'); ?>
-        <?php $premiados=$pendientes->plays+$pagados->plays;?>
-        <?php $premiadosSum=$pendientes->ventas+$pagados->ventas;?>
+        
         <div class="col-md-3 col-sm-6 col-xs-12">
 	        <div class="info-box bg-blue">
 	            <span class="info-box-icon"><i class="ion ion-ios-pricetag-outline"></i></span>
@@ -226,13 +244,13 @@
 	
 	            <div class="info-box-content">
 	              <span class="info-box-text">Pagos Pendientes</span>
-	              <span class="info-box-number"><?php echo  $pendientes->plays; ?></span>
+	              <span class="info-box-number"><?php echo  $pendientes; ?></span>
 	
 	              <div class="progress">
 	                <div class="progress-bar" style="width: 50%"></div>
 	              </div>
 	              <span class="progress-description">
-	                    {{ number_format($pendientes->ventas,2,",",".") }}
+	                    {{ number_format($pendientes_,2,",",".") }}
 	                  </span>
 	            </div>
 	            <!-- /.info-box-content -->
@@ -245,13 +263,13 @@
 	
 	            <div class="info-box-content">
 	              <span class="info-box-text">Pagos Realizados</span>
-	              <span class="info-box-number"><?php echo  $pagados->plays; ?></span>
+	              <span class="info-box-number"><?php echo  $pagados; ?></span>
 	
 	              <div class="progress">
 	                <div class="progress-bar" style="width: 50%"></div>
 	              </div>
 	              <span class="progress-description">
-	                    {{ number_format($pagados->ventas,2,",",".")  }}
+	                    {{ number_format($pagados_,2,",",".")  }}
 	                  </span>
 	            </div>
 	            <!-- /.info-box-content -->
