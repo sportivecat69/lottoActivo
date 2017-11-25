@@ -282,7 +282,7 @@ class Agency extends Model
  	 * @param  int  $id
  	 * @return \Illuminate\Http\Response
  	 */
- 	public static function bestSeller($id, $id_categorie){
+ 	public static function bestSeller($id, $id_categorie, $limit=null){
  		
  		$total=0;
  		$array_sellers=array();
@@ -309,12 +309,13 @@ class Agency extends Model
  		$sales = \DB::table('sales')
  		->leftJoin('articles', 'sales.articles_id', '=', 'articles.id')
  		->leftJoin('categories', 'articles.categorie_id', '=', 'categories.id')
- 		->select(['articles_id', \DB::raw("count(articles_id) as plays"), \DB::raw("SUM(bet) as ventas")])
+ 		->select(['articles_id', 'articles.name as name_article',\DB::raw("count(articles_id) as plays"), \DB::raw("SUM(bet) as ventas")])
  		->where('sales.status','<>', 'ANULADO') // NO SE CONSIDERAN LOS ANULADOS
  		->whereIn('sale_invoice_id', $array_invoices) // filtro por agencia
  		->where('categories.id',$id_categorie) // filtro por categoria
- 		->groupBy('sales.articles_id')
+ 		->groupBy(['sales.articles_id', 'articles.name'])
 		->orderBy('plays','DESC')
+		->limit($limit)
  		->get(); // verificar
  		
 //  		$sales = \DB::table('sales')
@@ -326,9 +327,9 @@ class Agency extends Model
 //  		->orderBy('2','DESC')
 //  		->get();
  		
- 		dd($sales);die();
+ 		//dd($sales);die();
  		
- 		return $sales[0];
+ 		return $sales;
  	}
 	
 }
