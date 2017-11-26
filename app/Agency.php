@@ -150,6 +150,22 @@ class Agency extends Model
 		return $gain;
 	}
 	
+	/**
+	 * Gain of seller for specified agency
+	 *
+	 * @param  int  $id Agency
+	 * @return \Illuminate\Http\Response
+	 */
+	public static function gainOfSeller($id, $iduser){ // sellers_agency_id
+	
+		$agency= self::find($id);
+		$ventas=self::todaySalesUser($iduser);
+	
+		$percentage=($ventas*$agency->percentage_gain)/100;
+
+		return $percentage;
+	}
+	
 	
 	/**
 	 * today's tickets sold for specified agency
@@ -157,7 +173,7 @@ class Agency extends Model
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public static function todayTickets($id, $status=null){
+	public static function todayTickets($id, $status=null, $userid=null){ // sellers_agency_id
 		
 		$status = !is_null($status) ? array($status) : array('ACTIVO','INACTIVO','ANULADO','CADUCADO'); // caducado no aplica para el día
 				
@@ -165,8 +181,14 @@ class Agency extends Model
 		$sellers=self::sellersAgency($id); // se recorre por usuario asociado a la agencia
 		$array_sellers=array();
 		
-		foreach ($sellers as $seller){ // ventas por usuarios asociados a la agencia
-			$array_sellers[]=$seller->id;
+		if(is_null($userid)){
+		
+			foreach ($sellers as $seller){ // ventas por usuarios asociados a la agencia
+				$array_sellers[]=$seller->id;
+			}
+		
+		}else{
+			$array_sellers[]=$userid;
 		}
 		
 		$tickets = \DB::table('sale_invoices')
@@ -189,7 +211,7 @@ class Agency extends Model
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public static function todayPlays($id, $status=null){
+	public static function todayPlays($id, $status=null, $userid=null){ // sellers_agency_id
 	
 		$status = !is_null($status) ? array($status) : array('ACTIVO','INACTIVO','PREMIADO','PAGADO','ANULADO','CADUCADO');
 	
@@ -197,9 +219,15 @@ class Agency extends Model
 		$array_sellers=array();
 		$array_invoices=array();
 		$sellers=self::sellersAgency($id); // se recorre por usuario asociado a la agencia
+				
+		if(is_null($userid)){
 		
-		foreach ($sellers as $seller){ // ventas por usuarios asociados a la agencia
-			$array_sellers[]=$seller->id;
+			foreach ($sellers as $seller){ // ventas por usuarios asociados a la agencia
+				$array_sellers[]=$seller->id;
+			}
+		
+		}else{
+			$array_sellers[]=$userid;
 		}
 		
 		
@@ -232,7 +260,7 @@ class Agency extends Model
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
- 	public static function todaySalesLottery($id_agency, $id_categorie){
+ 	public static function todaySalesLottery($id_agency, $id_categorie, $userid=null){ // sellers_agency_id
 		
  		$total=0;
  		
@@ -240,8 +268,14 @@ class Agency extends Model
  		$array_invoices=array();
  		$sellers=self::sellersAgency($id_agency); // se recorre por usuario asociado a la agencia
  		
- 		foreach ($sellers as $seller){ // ventas por usuarios asociados a la agencia
- 			$array_sellers[]=$seller->id;
+ 		if(is_null($userid)){
+ 
+	 		foreach ($sellers as $seller){ // ventas por usuarios asociados a la agencia
+	 			$array_sellers[]=$seller->id;
+	 		}
+	 		
+ 		}else{
+ 			$array_sellers[]=$userid;
  		}
  		
  		
@@ -282,15 +316,21 @@ class Agency extends Model
  	 * @param  int  $id
  	 * @return \Illuminate\Http\Response
  	 */
- 	public static function bestSeller($id, $id_categorie, $limit=null){
+ 	public static function bestSeller($id, $id_categorie, $limit=null, $userid=null){ // sellers_agency_id
  		
  		$total=0;
  		$array_sellers=array();
  		$array_invoices=array();
  		$sellers=self::sellersAgency($id); // se recorre por usuario asociado a la agencia
  		
- 		foreach ($sellers as $seller){ // ventas por usuarios asociados a la agencia
- 			$array_sellers[]=$seller->id;
+ 		if(is_null($userid)){
+ 		
+ 			foreach ($sellers as $seller){ // ventas por usuarios asociados a la agencia
+ 				$array_sellers[]=$seller->id;
+ 			}
+ 		
+ 		}else{
+ 			$array_sellers[]=$userid;
  		}
  		
  		

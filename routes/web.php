@@ -41,7 +41,8 @@ Route::group(['middleware' => 'auth'], function (){
 		return view('dashboard');
 	})->middleware('auth');
 	
-	Route::get('dashboard', 'DashboardController@index')->name('dashboard');;
+	Route::get('dashboard', 'DashboardController@index')->name('dashboard');
+	Route::get('index-seller', 'DashboardController@indexSeller')->name('index.seller');
 	
 	Route::resource('categorie', 'CategorieController');
 	Route::get('article/{category}', 'ArticleController@index')->name('article.index');

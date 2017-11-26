@@ -93,6 +93,7 @@
       	@endphp
         <!-- Optionally, you can add icons to the links -->
         <li class="{{ $url === '' ? 'active' : '' }}"><a href="{{ url('/') }}"><i class="fa fa-home fa-lg" aria-hidden="true"></i> <span>Inicio</span></a></li>
+        <li class="{{ $url === '' ? 'active' : '' }}"><a href="{{ route('index.seller') }}"><i class="fa fa-home fa-lg" aria-hidden="true"></i> <span>Resumen del d&iacute;a</span></a></li>
   		<li class="{{ $url === '/categorie' ? 'active' : ''}}  {{ $url === '/article' ? 'active' : ''}} treeview">
           <a href="#"><i class="fa fa-shopping-bag " aria-hidden="true"></i> <span>Productos</span>
             <span class="pull-right-container">
