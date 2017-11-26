@@ -93,7 +93,7 @@
       	@endphp
         <!-- Optionally, you can add icons to the links -->
         <li class="{{ $url === '' ? 'active' : '' }}"><a href="{{ url('/') }}"><i class="fa fa-home fa-lg" aria-hidden="true"></i> <span>Inicio</span></a></li>
-        <li class="{{ $url === '' ? 'active' : '' }}"><a href="{{ route('index.seller') }}"><i class="fa fa-home fa-lg" aria-hidden="true"></i> <span>Resumen del d&iacute;a</span></a></li>
+        <li class="{{ $url === '' ? 'active' : '' }}"><a href="{{ route('index.seller') }}"><i class="fa fa-file-text-o" aria-hidden="true"></i> <span>Resumen del d&iacute;a</span></a></li>
   		<li class="{{ $url === '/categorie' ? 'active' : ''}}  {{ $url === '/article' ? 'active' : ''}} treeview">
           <a href="#"><i class="fa fa-shopping-bag " aria-hidden="true"></i> <span>Productos</span>
             <span class="pull-right-container">
@@ -127,7 +127,7 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li class="{{ $url === '/sale' ? 'active' : ''}}"><a href="{{ route('sale.index', 1) }}">Ventas</a></li>
+            <li class="{{ $url === '/sale' ? 'active' : ''}}"><a href="{{ route('chart.sold') }}">Ventas</a></li>
             <li class="{{ $url === '/sale' ? 'active' : ''}}"><a href="{{ route('sale.index', 2) }}">Tickets</a></li>
             <li class="{{ $url === '/sale' ? 'active' : ''}}"><a href="{{ route('sale.index', 2) }}">Premios</a></li>
             <li class="{{ $url === '/sale' ? 'active' : ''}}"><a href="{{ route('sale.index', 2) }}">Pagos Realizados</a></li>

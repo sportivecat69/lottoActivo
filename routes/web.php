@@ -43,6 +43,8 @@ Route::group(['middleware' => 'auth'], function (){
 	
 	Route::get('dashboard', 'DashboardController@index')->name('dashboard');
 	Route::get('index-seller', 'DashboardController@indexSeller')->name('index.seller');
+	Route::get('chart-sold', 'DashboardController@getChartSold')->name('chart.sold');
+	//Route::post('chart-sold', 'DashboardController@getChartSold')->name('chart.sold');
 	
 	Route::resource('categorie', 'CategorieController');
 	Route::get('article/{category}', 'ArticleController@index')->name('article.index');
