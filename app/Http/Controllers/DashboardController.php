@@ -23,6 +23,13 @@ class DashboardController extends Controller
      */
     public function index()
     {
+//     	if(Auth::user()->hasRole('banker')){
+//     		return view('dashboard');
+//     	}elseif(Auth::user()->hasRole('seller')){
+//     		return view('dashboard', ['message'=>'hola']);
+//     	}
+    	 
+    	//return view('warehouses.agencies.edit', ['agency' => $agency, 'categories' => $categories, 'acs'=>$acs]);
         return view('dashboard');
     }
 }

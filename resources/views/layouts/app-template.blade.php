@@ -119,6 +119,21 @@
         <li class="{{ $url === '/agency' ? 'active' : '' }}">
         	<a href="{{ route('agency.index') }}"><i class="fa fa-university" aria-hidden="true"></i> <span>Agencias</span></a>
         </li>
+        <li class="{{ $url === '/sale' ? 'active' : ''}}  {{ $url === '/client' ? 'active' : ''}} {{ $url === '/sale/report' ? 'active' : ''}} treeview">
+          <a href="#"><i class="fa fa-line-chart" aria-hidden="true"></i> <span>Reportes</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li class="{{ $url === '/sale' ? 'active' : ''}}"><a href="{{ route('sale.index', 1) }}">Ventas</a></li>
+            <li class="{{ $url === '/sale' ? 'active' : ''}}"><a href="{{ route('sale.index', 2) }}">Tickets</a></li>
+            <li class="{{ $url === '/sale' ? 'active' : ''}}"><a href="{{ route('sale.index', 2) }}">Premios</a></li>
+            <li class="{{ $url === '/sale' ? 'active' : ''}}"><a href="{{ route('sale.index', 2) }}">Pagos Realizados</a></li>
+            <li class="{{ $url === '/sale' ? 'active' : ''}}"><a href="{{ route('sale.index', 2) }}">Pagos Pendientes</a></li>
+            <li class="{{ $url === '/sale' ? 'active' : ''}}"><a href="{{ route('sale.index', 2) }}">Utilidad</a></li>
+          </ul>
+        </li>
         <li class="{{ $url === '/user-management' ? 'active' : '' }}">
         	<a href="{{ route('usermanagement.index') }}"><i class="fa fa-users" aria-hidden="true"></i> <span>Usuarios</span></a>
         </li>
