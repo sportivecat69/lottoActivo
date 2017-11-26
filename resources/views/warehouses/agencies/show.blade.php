@@ -19,7 +19,7 @@ $pagados_=App\Agency::todayPrizes($agency->id, true, 'PAGADO');
 $percentage=($todaySold*$agency->percentage_gain)/100;
 $utilidad=$todaySold-$percentage-$premiadosSum;
 
-$string = ($utilidad>0) ? '<i class="fa fa-thumbs-up" aria-hidden="true"></i>   &iexcl;Felicidades! tienes una utilidad de ' : '<i class="fa fa-thumbs-down" aria-hidden="true"></i>   &iexcl;Valla! parece que tienes perdidas por '
+$string = ($utilidad>0) ? '<i class="fa fa-thumbs-up" aria-hidden="true"></i>   &iexcl;Felicidades! tienes una utilidad de ' : '<i class="fa fa-thumbs-down" aria-hidden="true"></i>   &iexcl;Vaya! parece que tienes perdidas por '
 ?>
 <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
