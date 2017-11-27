@@ -112,8 +112,8 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li class="{{ $url === '/sale' ? 'active' : ''}}"><a href="{{ route('sale.index', 1) }}">Lottoactivo</a></li>
-            <li class="{{ $url === '/sale' ? 'active' : ''}}"><a href="{{ route('sale.index', 2) }}">Granjita</a></li>
+            <li class="{{ $url === '/sale' ? 'active' : ''}}"><a href="{{ route('sale.index', 1) }}">Animalitos</a></li>
+<!--             <li class="{{ $url === '/sale' ? 'active' : ''}}"><a href="{{ route('sale.index', 2) }}">Granjita</a></li> -->
 <!--             <li class="{{ $url === '/sale/report' ? 'active' : ''}}"><a href="{{ route('sale.report') }}">Reporte</a></li> -->
           </ul>
         </li>

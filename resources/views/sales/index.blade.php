@@ -176,8 +176,6 @@ dd($tickets); die();
 					            <table class="table table-striped table-condensed text-center lotto-activo"> 
 					            	@if($category == 1)
 					            		@include('sales.categories.lottoactivo')
-					            	@elseif($category == 2)
-					            		@include('sales.categories.granjita')
 				                    @endif	
 				                    
 					            </table>
@@ -228,7 +226,7 @@ dd($tickets); die();
 							</div>
 							<div class=" col-md-8">
 								<div class="list-sale">
-    					            <table class="table table-striped table-condensed text-center" id="tabla_product">
+    					            <table class="table table-striped table-condensed text-center table-hover" id="tabla_product">
     					                <thead>
     					                    <tr>
     					                    	<th>Ruleta</th>

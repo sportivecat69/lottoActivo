@@ -26,7 +26,7 @@
     </td>
     <td>
 		<a href="#" onclick="add('04')">
-			<img alt="04" src="{{asset('img/granjita/04.png')}}">
+			<img alt="04" src="{{asset('img/granjita/04.jpg')}}">
 		</a>
 	</td>
 </tr>

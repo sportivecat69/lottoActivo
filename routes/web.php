@@ -25,8 +25,6 @@ Auth::routes();
 // Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm');
 // Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 
-
-
 Route::group(['middleware' => 'auth'], function (){
 	
 	Route::get('password/change', 'UserManagementController@changePassword')->name('password.change');
@@ -74,7 +72,7 @@ Route::group(['middleware' => 'auth'], function (){
 	Route::get('cart/show', 'CartController@show')->name('cart.show');
 	Route::get('cart/add/{product}', 'CartController@add')->name('cart.add');
 	Route::get('cart/delete/{product}', 'CartController@delete')->name('cart.delete');
-
+	
 });
 
 

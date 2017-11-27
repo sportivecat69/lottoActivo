@@ -17,6 +17,7 @@ use Mike42\Escpos\Printer;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use App\SellerAgency;
 use App\AgencyCategoriesSell;
+use Carbon\Carbon;
 
 class SaleController extends Controller
 {
@@ -56,35 +57,16 @@ class SaleController extends Controller
 	        ['categorie_id', $request->categorie]
 	    ])->first();
 	    
-	    /**
-	     * Hacer resta de total de venta por articulo menos el limite de venta
-	     * Ej: $rest = $limite - $venta; //200 
-	     */
-	    
 	    if (!$article) {
 	        return 'not registro';
 	    } else {
 	        
 	        if($article->status != 0){
 	            
-	            //Calculo lavenat por hora del articulo
-	            $sales = Sale::where('articles_id', $article->id)->get();
-	            
-	            $rest = 0;
-	            foreach ($sales as $sale){
-	                if (date('Y-m-d', strtotime($sale->created_at)) === date('Y-m-d')){
-	                    $rest += $sale->bet + $rest;
-	                }
-	            }
-	            
-	            $rest_article = $article->sale_price - $rest;
-	            
-	            return $rest_article;die;
-	            
-	            //     // 	                if (convertAmount($request->amount) <= '200') {
 	            
     	            $rowCount = count($request->sorteo);
     	            for($i=0; $i < $rowCount; $i++){
+    	                
     	                //Consulto la hora de sorteo
     	                $draw = Draw::find($request->sorteo[$i]);
     	                //Consulto el minuto configurado para cancelar venta
@@ -94,12 +76,28 @@ class SaleController extends Controller
     	                //Valido si la hora del sorteo ya paso
     	                if (date('H:i') < date('H:i', $horaVenta)) {
     	                    
-    //     						// quizas pueda resumirse pero lo cierto es que la variable
-    //     	                    // product no te sirve como objeto a salvar
+        						// quizas pueda resumirse pero lo cierto es que la variable
+        	                    // product no te sirve como objeto a salvar
         						$producto=new Article();
         						foreach ($product->getAttributes() as $key=>$value){
         							$producto->setAttribute($key, $value);
         						}
+        						
+        						/********************************************************
+        						 *        Calculo de precio venta por hora del articulo
+        						 ********************************************************/
+//         						$sales = Sale::where([
+//         						                        ['draws_id', $request->sorteo[$i]],
+//                             						    ['articles_id', $article->id],
+//                             						    ['created_at','>=', Carbon::today()],
+//                             						    ['created_at','<=', Carbon::today()->addDay(1)],
+//                             						])->sum('bet');
+        						
+//                             	$rest =  $article->sale_price - $sales;
+//                             	return $rest;die;
+        						/********************************************************
+        						 *   End Calculo de precio venta por hora del articulo
+        						 ********************************************************/
         						
         
             	                $sale_cart = session()->get('sale_cart');
@@ -115,9 +113,6 @@ class SaleController extends Controller
     	            }
 	               return $article->name;
 	               
-	               //     // 	                } else {
-	               //     // 	                    return 1;//Se ha excedido el limite de venta
-	               //     // 	                }
 	        } else {
 	            return 0;//El n&uacute;mero esta inhabilitado
 	        }
