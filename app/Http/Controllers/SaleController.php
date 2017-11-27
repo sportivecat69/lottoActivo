@@ -18,6 +18,7 @@ use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use App\SellerAgency;
 use App\AgencyCategoriesSell;
 use Carbon\Carbon;
+use App\Categorie;
 
 class SaleController extends Controller
 {
@@ -36,11 +37,11 @@ class SaleController extends Controller
 		$sale_cart = session()->get('sale_cart');
 		$total = $this->total();
 		
-		$sorteos = Draw::where('categorie_id', $category)->orderBy('id', 'asc')->get();
+		$sorteos = Draw::all();
 		
 		$seller_agency = SellerAgency::where('users_id', Auth::user()->id)->first();
 		
-		return view('sales.index', ['sale_cart' => $sale_cart, 'total' => $total, 'sorteos' => $sorteos, 'mint_sell' => $seller_agency->agency->mint_sell, 'category' => $category ]);
+		return view('sales.index', ['sale_cart' => $sale_cart, 'total' => $total, 'sorteos' => $sorteos, 'mint_sell' => $seller_agency->agency->mint_sell, 'category' => $category]);
 	}
 	
 	/**
@@ -52,72 +53,88 @@ class SaleController extends Controller
 	public function add(Request $request, Article $product)
 	{
 		
-	    $article = Article::where([
-	        ['cod', $request->cod],
-	        ['categorie_id', $request->categorie]
-	    ])->first();
-	    
-	    if (!$article) {
-	        return 'not registro';
-	    } else {
-	        
-	        if($article->status != 0){
-	            
-	            
-    	            $rowCount = count($request->sorteo);
-    	            for($i=0; $i < $rowCount; $i++){
-    	                
-    	                //Consulto la hora de sorteo
-    	                $draw = Draw::find($request->sorteo[$i]);
-    	                //Consulto el minuto configurado para cancelar venta
-    	                $seller_agency = SellerAgency::where('users_id', Auth::user()->id)->first();
-    	                //Le resto los minutos configurado de la agencia al sorteo seleccionado
-    	                $horaVenta = strtotime ( '-'.$seller_agency->agency->mint_sell.' minute' , strtotime ( date( 'H:i', strtotime($draw->time)) ) ) ;
-    	                //Valido si la hora del sorteo ya paso
-    	                if (date('H:i') < date('H:i', $horaVenta)) {
-    	                    
-        						// quizas pueda resumirse pero lo cierto es que la variable
-        	                    // product no te sirve como objeto a salvar
-        						$producto=new Article();
-        						foreach ($product->getAttributes() as $key=>$value){
-        							$producto->setAttribute($key, $value);
-        						}
-        						
-        						/********************************************************
-        						 *        Calculo de precio venta por hora del articulo
-        						 ********************************************************/
-//         						$sales = Sale::where([
-//         						                        ['draws_id', $request->sorteo[$i]],
-//                             						    ['articles_id', $article->id],
-//                             						    ['created_at','>=', Carbon::today()],
-//                             						    ['created_at','<=', Carbon::today()->addDay(1)],
-//                             						])->sum('bet');
-        						
-//                             	$rest =  $article->sale_price - $sales;
-//                             	return $rest;die;
-        						/********************************************************
-        						 *   End Calculo de precio venta por hora del articulo
-        						 ********************************************************/
-        						
-        
-            	                $sale_cart = session()->get('sale_cart');
-            	                $producto->categorie = $article->categorie->name;
-            	                $producto->sorteo = $request->sorteo[$i];
-            	                $producto->amount = convertAmount($request->amount);
-            	                $sale_cart[$producto->cod.substr($request->sorteo[$i],0,2)] = $producto;
-            	                session()->put('sale_cart', $sale_cart);
-        
-    	                } else {
-    	                   return 'error';
-    	                }
-    	            }
-	               return $article->name;
-	               
-	        } else {
-	            return 0;//El n&uacute;mero esta inhabilitado
-	        }
-	        
-	    }
+    	    $article = Article::where([
+    	        ['cod', $request->cod],
+//     	        ['categorie_id', $request->categorie]
+    	    ])->first();
+    	    
+    	    if (!$article) {
+    	        return 'not registro';
+    	    } else {
+    	        
+    	        if($article->status != 0){
+    	               
+        	            $rowCount = count($request->sorteo);
+        	            for($i=0; $i < $rowCount; $i++){
+        	                
+        	                //Consulto la hora de sorteo y el articulo
+        	                $draw = Draw::find($request->sorteo[$i]);
+        	                
+        	                $article_categorie = Article::where([
+        	                    ['cod', $request->cod],
+        	                    ['categorie_id', $draw->categorie->id]
+        	                ])->first();
+        	                
+        	                //Consulto el minuto configurado para cancelar venta
+        	                $seller_agency = SellerAgency::where('users_id', Auth::user()->id)->first();
+        	                //Le resto los minutos configurado de la agencia al sorteo seleccionado
+        	                $horaVenta = strtotime ( '-'.$seller_agency->agency->mint_sell.' minute' , strtotime ( date( 'H:i', strtotime($draw->time)) ) ) ;
+        	                //Valido si la hora del sorteo ya paso
+        	                if (date('H:i') < date('H:i', $horaVenta)) {
+        	                    
+            						// quizas pueda resumirse pero lo cierto es que la variable
+            	                    // product no te sirve como objeto a salvar
+            						$producto=new Article();
+            						foreach ($product->getAttributes() as $key=>$value){
+            							$producto->setAttribute($key, $value);
+            						}
+            						
+            						/********************************************************
+            						 *        Calculo de precio venta por hora del articulo
+            						 ********************************************************/
+    //         						$sales = Sale::where([
+    //         						                        ['draws_id', $request->sorteo[$i]],
+    //                             						    ['articles_id', $article->id],
+    //                             						    ['created_at','>=', Carbon::today()],
+    //                             						    ['created_at','<=', Carbon::today()->addDay(1)],
+    //                             						])->sum('bet');
+            						
+    //                             	$rest =  $article->sale_price - $sales;
+    //                             	return $rest;die;
+            						/********************************************************
+            						 *   End Calculo de precio venta por hora del articulo
+            						 ********************************************************/
+            						
+            
+                	                $sale_cart = session()->get('sale_cart');
+                	                $producto->id = $article_categorie->id;
+                	                $producto->categorie =  $draw->categorie->name;
+                	                $producto->hora =  $draw->time;
+                	                $producto->sorteo = $draw->id;
+                	                $producto->amount = convertAmount($request->amount);
+                	                $sale_cart[$producto->cod.substr($draw->id,0,2)] = $producto;
+                	                session()->put('sale_cart', $sale_cart);
+                	                
+                	                
+                	                $data[$i] = (object) [
+                	                    'sorteo' => $draw->id,
+                	                    'name' => $article->name,
+                	                    'categoria_hora' => $draw->categorie->name.' '.$draw->time,
+                	                    'monto' =>  convertAmount($request->amount),
+                	                ];
+            
+        	                } else {
+        	                   return 'error';
+        	                }
+        	            }
+//         	            return Response::json($data);
+        	            return $data;
+    	               
+    	        } else {
+    	            return 0;//El n&uacute;mero esta inhabilitado
+    	        }
+    	        
+    	    }
 	    
 	}
 	
@@ -210,16 +227,16 @@ class SaleController extends Controller
 	    //CREACION DE LA DESCRIPCION DEL TICKET
 	    foreach ($sorteos_unido as $sorteo) {
 	        $s = Draw::find($sorteo);
-	        $printer->text("---- Sorteo " . $s->time . " ----\n");
+	        $printer->text("----" . $s->categorie->name .' '. $s->time . " ----\n");
 	        
 	        foreach ($sale_cart as $sc) {
 	            $sorte = Draw::find($sc->sorteo);
-	            if(date('H', strtotime($s->time)) == date('H', strtotime($sorte->time))){
+	            if($s->id == $sorte->id){
 	                $article = Article::find($sc->id);
 	                
 	                /*Alinear a la izquierda para la cantidad y el nombre*/
 	                $printer->setJustification(Printer::JUSTIFY_LEFT);
-	                $printer->text($article->cod .' - '. $article->name ." x ". number_format($sc->amount,0,",",".") ." - " . ($article->categorie->name) . "\n");
+	                $printer->text($article->cod .' - '. $article->name ." x ". number_format($sc->amount,0,",",".") . "\n");
 	            }
 	        }
 	    }

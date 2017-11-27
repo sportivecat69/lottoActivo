@@ -198,7 +198,7 @@
       fixed layout. -->
       <script>
 		$(document).ready(function() {
-			setTimeout(function(){ $('.alert').fadeOut(1000) }, 5000);
+			setTimeout(function(){ $('.alert').fadeOut(1000) }, 50000);
 		});
 
 		//Boton loading...

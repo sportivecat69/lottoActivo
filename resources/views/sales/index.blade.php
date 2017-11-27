@@ -146,21 +146,56 @@ dd($tickets); die();
             <div class="col-md-12">
               <div class="box">
                 <div class="box-header with-border">
-                
-                  <div class="col-md-10">
-                  	<a data-target="#modal-info" data-toggle="modal" href="#" class="">
-                       <i class="fa fa-info-circle fa-lg" aria-hidden="true" style="color:#367fa9;"></i>
-                    </a>
-                  	<h3 class="box-title">&nbsp;Gestor de Ventas </h3>
-                  </div>
-                  
+<!--                  <div class="col-md-2"> -->
+<!--                       <div class="col-md-1"> -->
+<!--                       	<a data-target="#modal-info" data-toggle="modal" href="#" class=""> -->
+                      <!-- <i class="fa fa-info-circle fa-lg" aria-hidden="true" style="color:#367fa9;"></i> -->    
+<!--                         </a> -->
+<!--                       </div> -->
+<!--                   </div> -->
                   <!-- BTN Anular y Pagar  -->	
-                  <div class="col-md-2">
-              		<div class="text-right" style="margin-right: 10px;">
+                  <div class="col-md-12">
+               		
+					<div class="col-md-4">
+		                <div class="input-group">
+		                	<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+		                    <select id="sorteo" name="sorteo[]" class="selectpicker show-menu-arrow form-control" multiple data-actions-box="true" title="Seleccione Sorteo" data-selected-text-format="count > 2">
+                              @foreach($sorteos as $sorteo)
+                                @php
+                                	 $horaVenta = strtotime ( '-'.$mint_sell.' minute' , strtotime ( date( 'H:i', strtotime($sorteo->time)) ) ) ;
+                                @endphp
+                              	@if(date('H:i') < date('H:i', $horaVenta))
+                              		<option value="{{ $sorteo->id }}" id='{{ $sorteo->id }}'>{{ $sorteo->categorie->name }} - {{ $sorteo->time }}</option>
+                              	@endif
+                              @endforeach
+                            </select>
+	               		</div>
+               		</div>
+               		
+					<div class="col-md-3">
+		                <div class="input-group">
+		                	<span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span>
+		                    <input type="text" class="form-control number" maxlength="2" onkeydown="keyCode_codigo(event)"  id="codigo" name="codigo"  placeholder="N&uacute;mero" autocomplete="off">
+	               		</div>
+					</div>
+					
+					<div class="col-md-3">
+		                <div class="input-group">
+		                	<span class="input-group-addon">Bsf.</span>
+		                    <input type="text" class="form-control" onkeydown="keyCode_monto(event)"  id="monto" name="monto"  placeholder="Ingrese Monto" autocomplete="off">
+	               		</div>
+					</div>
+								
+              		<div class="text-right">
+						<a href="#" id="print" onclick="print()" class="btn btn-primary" {{ count($sale_cart) ? '' : 'disabled' }}>
+                        	<i class="fa fa-print" aria-hidden="true"></i>
+                        </a>
+						<a data-target="#modal-delete" data-toggle="modal" href="#" id="trash" class="btn btn-danger" {{ count($sale_cart) ? '' : 'disabled' }}>
+                        	<i class="fa fa-trash" aria-hidden="true"></i>
+                        </a>
                         <a href="#" class="btn btn-success" data-placement="bottom" data-target="#modal-pagar" data-toggle="modal">
                         	<i class="fa fa-money" aria-hidden="true"></i>
                         </a>
-
 						<a href="#" class="btn btn-danger" data-placement="bottom" data-target="#modal-anular" data-toggle="modal">
                         	<i class="fa fa-ban" aria-hidden="true"></i>
                         </a>
@@ -180,58 +215,13 @@ dd($tickets); die();
 				                    
 					            </table>
 					        </div>
-    						<div class=" col-md-8">
-								<div class=" col-md-12">
-									<div class="col-md-4">
-						                <div class="input-group">
-						                	<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-						                    <select id="sorteo" name="sorteo[]" class="selectpicker show-menu-arrow form-control" multiple data-actions-box="true" title="Seleccione Sorteo" data-selected-text-format="count > 2">
-                                              @foreach($sorteos as $sorteo)
-                                                @php
-                                                	 $horaVenta = strtotime ( '-'.$mint_sell.' minute' , strtotime ( date( 'H:i', strtotime($sorteo->time)) ) ) ;
-                                                @endphp
-                                              	@if(date('H:i') < date('H:i', $horaVenta))
-                                              		<option value="{{ $sorteo->id }}">{{ $sorteo->time }}</option>
-                                              	@endif
-                                              @endforeach
-                                            </select>
-					               		</div>
-				               		</div>
-    								<div class="col-md-3">
-						                <div class="input-group">
-						                	<span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span>
-						                    <input type="text" class="form-control number" maxlength="2" onkeydown="keyCode_codigo(event)"  id="codigo" name="codigo"  placeholder="N&uacute;mero" autocomplete="off">
-					               		</div>
-    								</div>
-    								<div class="col-md-5" style=" display: inline-flex;">
-						                <div class="input-group col-md-8">
-						                	<span class="input-group-addon">Bsf.</span>
-						                    <input type="text" class="form-control" onkeydown="keyCode_monto(event)"  id="monto" name="monto"  placeholder="Ingrese Monto" autocomplete="off">
-					               		</div>
-					               		<div class="col-md-2">
-											<a href="#" id="print" onclick="print()" class="btn btn-primary" {{ count($sale_cart) ? '' : 'disabled' }}>
-					                        	<i class="fa fa-print" aria-hidden="true"></i>
-					                        </a>
-					                    </div>
-					               		<div class="col-md-2">
-											<a data-target="#modal-delete" data-toggle="modal" href="#" id="trash" class="btn btn-danger" {{ count($sale_cart) ? '' : 'disabled' }}>
-					                        	<i class="fa fa-trash" aria-hidden="true"></i>
-					                        </a>
-										</div>
-    								</div>
-								</div>
-								<div class=" col-md-12" >
-					                <hr>
-								</div>
-							</div>
 							<div class=" col-md-8">
 								<div class="list-sale">
     					            <table class="table table-striped table-condensed text-center table-hover" id="tabla_product">
     					                <thead>
     					                    <tr>
-    					                    	<th>Ruleta</th>
+    					                    	<th>Sorteo</th>
     					                        <th>N&uacute;mero: <span id="jugadas" style="color:#FF0000">{{ count($sale_cart) }}</span></th>
-    					                        <th>Sorteo</th>
     					                        <th>Monto</th>
     					                        <th>Total:  <span id="total" style="color:#FF0000">{{ number_format($total,2,",",".") }}</span> </th>
     					                    </tr>
@@ -240,12 +230,9 @@ dd($tickets); die();
     					                	@if(count($sale_cart))
     						                	@foreach($sale_cart as $c)
     							                    <tr id="{{ $c->cod }}{{ substr($c->sorteo,0,2) }}">
-    							                    	<td><h5>{{ $c->categorie }}</h5></td>
+    							                    	<td><h5>{{ $c->categorie }} {{ $c->hora }}</h5></td>
     							                        <td>
     						                                <h5>{{ $c->cod }} - {{ $c->name }}</h5>
-    							                        </td>
-    							                        <td>
-    						                                <h5>{{ $c->sorteo }}</h5>
     							                        </td>
     							                        <td>
     						                                <h5>{{$c->amount}}</h5>
@@ -467,7 +454,7 @@ dd($tickets); die();
 			    var cod = $('#codigo').val();
 			    var monto =  $('#monto').val();
 			    var sorteo =  $('#sorteo').val();
-			    var categorie = <?php echo $category ?>;
+			    var categoria =  $('#categoria').val();
 			    if(cod != '' && monto != ''){
 				    //validamos si ha selecciondo sorteo
 			    	if($('#sorteo').val() != null){
@@ -477,35 +464,32 @@ dd($tickets); die();
         		    	 $.ajax({
     							url: appRoot + "/sale/add/" + cod ,
         		    	        type: "post",
-        		    	        data: { "_token": "{{ csrf_token() }}", categorie: categorie, sorteo: sorteo, cod: cod, amount: monto  } ,
+        		    	        data: { "_token": "{{ csrf_token() }}", categoria: categoria, sorteo: sorteo, cod: cod, amount: monto  } ,
         		    	        success: function (data) {
-            		    	        console.log(data);
+//             		    	        console.log(data);
             		    	        //Validamos si esta abilitado o se excedio el limite
             		    	        if(data != 0 && data != 1) {
                 		    	        if(data != 'error') {
-                		    	        	$.each(sorteo, function(index){
-        //         		    	        		console.log(sorteo[index]);
-                		    	        		var cod_ = cod + sorteo[index].substring(0, 2);
+                		    	        	data.forEach(function(data, index) {
+//                 		    	        		console.log(data.categoria_hora);
+                		    	        		var cod_ = cod + data.sorteo;
                 			    	        	//SI EXISTE Y LO REPIREN LO REMUEVE 
                 		    	        		$('#'+cod_).remove();
                 		    	        		//END
                 		    	        		
                     							add_ = '<tr id="'+cod_+'">';
                     							add_ += 	'<td>';
-                    							if(categorie == 1){ 
-                    								add_ += '<h5>Ruleta Activa<h5>'; 
-                        						} else if(categorie == 2) {
-                        							add_ += '<h5>La Granjita<h5>'; 
-                            					};
+                								
+                    							if(sorteo[index] == data.sorteo){ 
+                    								add_ += '<h5>'+data.categoria_hora+'<h5>'; 
+                        						} 
+                        						
                         						add_ += 	'</td>';
                     							add_ += 	'<td><h5>';
-                    							add_ += 		cod + ' - ' +data;
+                    							add_ += 		cod + ' - ' +data.name;
                     							add_ += 	'</h5></td>';
                     							add_ += 	'<td><h5>';
-                    							add_ += 		sorteo[index];
-                    							add_ += 	'</h5></td>';
-                    							add_ += 	'<td><h5>';
-                    							add_ += 		monto;
+                    							add_ += 		data.monto;
                     							add_ += 	'</h5></td>';
                     							add_ +=   '<td>';
                     							add_ +=    	'<a href="#" onclick="delete_(\''+cod_+'\')">';
@@ -519,7 +503,7 @@ dd($tickets); die();
                 		    	        	//Calcula el monto
                 							var total = 0;
                 							$('#tabla_product tbody tr').each(function(){
-                								total += parseInt($(this).find('td').eq(3).text()||0,10)
+                								total += parseInt($(this).find('td').eq(2).text()||0,10)
                 							});
                 							$('#total').html(total+',00');
                 							//Calculo de Nro. jugadas
@@ -623,7 +607,7 @@ dd($tickets); die();
     	        	//Calcula el monto
 					var total = 0;
 					$('#tabla_product tbody tr').each(function(){
-						total += parseInt($(this).find('td').eq(3).text()||0,10)
+						total += parseInt($(this).find('td').eq(2).text()||0,10)
 					});
 					$('#total').html(total+',00');
 					//Calculo de Nro. jugadas

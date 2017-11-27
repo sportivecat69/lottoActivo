@@ -14,4 +14,9 @@ class Draw extends Model
     protected $fillable = [
         'categorie_id', 'time',
     ];
+    
+    public function categorie()
+    {
+        return $this->hasOne(Categorie::class, 'id', 'categorie_id');
+    }
 }

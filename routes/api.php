@@ -15,4 +15,6 @@ use Illuminate\Http\Request;
 
 Route::group(['middleware' => ['auth:api']], function () {
     Route::get('draw', 'DrawController@index');
+    Route::get('draw/{categorie}/show', 'SorteoController@index')->name('draw.index');
+    Route::get('draw/update', 'SorteoController@draw')->name('draw.update');
 });
