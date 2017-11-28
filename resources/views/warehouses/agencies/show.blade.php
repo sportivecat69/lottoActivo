@@ -24,7 +24,7 @@ $string = ($utilidad>0) ? '<i class="fa fa-thumbs-up" aria-hidden="true"></i>   
 <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
      <div class="row"  style="padding: 20px 30px; background: rgb(243, 156, 18); font-size: 16px; font-weight: 600;">
-      <div><span style="color: rgba(255, 255, 255, 0.9); display: inline-block; margin-right: 10px; text-decoration: none;">Aqu&iacute; podr&aacute;s ver el detalle de la actividad de tu agencia el d&iacute;a de Hoy... </span><span class="pull-right" style="color: rgba(255, 255, 255, 0.9); display: inline-block; margin-right: 10px; text-decoration: none;"><?php echo $string; ?> <span class="btn btn-default btn-sm" style="margin-left: 10px; border: 0px; box-shadow: none; color: rgb(243, 156, 18); font-weight: 600; background: rgb(255, 255, 255);">{{ number_format($utilidad,2,",",".") }} Bs.</span></span></div>
+      <div><span style="color: rgba(255, 255, 255, 0.9); display: inline-block; margin-right: 10px; text-decoration: none;">Aqu&iacute; podr&aacute;s ver el detalle de la actividad de tu agencia el d&iacute;a de Hoy... </span><span class="pull-right" style="color: rgba(255, 255, 255, 0.9); display: inline-block; margin-right: 10px; text-decoration: none;"><?php echo $string; ?> <span class="btn btn-default btn-sm" style="margin-left: 10px; border: 0px; box-shadow: none; color: rgb(243, 156, 18); font-weight: 600; background: rgb(255, 255, 255);">{{ number_format($utilidad,2,",",".") }} Bs.<span style="margin-left: 10px;"><a href="{{ route('print.utility') }}"><i class="fa fa-print"></i></a></span></span></span></div>
    </div>
    <!-- /.row  -->
     

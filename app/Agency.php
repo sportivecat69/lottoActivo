@@ -370,7 +370,7 @@ class Agency extends Model
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public static function todayPrizes($id, $total=false, $status=null){ // only PREMIADO, PAGADO
+	public static function todayPrizes($id, $total=false, $status=null){ // only PREMIADO, PAGADO //falta filtro por usuario
 		
 		$status = !is_null($status) ? array($status) : array('PREMIADO','PAGADO');
 		
