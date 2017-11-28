@@ -70,7 +70,7 @@
 														<td>{{ $article->name }}</td>
 														<td>{{ number_format($article->sale_price,2,",",".") }}</td>
 														<td>
-															@if($article->status === 1)
+															@if($article->status === TRUE)
 																<i class="fa fa-check-circle fa-lg" aria-hidden="true" style="color:#68D332;"></i>
 															@else
 																<i class="fa fa-minus-circle fa-lg" aria-hidden="true" style="color:#FF0000;"></i>
