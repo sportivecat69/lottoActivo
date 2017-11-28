@@ -92,12 +92,23 @@ class SaleController extends Controller
             						/********************************************************
             						 *        Calculo de precio venta por hora del articulo
             						 ********************************************************/
-    //         						$sales = Sale::where([
-    //         						                        ['draws_id', $request->sorteo[$i]],
-    //                             						    ['articles_id', $article->id],
-    //                             						    ['created_at','>=', Carbon::today()],
-    //                             						    ['created_at','<=', Carbon::today()->addDay(1)],
-    //                             						])->sum('bet');
+            						
+//             						$invoices = \DB::table('sale_invoices')
+//             						->select('id')
+//             						->where('created_at','>=', Carbon::today())
+//             						->where('created_at','<=', Carbon::today()->addDay(1))
+//             						->where('sellers_agency_id', $seller_agency->id)
+//             						->get();
+            						
+//             						$sales = Sale::where([
+//             						                        ['draws_id', $request->sorteo[$i]],
+//                                 						    ['articles_id', $article->id],
+//                                 						    ['created_at','>=', Carbon::today()],
+//                                 						    ['created_at','<=', Carbon::today()->addDay(1)],
+            												
+//                                 						])
+//             						->whereIn('sale_invoice_id', $invoices)
+//             						->sum('bet');
             						
     //                             	$rest =  $article->sale_price - $sales;
     //                             	return $rest;die;
